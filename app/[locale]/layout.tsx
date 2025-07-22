@@ -35,14 +35,14 @@ export default async function RootLayout({
   }
 
   return (
-    <ProvidersWrapper>
-      <html lang={locale} data-scroll-behavior="smooth">
-        <body
-          className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-        >
-          <NextIntlClientProvider>{children}</NextIntlClientProvider>
-        </body>
-      </html>
-    </ProvidersWrapper>
+    <html lang={locale} data-scroll-behavior="smooth">
+      <body
+        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+      >
+        <NextIntlClientProvider>
+          <ProvidersWrapper>{children}</ProvidersWrapper>
+        </NextIntlClientProvider>
+      </body>
+    </html>
   );
 }
