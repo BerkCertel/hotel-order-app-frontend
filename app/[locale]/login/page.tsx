@@ -10,35 +10,59 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { Link } from "@/i18n/navigation";
+import { API_PATHS } from "@/constants/apiPaths";
+import { UserContext } from "@/context/userContext";
+import { Link, useRouter } from "@/i18n/navigation";
 import { LoginFormSchema } from "@/schemas/LoginFormSchema";
-import { loginUser } from "@/store/authSlice";
-import { useAppDispatch, useAppSelector } from "@/store/store";
+
+import axiosInstance from "@/utils/axiosInstance";
 import { Label } from "@radix-ui/react-label";
+import { AxiosError } from "axios";
 import { useFormik } from "formik";
-import { useEffect } from "react";
+import { useContext, useState } from "react";
 import { FaUser } from "react-icons/fa";
 import { toast } from "sonner";
 
 export default function LoginPage() {
-  const dispatch = useAppDispatch();
-  const { error, message, loading, user } = useAppSelector(
-    (state) => state.auth
-  );
-
-  console.log(user);
-  useEffect(() => {
-    if (error) toast.error(error);
-    if (message) toast.success(message);
-
-    console.log(user);
-  }, [error, message, user]);
+  const [Loading, setLoading] = useState(false);
+  const navigate = useRouter();
+  const { updateUser } = useContext(UserContext);
 
   const formik = useFormik({
     initialValues: { email: "", password: "" },
     validationSchema: LoginFormSchema,
-    onSubmit: (values, { resetForm }) => {
-      dispatch(loginUser(values));
+    onSubmit: async (values, { resetForm }) => {
+      try {
+        setLoading(true);
+        const response = await axiosInstance.post(API_PATHS.AUTH.LOGIN, {
+          email: values.email,
+          password: values.password,
+        });
+
+        const { token, user } = response.data;
+
+        if (token) {
+          localStorage.setItem("token", token);
+          updateUser(user); // Update user context with user data
+        }
+
+        if (user.role === "ADMIN" || user.role === "SUPER_ADMIN") {
+          navigate.push("/admin");
+        } else if (user.role === "USER") {
+          navigate.push("/user/dashboard");
+        }
+
+        toast.success("Login successful!");
+      } catch (error) {
+        const err = error as AxiosError<{ message?: string }>;
+        if (err.response && err.response.data.message) {
+          toast.error(err.response.data.message);
+        } else {
+          toast.error("Something went wrong. Please try again later.");
+        }
+      } finally {
+        setLoading(false);
+      }
       resetForm();
     },
   });
@@ -87,8 +111,8 @@ export default function LoginPage() {
               </div>
             </div>
             <CardFooter className="flex-col gap-2 mt-6">
-              <Button type="submit" className="w-full" disabled={loading}>
-                {loading ? "Logging in..." : "Login"}
+              <Button type="submit" className="w-full" disabled={Loading}>
+                {Loading ? "Logging in..." : "Login"}
               </Button>
               <Button variant={"link"} asChild>
                 <Link href="forgot-password">Forgot your password?</Link>

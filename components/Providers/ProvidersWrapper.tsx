@@ -1,6 +1,7 @@
 import React from "react";
 import StoreProvider from "./StoreProvider";
 import { Toaster } from "../ui/sonner";
+import UserProvider from "@/context/userContext";
 
 interface ProvidersWrapperProps {
   children: React.ReactNode;
@@ -9,9 +10,11 @@ interface ProvidersWrapperProps {
 function ProvidersWrapper({ children }: ProvidersWrapperProps) {
   return (
     <>
-      <StoreProvider>
-        {children} <Toaster />
-      </StoreProvider>
+      <UserProvider>
+        <StoreProvider>
+          {children} <Toaster />
+        </StoreProvider>
+      </UserProvider>
     </>
   );
 }
