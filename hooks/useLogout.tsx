@@ -8,9 +8,9 @@ export function useLogout() {
   const { clearUser } = useContext(UserContext);
 
   const logout = () => {
+    router.push("/");
     localStorage.removeItem("token");
     clearUser();
-    router.push("/login");
     toast.warning("Logout successful!");
   };
 

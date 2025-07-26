@@ -1,5 +1,6 @@
 "use client";
 
+import { PageContainer } from "@/components/Containers/PageContainer";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -18,8 +19,9 @@ function AdminMainPage() {
   const { user } = useContext(UserContext);
 
   const logout = useLogout();
+
   return (
-    <div className="flex h-full w-full items-center justify-center">
+    <PageContainer>
       <Card>
         <CardHeader>
           <CardTitle>Card Title</CardTitle>
@@ -38,11 +40,11 @@ function AdminMainPage() {
           </div>
         </CardContent>
         <CardFooter>
-          <Button onClick={logout}>Logout</Button>
+          <Button onClick={() => logout()}>Logout</Button>
           <p>Card Footer</p>
         </CardFooter>
       </Card>
-    </div>
+    </PageContainer>
   );
 }
 

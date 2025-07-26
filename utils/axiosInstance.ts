@@ -36,7 +36,7 @@ axiosInstance.interceptors.response.use(
 
       if (status === 401) {
         console.error("Unauthorized access - redirecting to login");
-        window.location.href = "/login";
+        window.location.href = "/";
       } else if (status === 403) {
         console.error("Forbidden access - you do not have permission");
       } else if (error.code === "ECONNABORTED") {

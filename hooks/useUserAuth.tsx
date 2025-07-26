@@ -17,7 +17,7 @@ export const useUserAuth = () => {
       typeof window !== "undefined" ? localStorage.getItem("token") : null;
     if (!token) {
       clearUser();
-      router.push("/login");
+      router.push("/");
       return;
     }
 
@@ -35,7 +35,7 @@ export const useUserAuth = () => {
         console.error("Failed to fetch user info:", error);
         if (isMounted) {
           clearUser();
-          router.push("/login");
+          router.push("/");
         }
       }
     };

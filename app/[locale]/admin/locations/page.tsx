@@ -1,16 +1,15 @@
-import { LocationCards } from "@/components/cards/LocationCards";
+import { PageContainer } from "@/components/Containers/PageContainer";
 
 export default function AdminLocationsPage() {
   return (
-    <div className="space-y-6">
-      <div>
-        <h1 className="text-2xl lg:text-3xl font-bold">Lokasyonlar</h1>
-        <p className="text-muted-foreground">
-          Oluşturulan lokasyonları ve QR kodlarını görüntüleyin
+    <PageContainer>
+      <div className="flex flex-col gap-2 text-center ">
+        <h1 className=" text-2xl lg:text-3xl font-bold">Lokasyonlar</h1>
+        <p className="text-muted-foreground text-md">
+          Oluşturulan lokasyonları görüntüleyin.
         </p>
       </div>
-
-      <LocationCards showQRCodes={true} />
-    </div>
+      <div></div>
+    </PageContainer>
   );
 }

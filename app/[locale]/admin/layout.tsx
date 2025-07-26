@@ -1,5 +1,7 @@
 "use client";
 
+import DashboardLayout from "@/components/layouts/DashboardLayout";
+
 import { useUserAuth } from "@/hooks/useUserAuth";
 import React from "react";
 
@@ -11,8 +13,8 @@ function AdminPageMainLayout({ children }: AdminPageMainLayoutProps) {
   useUserAuth();
 
   return (
-    <div className="min-h-screen w-full flex items-center justify-center">
-      {children}
+    <div>
+      <DashboardLayout>{children}</DashboardLayout>
     </div>
   );
 }
