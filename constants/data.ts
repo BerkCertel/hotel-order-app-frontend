@@ -1,4 +1,11 @@
-import { LuQrCode, LuMapPin, LuUsers, LuList, LuLogOut } from "react-icons/lu";
+import {
+  LuQrCode,
+  LuMapPin,
+  LuUsers,
+  LuList,
+  LuCirclePlus,
+} from "react-icons/lu";
+import { MdOutlineAddLocationAlt } from "react-icons/md";
 
 export const SIDE_MENU_DATA = [
   {
@@ -9,26 +16,32 @@ export const SIDE_MENU_DATA = [
   },
   {
     id: "02",
+    label: "QR Code Create",
+    icon: LuCirclePlus,
+    path: "/admin/qrcode-create",
+  },
+  {
+    id: "03",
     label: "Locations",
     icon: LuMapPin,
     path: "/admin/locations",
   },
   {
-    id: "03",
+    id: "04",
+    label: "Location Create",
+    icon: MdOutlineAddLocationAlt,
+    path: "/admin/location-create",
+  },
+  {
+    id: "05",
     label: "Users",
     icon: LuUsers,
     path: "/admin/users",
   },
   {
-    id: "04",
+    id: "06",
     label: "Orders",
     icon: LuList,
     path: "/admin/orders",
-  },
-  {
-    id: "05",
-    label: "Logout",
-    icon: LuLogOut,
-    path: "/admin/logout",
   },
 ];

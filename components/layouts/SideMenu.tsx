@@ -2,10 +2,13 @@ import { SIDE_MENU_DATA } from "@/constants/data";
 import { UserContext } from "@/context/userContext";
 import { useRouter } from "@/i18n/navigation";
 import { useContext } from "react";
+import { useLogout } from "@/hooks/useLogout";
+import { LuLogOut } from "react-icons/lu";
 
 function SideMenu() {
   const { clearUser } = useContext(UserContext);
   const navigate = useRouter();
+  const logout = useLogout();
 
   const handleClick = (route: string) => {
     if (route == "logout") {
@@ -33,6 +36,14 @@ function SideMenu() {
           {item.label}
         </div>
       ))}
+
+      <button
+        className="w-full flex items-center gap-4 text-[15px] text-black bg-black/15  py-3 px-6 rounded-lg mb-3 hover:bg-black hover:text-white cursor-pointer transition-all duration-200"
+        onClick={() => logout()}
+      >
+        <LuLogOut className="text-base" />
+        Logout
+      </button>
     </div>
   );
 }

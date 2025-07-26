@@ -8,22 +8,11 @@ export const API_PATHS = {
     GET_USER_INFO: "/api/v1/auth/get-user",
   },
 
-  INCOME: {
-    ADD_INCOME: "/api/v1/income/add",
-    GET_ALL_INCOME: "/api/v1/income/get-all",
-    DELETE_INCOME: (incomeId: string) => `/api/v1/income/delete/${incomeId}`,
-    DOWNLOAD_INCOME: `/api/v1/income/download-excel`,
-  },
-
-  EXPENSE: {
-    ADD_EXPENSE: "/api/v1/expense/add",
-    GET_ALL_EXPENSE: "/api/v1/expense/get-all",
-    DELETE_EXPENSE: (expenseId: string) =>
-      `/api/v1/expense/delete/${expenseId}`,
-    DOWNLOAD_EXPENSE: `/api/v1/expense/download-excel`,
-  },
-
-  IMAGE: {
-    UPLOAD_IMAGE: "/api/v1/auth/upload-image",
+  LOCATION: {
+    ADD_LOCATION: "/api/v1/location/create-location",
+    GET_ALL_LOCATIONS: "/api/v1/location/get-all-locations",
+    DELETE_LOCATION: (locationId: string) =>
+      `/api/v1/location/delete/${locationId}`,
+    DOWNLOAD_LOCATION: `/api/v1/location/download-excel`,
   },
 };

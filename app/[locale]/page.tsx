@@ -23,7 +23,7 @@ import { FaUser } from "react-icons/fa";
 
 export default function Home() {
   const [Loading, setLoading] = useState(false);
-  const navigate = useRouter();
+  const router = useRouter();
   const { updateUser } = useContext(UserContext);
 
   const formik = useFormik({
@@ -38,17 +38,15 @@ export default function Home() {
         });
 
         const { token, user } = response.data;
-
-        console.log(response);
         if (token) {
           localStorage.setItem("token", token);
           updateUser(user); // Update user context with user data
         }
 
         if (user.role === "ADMIN" || user.role === "SUPER_ADMIN") {
-          navigate.push("/admin");
+          router.push("/admin");
         } else if (user.role === "USER") {
-          navigate.push("/user/dashboard");
+          router.push("/user/dashboard");
         }
 
         toast.success("Login successful!");

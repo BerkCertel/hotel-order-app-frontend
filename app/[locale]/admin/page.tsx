@@ -11,12 +11,12 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { UserContext } from "@/context/userContext";
 import { useLogout } from "@/hooks/useLogout";
+import { UserContext } from "@/context/userContext";
 import { useContext } from "react";
 
 function AdminMainPage() {
-  const { user } = useContext(UserContext);
+  // const { user } = useContext(UserContext);
 
   const logout = useLogout();
 
@@ -29,19 +29,10 @@ function AdminMainPage() {
           <CardAction>Card Action</CardAction>
         </CardHeader>
         <CardContent>
-          <div>
-            {user ? (
-              <p>
-                Hoşgeldin, {user.email} {user.role}
-              </p>
-            ) : (
-              <p>Giriş yapmadınız.</p>
-            )}
-          </div>
+          <div></div>
         </CardContent>
         <CardFooter>
           <Button onClick={() => logout()}>Logout</Button>
-          <p>Card Footer</p>
         </CardFooter>
       </Card>
     </PageContainer>
