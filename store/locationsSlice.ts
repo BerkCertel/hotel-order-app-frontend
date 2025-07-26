@@ -2,12 +2,14 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { RootState } from "@/store/store";
 import axiosInstance from "@/utils/axiosInstance";
 import { API_PATHS } from "@/constants/apiPaths";
+import { Location } from "@/types/LocationTypes";
+import { AxiosError } from "axios";
 
 interface LocationState {
   loading: boolean;
   error: string | null;
   success: boolean;
-  locations: any[]; // Assuming locations is an array of objects
+  locations: Location[];
 }
 
 const initialState: LocationState = {
@@ -18,33 +20,35 @@ const initialState: LocationState = {
 };
 
 export const createLocation = createAsyncThunk<
-  any, // response type
-  string, // param: sadece location string'i
+  Location, // response type (tek location döner)
+  string, // parametre: sadece location string'i
   { rejectValue: string }
 >("location/createLocation", async (location, { rejectWithValue }) => {
   try {
     const res = await axiosInstance.post(API_PATHS.LOCATION.ADD_LOCATION, {
       location,
     });
-    return res.data;
-  } catch (error: any) {
+    return res.data as Location;
+  } catch (error: unknown) {
+    const err = error as AxiosError<{ message?: string }>;
     return rejectWithValue(
-      error?.response?.data?.message || "Lokasyon oluşturulamadı"
+      err.response?.data?.message || "Lokasyonlar alınamadı"
     );
   }
 });
 
 export const getAllLocations = createAsyncThunk<
-  any[],
+  Location[], // response type (dizi olarak döner)
   void,
   { rejectValue: string }
 >("locations/getAllLocations", async (_, { rejectWithValue }) => {
   try {
     const res = await axiosInstance.get(API_PATHS.LOCATION.GET_ALL_LOCATIONS);
-    return res.data;
-  } catch (error: any) {
+    return res.data as Location[];
+  } catch (error: unknown) {
+    const err = error as AxiosError<{ message?: string }>;
     return rejectWithValue(
-      error?.response?.data?.message || "Lokasyonlar alınamadı"
+      err.response?.data?.message || "Lokasyonlar alınamadı"
     );
   }
 });

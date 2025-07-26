@@ -6,6 +6,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { cn } from "@/lib/utils";
 import { getAllLocations, selectLocationState } from "@/store/locationsSlice";
 import { useAppDispatch, useAppSelector } from "@/store/store";
+import { Location } from "@/types/LocationTypes";
 import { useEffect } from "react";
 import { MdDelete, MdEdit } from "react-icons/md";
 
@@ -42,7 +43,7 @@ export default function AdminLocationsPage() {
               <div className="text-red-500">{error}</div>
             ) : (
               <div className="divide-y">
-                {locations.map((loc: any) => (
+                {locations.map((loc: Location) => (
                   <div
                     key={loc._id}
                     className={cn(
