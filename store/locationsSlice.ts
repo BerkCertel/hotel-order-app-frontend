@@ -38,7 +38,7 @@ export const createLocation = createAsyncThunk<
 });
 
 export const getAllLocations = createAsyncThunk<
-  Location[], // response type (dizi olarak döner)
+  Location[],
   void,
   { rejectValue: string }
 >("locations/getAllLocations", async (_, { rejectWithValue }) => {
@@ -49,6 +49,29 @@ export const getAllLocations = createAsyncThunk<
     const err = error as AxiosError<{ message?: string }>;
     return rejectWithValue(
       err.response?.data?.message || "Lokasyonlar alınamadı"
+    );
+  }
+});
+
+// LOCATION UPDATE
+export const updateLocation = createAsyncThunk<
+  Location,
+  { id: string; location: string },
+  { rejectValue: string }
+>("location/updateLocation", async ({ id, location }, { rejectWithValue }) => {
+  try {
+    // DOĞRU KULLANIM: API_PATHS.LOCATION.UPDATE_LOCATION bir fonksiyon!
+    const res = await axiosInstance.put(
+      API_PATHS.LOCATION.UPDATE_LOCATION(id),
+      { location }
+    );
+    // Backend response'unu kontrol et, örneğin:
+    // res.data.updatedLocation ile dönüyor
+    return res.data.updatedLocation as Location;
+  } catch (error: unknown) {
+    const err = error as AxiosError<{ message?: string }>;
+    return rejectWithValue(
+      err.response?.data?.message || "Lokasyon güncellenemedi"
     );
   }
 });
@@ -65,6 +88,7 @@ const locationsSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
+      // CREATE
       .addCase(createLocation.pending, (state) => {
         state.loading = true;
         state.error = null;
@@ -80,6 +104,7 @@ const locationsSlice = createSlice({
         state.error = action.payload || "Lokasyon oluşturulamadı";
         state.success = false;
       })
+      // GET ALL
       .addCase(getAllLocations.pending, (state) => {
         state.loading = true;
         state.error = null;
@@ -92,6 +117,30 @@ const locationsSlice = createSlice({
       .addCase(getAllLocations.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload || "Lokasyonlar alınamadı";
+      })
+      // UPDATE
+      .addCase(updateLocation.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+        state.success = false;
+      })
+      .addCase(updateLocation.fulfilled, (state, action) => {
+        state.loading = false;
+        state.error = null;
+        state.success = true;
+        // Update the location in the array
+        const updatedLocation = action.payload;
+        const index = state.locations.findIndex(
+          (loc) => loc._id === updatedLocation._id
+        );
+        if (index !== -1) {
+          state.locations[index] = updatedLocation;
+        }
+      })
+      .addCase(updateLocation.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload || "Lokasyon güncellenemedi";
+        state.success = false;
       });
   },
 });

@@ -11,6 +11,8 @@ export const API_PATHS = {
   LOCATION: {
     ADD_LOCATION: "/api/v1/location/create-location",
     GET_ALL_LOCATIONS: "/api/v1/location/get-all-locations",
+    UPDATE_LOCATION: (locationId: string) =>
+      `/api/v1/location/update-location/${locationId}`,
     DELETE_LOCATION: (locationId: string) =>
       `/api/v1/location/delete/${locationId}`,
     DOWNLOAD_LOCATION: `/api/v1/location/download-excel`,
