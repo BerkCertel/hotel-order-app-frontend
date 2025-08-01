@@ -1,73 +1,194 @@
+"use client";
+
 import { PageContainer } from "@/components/Containers/PageContainer";
+import { DeleteModal } from "@/components/modals/DeleteModal";
+import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Skeleton } from "@/components/ui/skeleton";
+import { UserContext } from "@/context/userContext";
+import { cn } from "@/lib/utils";
 import { UserCreateSchema } from "@/schemas/UserCreateSchema";
-import { useAppDispatch, useAppSelector } from "@/store/store";import {
-
-
-selectUserState
+import { useAppDispatch, useAppSelector } from "@/store/store";
+import {
+  createUser,
+  deleteUser,
+  getAllUsers,
+  selectUserState,
+  updateUserRole,
 } from "@/store/usersSlice";
+import { User } from "@/types/UserTypes";
 import { useFormik } from "formik";
-import React from "react";
+import React, { useContext, useEffect, useState } from "react";
+import { MdDelete, MdEdit } from "react-icons/md";
+import { TiPlus } from "react-icons/ti";
+import { toast } from "sonner";
 
 function AdminUsersPage() {
+  const { loading, users } = useAppSelector(selectUserState);
+  const { user } = useContext(UserContext);
 
-      const dispatch = useAppDispatch();
-      const { loading, error, success, users } =
-        useAppSelector(selectUserState());
+  // Local error state'leri
+  const [formError, setFormError] = useState<string | null>(null);
+  const [listError, setListError] = useState<string | null>(null);
 
+  const [editingId, setEditingId] = useState<string | null>(null);
+  const [editValue, setEditValue] = useState<{
+    role: string;
+  }>({ role: "" });
+
+  const dispatch = useAppDispatch();
+
+  // Kullanıcıları çek
+  useEffect(() => {
+    const fetchUsers = async () => {
+      const result = await dispatch(getAllUsers());
+      if (getAllUsers.rejected.match(result)) {
+        setListError((result.payload as string) || "Kullanıcılar alınamadı");
+      } else {
+        setListError(null);
+      }
+    };
+    fetchUsers();
+  }, [dispatch]);
+
+  // Kullanıcı oluşturma formu
   const formik = useFormik({
-    initialValues: { email: "" ,password:"",  },
+    initialValues: { email: "", password: "", role: "" },
     validationSchema: UserCreateSchema,
     onSubmit: async (values, { resetForm }) => {
-      dispatch(createUser(values));
-      if (success) {
+      const resultAction = await dispatch(
+        createUser({
+          email: values.email,
+          password: values.password,
+          role: values.role,
+        })
+      );
+      if (createUser.fulfilled.match(resultAction)) {
+        toast.success("Kullanıcı başarıyla oluşturuldu.");
         resetForm();
+        setFormError(null);
+        dispatch(getAllUsers());
+      } else {
+        setFormError(resultAction.payload || "Kullanıcı oluşturulamadı.");
+        toast.error(resultAction.payload || "Kullanıcı oluşturulamadı.");
       }
     },
   });
+
+  // Edit'e tıklanınca sadece rolü editle
+  const handleEdit = (user: User) => {
+    setEditingId(user._id);
+    setEditValue({ role: user.role });
+  };
+
+  // Kaydet butonunda tetiklenen fonksiyon (rol güncelle)
+  const handleUpdate = async () => {
+    if (!editingId) return;
+    const resultAction = await dispatch(
+      updateUserRole({ id: editingId, role: editValue.role })
+    );
+    if (updateUserRole.fulfilled.match(resultAction)) {
+      toast.success("Kullanıcı rolü güncellendi.");
+      setEditingId(null);
+      setEditValue({ role: "" });
+      dispatch(getAllUsers());
+    } else {
+      toast.error(resultAction.payload || "Güncelleme başarısız.");
+    }
+  };
+
+  // Kullanıcı silme
+  const handleDelete = async (id: string) => {
+    const resultAction = await dispatch(deleteUser({ id }));
+    if (deleteUser.fulfilled.match(resultAction)) {
+      toast.success("Kullanıcı başarıyla silindi.");
+      dispatch(getAllUsers());
+    } else {
+      toast.error(resultAction.payload || "Kullanıcı silinemedi.");
+    }
+  };
 
   return (
     <PageContainer>
       <Card>
         <CardHeader className="text-center">
           <CardTitle className="text-2xl lg:text-3xl font-semibold">
-            Lokasyon Oluştur
+            Kullanıcı Oluştur
           </CardTitle>
         </CardHeader>
         <CardContent>
           <form onSubmit={formik.handleSubmit}>
-            {formik.touched.location && formik.errors.location && (
+            {formik.touched.email && formik.errors.email && (
               <span className="text-red-500 text-xs">
-                {formik.errors.location}
+                {formik.errors.email}
               </span>
+            )}
+            {formik.touched.role && formik.errors.role && (
+              <span className="text-red-500 text-xs">{formik.errors.role}</span>
+            )}
+            {formError && (
+              <span className="text-red-500 text-xs">{formError}</span>
             )}
             <div className="flex justify-between gap-2 w-full">
               <Input
-                name="location"
-                placeholder="Lokasyon"
-                value={formik.values.location}
+                name="email"
+                placeholder="Email"
+                value={formik.values.email}
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
                 disabled={loading}
               />
+              <Input
+                name="password"
+                type="password"
+                placeholder="Şifre"
+                value={formik.values.password}
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+                disabled={loading}
+              />
+              <Select
+                value={formik.values.role}
+                onValueChange={(value) => formik.setFieldValue("role", value)}
+                disabled={loading}
+              >
+                <SelectTrigger className="w-[120px]">
+                  <SelectValue placeholder="Rol" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="ADMIN">Admin</SelectItem>
+                  <SelectItem value="USER">User</SelectItem>
+                </SelectContent>
+              </Select>
               <Button
                 type="submit"
                 className="flex items-center gap-1"
-                disabled={!formik.isValid || formik.isSubmitting || loading}
+                disabled={
+                  !formik.isValid ||
+                  formik.isSubmitting ||
+                  loading ||
+                  !formik.values.email ||
+                  !formik.values.password ||
+                  !formik.values.role
+                }
               >
-                <TiPlus size={10} /> Oluştur
+                <TiPlus size={16} /> Oluştur
               </Button>
             </div>
           </form>
-          {/* Loading Skeleton */}
           {loading && (
             <div className="mt-4">
               <Skeleton className="h-10 w-full rounded" />
             </div>
-          )}
-          {/* Error Message (opsiyonel, toast ile de gösteriliyor) */}
-          {error && !loading && (
-            <div className="mt-2 text-red-500 text-sm">{error}</div>
           )}
         </CardContent>
       </Card>
@@ -76,11 +197,11 @@ function AdminUsersPage() {
         <CardHeader>
           <CardTitle>
             <h1 className="text-center text-2xl lg:text-3xl font-bold">
-              Lokasyonlar
+              Kullanıcılar
             </h1>
           </CardTitle>
           <p className="text-center text-muted-foreground text-md">
-            Oluşturulan lokasyonları görüntüleyin.
+            Oluşturulan kullanıcıları görüntüleyin.
           </p>
         </CardHeader>
         <CardContent className="w-full min-w-2xl">
@@ -90,36 +211,49 @@ function AdminUsersPage() {
                 <Skeleton key={i} className="h-12 w-full rounded-md" />
               ))}
             </div>
-          ) : error ? (
-            <div className="text-red-500">{error}</div>
+          ) : listError ? (
+            <div className="text-red-500">{listError}</div>
+          ) : users.length === 0 ? (
+            <div className="text-center text-gray-500 py-8">
+              Henüz kullanıcı yok.
+            </div>
           ) : (
             <ScrollArea className="h-96">
               <div className="h-full flex flex-col gap-2 border-2 rounded-lg px-2 py-3">
-                {locations.map((loc: Location) => (
+                {users.map((user: User) => (
                   <div
-                    key={loc._id}
+                    key={user._id}
                     className={cn(
                       "flex items-center justify-between gap-2 group transition-colors",
                       "rounded-md p-2 border",
-                      `${editingId === loc._id ? "" : "hover:bg-gray-100"}`,
                       `${
-                        editingId === loc._id
+                        editingId === user._id
                           ? "bg-blue-50 border-blue-200"
                           : "bg-white border-gray-200"
-                      }`
+                      }`,
+                      `${editingId !== user._id ? "hover:bg-gray-100" : ""}`
                     )}
                   >
-                    {editingId === loc._id ? (
+                    {editingId === user._id ? (
                       <>
-                        <Input
-                          name="location"
-                          value={editValue}
-                          onChange={(e) => setEditValue(e.target.value)}
+                        <Select
+                          value={editValue.role}
+                          onValueChange={(value) =>
+                            setEditValue({ role: value })
+                          }
                           disabled={loading}
-                        />
+                        >
+                          <SelectTrigger className="w-[120px]">
+                            <SelectValue placeholder="Rol" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="ADMIN">Admin</SelectItem>
+                            <SelectItem value="USER">User</SelectItem>
+                          </SelectContent>
+                        </Select>
                         <Button
                           onClick={handleUpdate}
-                          disabled={loading || editValue.trim() === ""}
+                          disabled={loading || !editValue.role}
                         >
                           Kaydet
                         </Button>
@@ -132,14 +266,17 @@ function AdminUsersPage() {
                         </Button>
                       </>
                     ) : (
-                      <div>
+                      <>
                         <span className="text-base font-medium">
-                          {loc.location}
+                          {user.email}{" "}
+                          <span className="ml-2 text-xs text-gray-500 border px-2 rounded-full">
+                            {user.role}
+                          </span>
                         </span>
                         <div className="flex items-center gap-2">
                           <button
                             className="edit-button"
-                            onClick={() => handleEdit(loc)}
+                            onClick={() => handleEdit(user)}
                           >
                             <MdEdit size={20} />
                           </button>
@@ -149,13 +286,11 @@ function AdminUsersPage() {
                                 <MdDelete size={20} />
                               </button>
                             }
-                            title="Lokasyonu silmek istediğinize emin misiniz?"
-                            description="Bu işlem geri alınamaz. Seçili lokasyon kalıcı olarak silinecek."
+                            title="Kullanıcıyı silmek istediğinize emin misiniz?"
+                            description="Bu işlem geri alınamaz. Seçili kullanıcı kalıcı olarak silinecek."
                             confirmText="Sil"
                             cancelText="Vazgeç"
-                            onConfirm={() =>
-                              dispatch(deleteLocation({ id: loc._id }))
-                            }
+                            onConfirm={() => handleDelete(user._id)}
                           />
                         </div>
                       </>

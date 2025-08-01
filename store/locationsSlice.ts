@@ -19,6 +19,7 @@ const initialState: LocationState = {
   locations: [],
 };
 
+// CREATE LOCATION
 export const createLocation = createAsyncThunk<
   Location, // response type (tek location döner)
   string, // parametre: sadece location string'i
@@ -37,6 +38,7 @@ export const createLocation = createAsyncThunk<
   }
 });
 
+// GET ALL LOCATIONS
 export const getAllLocations = createAsyncThunk<
   Location[],
   void,

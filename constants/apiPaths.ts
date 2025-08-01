@@ -6,6 +6,10 @@ export const API_PATHS = {
   AUTH: {
     LOGIN: "/api/v1/auth/login",
     GET_USER_INFO: "/api/v1/auth/get-user",
+    ADD_USER: "/api/v1/auth/add-user",
+    UPDATE_USER_ROLE: "/api/v1/auth/update-role",
+    DELETE_USER: (id: string) => `/api/v1/auth/delete-user/${id}`,
+    GET_ALL_USERS: "/api/v1/auth/get-all-users",
   },
 
   LOCATION: {
