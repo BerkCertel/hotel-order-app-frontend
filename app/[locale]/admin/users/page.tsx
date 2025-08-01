@@ -1,80 +1,30 @@
-"use client";
-
 import { PageContainer } from "@/components/Containers/PageContainer";
-import { DeleteModal } from "@/components/modals/DeleteModal";
-import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { ScrollArea } from "@/components/ui/scroll-area";
-import { Skeleton } from "@/components/ui/skeleton";
-import { cn } from "@/lib/utils";
-import { LocationCreateSchema } from "@/schemas/LocationCreateSchema";
-import {
-  createLocation,
-  deleteLocation,
-  getAllLocations,
-  resetLocationState,
-  selectLocationState,
-  updateLocation,
-} from "@/store/locationsSlice";
-import { useAppDispatch, useAppSelector } from "@/store/store";
-import { Location } from "@/types/LocationTypes";
+import { UserCreateSchema } from "@/schemas/UserCreateSchema";
+import { useAppDispatch, useAppSelector } from "@/store/store";import {
+
+
+selectUserState
+} from "@/store/usersSlice";
 import { useFormik } from "formik";
-import React, { useEffect, useState } from "react";
-import { MdDelete, MdEdit } from "react-icons/md";
-import { toast } from "sonner";
-import { TiPlus } from "react-icons/ti";
+import React from "react";
 
-export default function Locations() {
-  const [editingId, setEditingId] = useState<string | null>(null);
-  const [editValue, setEditValue] = useState<string>("");
-  const dispatch = useAppDispatch();
-  const { loading, error, success, locations } =
-    useAppSelector(selectLocationState);
+function AdminUsersPage() {
 
-  useEffect(() => {
-    dispatch(getAllLocations());
-    // eslint-disable-next-line
-  }, []);
+      const dispatch = useAppDispatch();
+      const { loading, error, success, users } =
+        useAppSelector(selectUserState());
 
   const formik = useFormik({
-    initialValues: { location: "" },
-    validationSchema: LocationCreateSchema,
+    initialValues: { email: "" ,password:"",  },
+    validationSchema: UserCreateSchema,
     onSubmit: async (values, { resetForm }) => {
-      dispatch(createLocation(values.location));
+      dispatch(createUser(values));
       if (success) {
         resetForm();
       }
     },
   });
-
-  useEffect(() => {
-    if (success) {
-      toast.success("Lokasyon başarıyla oluşturuldu!");
-      formik.resetForm();
-      dispatch(resetLocationState());
-      dispatch(getAllLocations());
-    }
-    if (error) {
-      toast.error(error);
-      dispatch(resetLocationState());
-    }
-    // eslint-disable-next-line
-  }, [success, error]);
-
-  // Edit'e tıklanınca inputu aç ve mevcut değeri göster
-  const handleEdit = (loc: Location) => {
-    setEditingId(loc._id);
-    setEditValue(loc.location);
-  };
-
-  // Kaydet butonunda tetiklenen fonksiyon
-  const handleUpdate = async () => {
-    if (!editingId) return;
-    await dispatch(updateLocation({ id: editingId, location: editValue }));
-    setEditingId(null);
-    setEditValue("");
-  };
 
   return (
     <PageContainer>
@@ -182,7 +132,7 @@ export default function Locations() {
                         </Button>
                       </>
                     ) : (
-                      <>
+                      <div>
                         <span className="text-base font-medium">
                           {loc.location}
                         </span>
@@ -220,3 +170,5 @@ export default function Locations() {
     </PageContainer>
   );
 }
+
+export default AdminUsersPage;

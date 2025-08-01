@@ -76,6 +76,26 @@ export const updateLocation = createAsyncThunk<
   }
 });
 
+// LOCATION DELETE
+export const deleteLocation = createAsyncThunk<
+  Location,
+  { id: string },
+  { rejectValue: string }
+>("location/deleteLocation", async ({ id }, { rejectWithValue }) => {
+  try {
+    const res = await axiosInstance.delete(
+      API_PATHS.LOCATION.DELETE_LOCATION(id)
+    );
+
+    return res.data.deletedLocation as Location;
+  } catch (error: unknown) {
+    const err = error as AxiosError<{ message?: string }>;
+    return rejectWithValue(
+      err.response?.data?.message || "Lokasyon silinemedi"
+    );
+  }
+});
+
 const locationsSlice = createSlice({
   name: "locations",
   initialState,
@@ -140,6 +160,25 @@ const locationsSlice = createSlice({
       .addCase(updateLocation.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload || "Lokasyon güncellenemedi";
+        state.success = false;
+      })
+
+      // DELETE
+      .addCase(deleteLocation.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+        state.success = false;
+      })
+      .addCase(deleteLocation.fulfilled, (state, action) => {
+        state.loading = false;
+        state.locations = state.locations.filter(
+          (loc) => loc._id !== action.payload._id
+        );
+        state.error = null;
+      })
+      .addCase(deleteLocation.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload || "Lokasyonlar silinemedi";
         state.success = false;
       });
   },
