@@ -19,6 +19,13 @@ export const API_PATHS = {
       `/api/v1/location/update-location/${locationId}`,
     DELETE_LOCATION: (locationId: string) =>
       `/api/v1/location/delete-location/${locationId}`,
-    DOWNLOAD_LOCATION: `/api/v1/location/download-excel`,
+    // DOWNLOAD_LOCATION: `/api/v1/location/download-excel`,
+  },
+
+  CATEGORY: {
+    GET_ALL_CATEGORIES: "/api/v1/category/get-all-categories",
+    CREATE_CATEGORY: "/api/v1/category/create-category",
+    UPDATE_CATEGORY: (id: string) => `/api/v1/category/update-category/${id}`,
+    DELETE_CATEGORY: (id: string) => `/api/v1/category/delete-category/${id}`,
   },
 };
