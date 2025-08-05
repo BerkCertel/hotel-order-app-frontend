@@ -12,11 +12,7 @@ interface AdminPageMainLayoutProps {
 function AdminPageMainLayout({ children }: AdminPageMainLayoutProps) {
   useUserAuth();
 
-  return (
-    <div>
-      <DashboardLayout>{children}</DashboardLayout>
-    </div>
-  );
+  return <DashboardLayout>{children}</DashboardLayout>;
 }
 
 export default AdminPageMainLayout;

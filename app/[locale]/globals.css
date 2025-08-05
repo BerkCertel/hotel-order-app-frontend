@@ -141,9 +141,9 @@
 }
 
 .edit-button {
-  @apply bg-gray-400 rounded-full p-1 text-white hover:bg-gray-700 transition-colors cursor-pointer;
+  @apply bg-gray-400 rounded-lg p-1 text-white hover:bg-gray-700 transition-colors cursor-pointer;
 }
 
 .delete-button {
-  @apply bg-red-300 rounded-full p-1 text-white hover:bg-red-500 transition-colors cursor-pointer;
+  @apply bg-red-300 rounded-lg p-1 text-white hover:bg-red-500 transition-colors cursor-pointer;
 }

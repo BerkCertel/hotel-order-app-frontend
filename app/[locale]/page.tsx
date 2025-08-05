@@ -46,7 +46,7 @@ export default function Home() {
         if (user.role === "ADMIN" || user.role === "SUPER_ADMIN") {
           router.push("/admin");
         } else if (user.role === "USER") {
-          router.push("/user/dashboard");
+          router.push("/admin/users");
         }
 
         toast.success("Login successful!");

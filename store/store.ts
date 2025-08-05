@@ -4,6 +4,7 @@ import counterReducer from "./counterSlice";
 import locationsReducer from "./locationsSlice";
 import usersReducer from "./usersSlice";
 import categoryReducer from "./categorySlice";
+import subcategoryReducer from "./subcategorySlice";
 
 export const store = configureStore({
   reducer: {
@@ -11,6 +12,7 @@ export const store = configureStore({
     locations: locationsReducer,
     users: usersReducer,
     category: categoryReducer,
+    subcategory: subcategoryReducer,
   },
 });
 

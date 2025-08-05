@@ -39,6 +39,7 @@ export const useUserAuth = () => {
         }
       }
     };
+
     fetchUserInfo();
 
     return () => {

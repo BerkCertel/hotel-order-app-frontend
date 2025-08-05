@@ -14,7 +14,6 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Skeleton } from "@/components/ui/skeleton";
-import { UserContext } from "@/context/userContext";
 import { cn } from "@/lib/utils";
 import { UserCreateSchema } from "@/schemas/UserCreateSchema";
 import { useAppDispatch, useAppSelector } from "@/store/store";
@@ -27,14 +26,13 @@ import {
 } from "@/store/usersSlice";
 import { User } from "@/types/UserTypes";
 import { useFormik } from "formik";
-import React, { useContext, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { MdDelete, MdEdit } from "react-icons/md";
 import { TiPlus } from "react-icons/ti";
 import { toast } from "sonner";
 
 function AdminUsersPage() {
   const { loading, users } = useAppSelector(selectUserState);
-  const { user } = useContext(UserContext);
 
   // Local error state'leri
   const [formError, setFormError] = useState<string | null>(null);
@@ -235,7 +233,7 @@ function AdminUsersPage() {
                     )}
                   >
                     {editingId === user._id ? (
-                      <>
+                      <div className="flex items-center justify-start gap-2 w-full">
                         <Select
                           value={editValue.role}
                           onValueChange={(value) =>
@@ -264,7 +262,7 @@ function AdminUsersPage() {
                         >
                           İptal
                         </Button>
-                      </>
+                      </div>
                     ) : (
                       <>
                         <span className="text-base font-medium">

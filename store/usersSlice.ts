@@ -4,7 +4,6 @@ import axiosInstance from "@/utils/axiosInstance";
 import { API_PATHS } from "@/constants/apiPaths";
 import { AxiosError } from "axios";
 import { User } from "@/types/UserTypes";
-import { toast } from "sonner";
 
 interface UserState {
   loading: boolean;

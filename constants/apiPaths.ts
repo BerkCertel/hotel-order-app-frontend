@@ -28,4 +28,15 @@ export const API_PATHS = {
     UPDATE_CATEGORY: (id: string) => `/api/v1/category/update-category/${id}`,
     DELETE_CATEGORY: (id: string) => `/api/v1/category/delete-category/${id}`,
   },
+
+  SUBCATEGORY: {
+    GET_ALL_SUBCATEGORIES: "/api/v1/subcategory/get-all-subcategories",
+    CREATE_SUBCATEGORY: "/api/v1/subcategory/create-subcategory",
+    UPDATE_SUBCATEGORY: (id: string) =>
+      `/api/v1/subcategory/update-subcategory/${id}`,
+    DELETE_SUBCATEGORY: (id: string) =>
+      `/api/v1/subcategory/delete-subcategory/${id}`,
+    GET_BY_CATEGORY: (categoryId: string) =>
+      `/api/v1/subcategory/by-category/${categoryId}`,
+  },
 };
