@@ -37,16 +37,17 @@ export default function Home() {
           password: values.password,
         });
 
-        const { token, user } = response.data;
-        if (token) {
-          localStorage.setItem("token", token);
+        // DİKKAT: Artık token yok, sadece user var!
+        const { user } = response.data;
+        if (user) {
           updateUser(user); // Update user context with user data
-        }
 
-        if (user.role === "ADMIN" || user.role === "SUPER_ADMIN") {
-          router.push("/admin");
-        } else if (user.role === "USER") {
-          router.push("/admin/users");
+          // Rol kontrolü ve yönlendirme
+          if (user.role === "ADMIN" || user.role === "SUPERADMIN") {
+            router.push("/admin");
+          } else if (user.role === "USER") {
+            router.push("/admin/users");
+          }
         }
 
         toast.success("Login successful!");
