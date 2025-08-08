@@ -6,6 +6,8 @@ import usersReducer from "./usersSlice";
 import categoryReducer from "./categorySlice";
 import subcategoryReducer from "./subcategorySlice";
 import authReducer from "./authSlice";
+import qrcodeReducer from "./qrcodeSlice";
+import orderReducer from "./orderSlice";
 
 export const store = configureStore({
   reducer: {
@@ -15,6 +17,8 @@ export const store = configureStore({
     category: categoryReducer,
     subcategory: subcategoryReducer,
     auth: authReducer,
+    qrcode: qrcodeReducer,
+    order: orderReducer,
   },
 });
 

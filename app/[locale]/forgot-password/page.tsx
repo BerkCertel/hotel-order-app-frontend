@@ -6,6 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import { useAppDispatch, useAppSelector } from "@/store/store";
+import { Link } from "@/i18n/navigation";
 
 export default function ForgotPassword() {
   const [email, setEmail] = useState("");
@@ -34,9 +35,15 @@ export default function ForgotPassword() {
           onChange={(e) => setEmail(e.target.value)}
           required
         />
-        <Button type="submit" disabled={loading}>
-          {loading ? "Gönderiliyor..." : "Sıfırlama Linki Gönder"}
-        </Button>
+        <div className="flex flex-col gap-2">
+          <Button type="submit" disabled={loading}>
+            {loading ? "Gönderiliyor..." : "Sıfırlama Linki Gönder"}
+          </Button>
+          <Button variant={"link"} asChild>
+            <Link href="/">Giriş Yap</Link>
+          </Button>
+        </div>
+
         {error && <p className="text-red-500 text-sm">{error}</p>}
         {success && <p className="text-green-500 text-sm">Mail gönderildi!</p>}
       </form>

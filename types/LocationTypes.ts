@@ -4,3 +4,11 @@ export interface Location {
   createdAt: string;
   updatedAt: string;
 }
+
+export interface LocationItem {
+  id: string;
+  locationId: string;
+  name: string;
+  qrCode?: string;
+  createdAt: string;
+}

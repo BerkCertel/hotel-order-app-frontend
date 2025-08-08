@@ -25,6 +25,15 @@ export const API_PATHS = {
     // DOWNLOAD_LOCATION: `/api/v1/location/download-excel`,
   },
 
+  QR: {
+    CREATE_QRCODE: "/api/v1/qrcode/create-qrcode", // POST
+    GET_ALL_QRCODES: "/api/v1/qrcode/get-all-qrcodes", // GET
+    DELETE_QRCODE: (id: string) => `/api/v1/qrcode/delete-qrcode/${id}`, // DELETE
+    GET_QRCODES_BY_LOCATION: "/api/v1/qrcode/get-qrcodes-by-location", // POST
+    GET_QRCODE_BY_ID: (id: string) => `/api/v1/qrcode/get-qrcode-data/${id}`, // GET
+    GET_ALL_QRCODES_GROUPED: "/api/v1/qrcode/get-all-qrcodes-grouped", // GET (opsiyonel, grouping için)
+  },
+
   CATEGORY: {
     GET_ALL_CATEGORIES: "/api/v1/category/get-all-categories",
     CREATE_CATEGORY: "/api/v1/category/create-category",

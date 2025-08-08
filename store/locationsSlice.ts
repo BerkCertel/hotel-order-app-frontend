@@ -2,7 +2,7 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { RootState } from "@/store/store";
 import axiosInstance from "@/utils/axiosInstance";
 import { API_PATHS } from "@/constants/apiPaths";
-import { Location } from "@/types/LocationTypes";
+import { Location, LocationItem } from "@/types/LocationTypes";
 import { AxiosError } from "axios";
 
 interface LocationState {
@@ -10,6 +10,7 @@ interface LocationState {
   error: string | null;
   success: boolean;
   locations: Location[];
+  locationItems: LocationItem[]; // ← Bunu ekle!
 }
 
 const initialState: LocationState = {
@@ -17,6 +18,7 @@ const initialState: LocationState = {
   error: null,
   success: false,
   locations: [],
+  locationItems: [],
 };
 
 // CREATE LOCATION
