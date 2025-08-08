@@ -5,6 +5,7 @@ import locationsReducer from "./locationsSlice";
 import usersReducer from "./usersSlice";
 import categoryReducer from "./categorySlice";
 import subcategoryReducer from "./subcategorySlice";
+import authReducer from "./authSlice";
 
 export const store = configureStore({
   reducer: {
@@ -13,6 +14,7 @@ export const store = configureStore({
     users: usersReducer,
     category: categoryReducer,
     subcategory: subcategoryReducer,
+    auth: authReducer,
   },
 });
 

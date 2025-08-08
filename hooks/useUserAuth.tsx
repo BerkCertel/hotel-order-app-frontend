@@ -59,12 +59,10 @@ export const useUserAuth = () => {
 
     const fetchUserInfo = async () => {
       try {
-        // Cookie otomatik gönderilir!
         const response = await axiosInstance.get(API_PATHS.AUTH.GET_USER_INFO);
         if (isMounted && response.data) {
           updateUser(response.data);
         }
-        console.log(response.data);
       } catch (error) {
         console.error("Failed to fetch user info:", error);
         if (isMounted) {

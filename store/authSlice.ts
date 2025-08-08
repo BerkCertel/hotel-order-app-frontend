@@ -1,22 +1,103 @@
-import { createSlice } from "@reduxjs/toolkit";
-import type { PayloadAction } from "@reduxjs/toolkit";
+import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import axiosInstance from "@/utils/axiosInstance";
+import { API_PATHS } from "@/constants/apiPaths";
+import { AxiosError } from "axios";
+import { RootState } from "./store";
 
-export interface CounterState {
-  value: number;
+// Backend'den dönen yanıt tipi
+interface MessageResponse {
+  message: string;
 }
 
-const initialState: CounterState = {
-  value: 0,
+interface AuthState {
+  loading: boolean;
+  error: string | null;
+  success: boolean;
+}
+
+const initialState: AuthState = {
+  loading: false,
+  error: null,
+  success: false,
 };
 
-export const counterSlice = createSlice({
-  name: "counter",
-  initialState,
-  reducers: {},
-  extraReducers: (builder) => {},
+export const sendResetEmail = createAsyncThunk<
+  MessageResponse,
+  string,
+  { rejectValue: string }
+>("auth/sendResetEmail", async (email, { rejectWithValue }) => {
+  try {
+    const res = await axiosInstance.post<MessageResponse>(
+      API_PATHS.AUTH.FORGOT_PASSWORD,
+      { email }
+    );
+    return res.data;
+  } catch (error: unknown) {
+    const err = error as AxiosError<{ message?: string }>;
+    return rejectWithValue(err.response?.data?.message || "Bir hata oluştu");
+  }
 });
 
-// Action creators are generated for each case reducer function
-export const {} = counterSlice.actions;
+export const resetPassword = createAsyncThunk<
+  MessageResponse,
+  { token: string; password: string },
+  { rejectValue: string }
+>("auth/resetPassword", async ({ token, password }, { rejectWithValue }) => {
+  try {
+    const res = await axiosInstance.post<MessageResponse>(
+      API_PATHS.AUTH.RESET_PASSWORD(token),
+      { password }
+    );
+    return res.data;
+  } catch (error: unknown) {
+    const err = error as AxiosError<{ message?: string }>;
+    return rejectWithValue(err.response?.data?.message || "Bir Hata Oluştu");
+  }
+});
 
-export default counterSlice.reducer;
+const authSlice = createSlice({
+  name: "auth",
+  initialState,
+  reducers: {
+    resetAuthState(state) {
+      state.loading = false;
+      state.error = null;
+      state.success = false;
+    },
+  },
+  extraReducers: (builder) => {
+    builder
+      .addCase(sendResetEmail.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+        state.success = false;
+      })
+      .addCase(sendResetEmail.fulfilled, (state) => {
+        state.loading = false;
+        state.success = true;
+      })
+      .addCase(sendResetEmail.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload || "Bir hata oluştu";
+        state.success = false;
+      })
+      .addCase(resetPassword.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+        state.success = false;
+      })
+      .addCase(resetPassword.fulfilled, (state) => {
+        state.loading = false;
+        state.success = true;
+      })
+      .addCase(resetPassword.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload || "Bir Hata Oluştu";
+        state.success = false;
+      });
+  },
+});
+
+export const { resetAuthState } = authSlice.actions;
+export const selectAuthState = (state: RootState) => state.auth;
+export default authSlice.reducer;
