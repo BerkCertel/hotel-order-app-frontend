@@ -71,6 +71,28 @@ export const getAllSubcategories = createAsyncThunk<
   }
 });
 
+// GET SubCategory with CategoryId
+export const getSubcategoriesByCategory = createAsyncThunk<
+  Subcategory[],
+  string, // sadece categoryId bekliyor
+  { rejectValue: string }
+>(
+  "subcategory/getSubcategoriesByCategory",
+  async (categoryId, { rejectWithValue }) => {
+    try {
+      const res = await axiosInstance.get(
+        API_PATHS.SUBCATEGORY.GET_BY_CATEGORY(categoryId)
+      );
+      return res.data as Subcategory[];
+    } catch (error: unknown) {
+      const err = error as AxiosError<{ message?: string }>;
+      return rejectWithValue(
+        err.response?.data?.message || "Alt kategoriler alınamadı"
+      );
+    }
+  }
+);
+
 // DELETE
 export const deleteSubcategory = createAsyncThunk<
   Subcategory,
@@ -206,6 +228,20 @@ const subcategorySlice = createSlice({
         state.loading = false;
         state.error = action.payload || "Alt kategori güncellenemedi";
         state.success = false;
+      })
+      // GET WİTH CATEGORY
+      .addCase(getSubcategoriesByCategory.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(getSubcategoriesByCategory.fulfilled, (state, action) => {
+        state.loading = false;
+        state.subcategories = action.payload;
+        state.error = null;
+      })
+      .addCase(getSubcategoriesByCategory.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload || "Alt kategoriler alınamadı";
       });
   },
 });
