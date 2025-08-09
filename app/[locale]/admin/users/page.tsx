@@ -202,7 +202,7 @@ function AdminUsersPage() {
             Oluşturulan kullanıcıları görüntüleyin.
           </p>
         </CardHeader>
-        <CardContent className="w-full min-w-2xl">
+        <CardContent className="w-full ">
           {loading ? (
             <div className="space-y-2">
               {Array.from({ length: 4 }).map((_, i) => (

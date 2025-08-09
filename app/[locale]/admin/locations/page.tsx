@@ -21,7 +21,7 @@ import { useAppDispatch, useAppSelector } from "@/store/store";
 import { Location } from "@/types/LocationTypes";
 import { useFormik } from "formik";
 import React, { useEffect, useState } from "react";
-import { MdDelete, MdEdit } from "react-icons/md";
+import { MdDelete, MdEdit, MdLocationOff } from "react-icons/md";
 import { toast } from "sonner";
 import { TiPlus } from "react-icons/ti";
 
@@ -133,7 +133,7 @@ export default function Locations() {
             Oluşturulan lokasyonları görüntüleyin.
           </p>
         </CardHeader>
-        <CardContent className="w-full min-w-2xl">
+        <CardContent className="w-full ">
           {loading ? (
             <div className="space-y-2">
               {Array.from({ length: 4 }).map((_, i) => (
@@ -144,74 +144,81 @@ export default function Locations() {
             <div className="text-red-500">{error}</div>
           ) : (
             <ScrollArea className="h-96">
-              <div className="h-full flex flex-col gap-2 border-2 rounded-lg px-2 py-3">
-                {locations.map((loc: Location) => (
-                  <div
-                    key={loc._id}
-                    className={cn(
-                      "flex items-center justify-between gap-2 group transition-colors",
-                      "rounded-md p-2 border",
-                      `${editingId === loc._id ? "" : "hover:bg-gray-100"}`,
-                      `${
-                        editingId === loc._id
-                          ? "bg-blue-50 border-blue-200"
-                          : "bg-white border-gray-200"
-                      }`
-                    )}
-                  >
-                    {editingId === loc._id ? (
-                      <>
-                        <Input
-                          name="location"
-                          value={editValue}
-                          onChange={(e) => setEditValue(e.target.value)}
-                          disabled={loading}
-                        />
-                        <Button
-                          onClick={handleUpdate}
-                          disabled={loading || editValue.trim() === ""}
-                        >
-                          Kaydet
-                        </Button>
-                        <Button
-                          variant="outline"
-                          onClick={() => setEditingId(null)}
-                          disabled={loading}
-                        >
-                          İptal
-                        </Button>
-                      </>
-                    ) : (
-                      <>
-                        <span className="text-base font-medium">
-                          {loc.location}
-                        </span>
-                        <div className="flex items-center gap-2">
-                          <button
-                            className="edit-button"
-                            onClick={() => handleEdit(loc)}
-                          >
-                            <MdEdit size={20} />
-                          </button>
-                          <DeleteModal
-                            trigger={
-                              <button className="delete-button">
-                                <MdDelete size={20} />
-                              </button>
-                            }
-                            title="Lokasyonu silmek istediğinize emin misiniz?"
-                            description="Bu işlem geri alınamaz. Seçili lokasyon kalıcı olarak silinecek."
-                            confirmText="Sil"
-                            cancelText="Vazgeç"
-                            onConfirm={() =>
-                              dispatch(deleteLocation({ id: loc._id }))
-                            }
-                          />
-                        </div>
-                      </>
-                    )}
+              <div className="h-full flex flex-col gap-2 border rounded-lg px-2 py-3">
+                {locations.length === 0 ? (
+                  <div className="flex flex-col items-center justify-center text-gray-400 py-10">
+                    <MdLocationOff size={32} className="mb-2" />
+                    Hiç lokasyon eklenmemiş. Yeni bir lokasyon ekleyin!
                   </div>
-                ))}
+                ) : (
+                  locations.map((loc: Location) => (
+                    <div
+                      key={loc._id}
+                      className={cn(
+                        "flex items-center justify-between gap-2 group transition-colors w-full",
+                        "rounded-md p-2 border",
+                        `${editingId === loc._id ? "" : "hover:bg-gray-100"}`,
+                        `${
+                          editingId === loc._id
+                            ? "bg-blue-50 border-blue-200"
+                            : "bg-white border-gray-200"
+                        }`
+                      )}
+                    >
+                      {editingId === loc._id ? (
+                        <>
+                          <Input
+                            name="location"
+                            value={editValue}
+                            onChange={(e) => setEditValue(e.target.value)}
+                            disabled={loading}
+                          />
+                          <Button
+                            onClick={handleUpdate}
+                            disabled={loading || editValue.trim() === ""}
+                          >
+                            Kaydet
+                          </Button>
+                          <Button
+                            variant="outline"
+                            onClick={() => setEditingId(null)}
+                            disabled={loading}
+                          >
+                            İptal
+                          </Button>
+                        </>
+                      ) : (
+                        <>
+                          <span className="text-base font-medium">
+                            {loc.location}
+                          </span>
+                          <div className="flex items-center gap-2">
+                            <button
+                              className="edit-button"
+                              onClick={() => handleEdit(loc)}
+                            >
+                              <MdEdit size={20} />
+                            </button>
+                            <DeleteModal
+                              trigger={
+                                <button className="delete-button">
+                                  <MdDelete size={20} />
+                                </button>
+                              }
+                              title="Lokasyonu silmek istediğinize emin misiniz?"
+                              description="Bu işlem geri alınamaz. Seçili lokasyon kalıcı olarak silinecek."
+                              confirmText="Sil"
+                              cancelText="Vazgeç"
+                              onConfirm={() =>
+                                dispatch(deleteLocation({ id: loc._id }))
+                              }
+                            />
+                          </div>
+                        </>
+                      )}
+                    </div>
+                  ))
+                )}
               </div>
             </ScrollArea>
           )}

@@ -2,7 +2,6 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axiosInstance from "@/utils/axiosInstance";
 import { API_PATHS } from "@/constants/apiPaths";
 import { QrCode } from "@/types/QrCodeTypes";
-import { Location } from "@/types/LocationTypes";
 import { AxiosError } from "axios";
 import { RootState } from "@/store/store";
 

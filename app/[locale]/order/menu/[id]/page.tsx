@@ -11,25 +11,37 @@ import { useEffect } from "react";
 import { Card, CardContent, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import MenuHeader from "@/components/menu/MenuHeader";
+import { useParams } from "next/navigation";
+import { getQrCodeById, selectQrCodeState } from "@/store/qrcodeSlice";
 
 function MenuPage() {
+  const params = useParams();
   const dispatch = useAppDispatch();
   const navigate = useRouter();
   const { loading, error, categories } = useAppSelector(selectCategoryState);
+  const { qrCodeDetail } = useAppSelector(selectQrCodeState);
 
   useEffect(() => {
     dispatch(getAllCategories());
-    // eslint-disable-next-line
-  }, []);
+
+    if (typeof params?.id === "string") {
+      dispatch(getQrCodeById(params?.id));
+    }
+
+    if (params.id !== qrCodeDetail?._id) {
+      navigate.push(`/scan-qrcode-again`);
+    }
+  }, [params?.id, dispatch, qrCodeDetail?._id, navigate]);
 
   const handleCategoryClick = (id: string) => {
-    navigate.push(`/subcategory/${id}`);
+    navigate.push(`/order/subcategory/${id}`);
   };
 
   return (
-    <PageContainer>
-      <>
-        <h1 className="text-3xl font-bold mb-8 text-center">Menüler</h1>
+    <PageContainer className="mx-auto  container">
+      <div className=" w-full flex flex-col md:flex-none gap-5 mx-auto px-4 lg:mx-0 lg:px-0">
+        <MenuHeader HeaderText="Kategoriler" />
 
         {loading && (
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
@@ -82,7 +94,7 @@ function MenuPage() {
             ))}
           </div>
         )}
-      </>
+      </div>
     </PageContainer>
   );
 }

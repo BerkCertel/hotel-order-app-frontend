@@ -14,12 +14,12 @@ function DashboardLayout({ children }: DashboardLayoutProps) {
     <div className="">
       <Navbar />
       {user && (
-        <div className="flex">
+        <div className="flex  justify-center w-full">
           <div className="max-[1000px]:hidden">
             <SideMenu />
           </div>
 
-          <div className="flex-grow   mx-5">{children}</div>
+          <div className="w-full">{children}</div>
         </div>
       )}
     </div>
