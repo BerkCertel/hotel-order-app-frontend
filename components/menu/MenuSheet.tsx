@@ -38,6 +38,7 @@ function MenuSheet() {
       <SheetTrigger asChild>
         <Button>
           <FaBars className="w-6 h-6" />
+          Menu
         </Button>
       </SheetTrigger>
       <SheetContent side="right" className="p-0">

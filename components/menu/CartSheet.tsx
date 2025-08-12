@@ -30,13 +30,13 @@ import {
 function CartSheet() {
   const dispatch = useDispatch();
   const { items: cartItems } = useSelector(selectCartState);
-  const roomNumber = useSelector((state: RootState) => state.room.roomNumber);
-
+  const { orderUser } = useSelector((state: RootState) => state.orderuser);
   return (
     <Sheet>
       <SheetTrigger asChild>
         <Button className="relative">
           <FaShoppingBasket className="w-6 h-6" />
+          Cart
           {cartItems.length > 0 && (
             <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs w-5 h-5 flex items-center justify-center rounded-full border border-white z-10">
               {cartItems.length}
@@ -54,9 +54,15 @@ function CartSheet() {
         </div>
 
         <div className="p-4">
-          {roomNumber && (
+          {orderUser.name && (
             <div className="text-xs mb-2">
-              Your room: <b>{roomNumber}</b>
+              Your name: <b>{orderUser.name}</b>
+            </div>
+          )}
+
+          {orderUser.roomNumber && (
+            <div className="text-xs mb-2">
+              Your room: <b>{orderUser.roomNumber}</b>
             </div>
           )}
 

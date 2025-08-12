@@ -1,62 +1,42 @@
-import React, { useState } from "react";
+import React from "react";
 import { Loader2 } from "lucide-react";
+import { useFormik } from "formik";
+import { hotelAuthSchema } from "@/schemas/HotelAuthSchema";
 import {
   Dialog,
   DialogContent,
   DialogDescription,
   DialogHeader,
-  DialogTitle,
-} from "../ui/dialog";
-import { Button } from "../ui/button";
-import { Input } from "../ui/input";
-// axios ekle
-// import axios from "axios";
+} from "@/components/ui/dialog";
+import { DialogTitle } from "@radix-ui/react-dialog";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
 
 type HotelAuthModalProps = {
   open: boolean;
-  onSuccess: (roomNumber: string) => void; // oda bilgisini iletecek
+  onSuccess: (roomNumber: string, name: string) => void;
 };
 
 const HotelAuthModal: React.FC<HotelAuthModalProps> = ({ open, onSuccess }) => {
-  const [roomNumber, setRoomNumber] = useState("");
-  const [birthDate, setBirthDate] = useState("");
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setError(null);
-    setLoading(true);
-
-    // ŞU AN KOD DEVRE DIŞI, örnek:
-    // try {
-    //   const apiUrl = process.env.NEXT_PUBLIC_HOTEL_AUTH_API;
-    //   const res = await axios.post(apiUrl, {
-    //     roomNumber,
-    //     birthDate,
-    //   });
-    //   if (res.data.success) {
-    //     setLoading(false);
-    //     onSuccess(roomNumber);
-    //   } else {
-    //     setError("Bilgiler hatalı. Lütfen tekrar deneyin.");
-    //     setLoading(false);
-    //   }
-    // } catch (err) {
-    //   setError("Sistem hatası. Lütfen tekrar deneyin.");
-    //   setLoading(false);
-    // }
-
-    // FAKELİK:
-    await new Promise((resolve) => setTimeout(resolve, 1000));
-    if (roomNumber === "101" && birthDate === "2000-01-01") {
-      setLoading(false);
-      onSuccess(roomNumber); // oda bilgisini ilet
-    } else {
-      setError("Bilgiler hatalı. Lütfen tekrar deneyin.");
-      setLoading(false);
-    }
-  };
+  const formik = useFormik({
+    initialValues: {
+      roomNumber: "",
+      birthDate: "",
+      name: "",
+    },
+    validationSchema: hotelAuthSchema,
+    onSubmit: async (values, { setSubmitting, setFieldError }) => {
+      // Otel API'ye sadece roomNumber ve birthDate gönderiyoruz!
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+      if (values.roomNumber === "101" && values.birthDate === "2000-01-01") {
+        setSubmitting(false);
+        onSuccess(values.roomNumber, values.name); // ismi de ilet!
+      } else {
+        setFieldError("roomNumber", "Bilgiler hatalı. Lütfen tekrar deneyin.");
+        setSubmitting(false);
+      }
+    },
+  });
 
   return (
     <Dialog open={open} onOpenChange={() => {}}>
@@ -68,28 +48,51 @@ const HotelAuthModal: React.FC<HotelAuthModalProps> = ({ open, onSuccess }) => {
         <DialogHeader>
           <DialogTitle>Otele Giriş Doğrulaması</DialogTitle>
           <DialogDescription>
-            Lütfen oda numaranızı ve doğum tarihinizi girin.
+            Lütfen oda numaranızı, doğum tarihinizi ve adınızı girin.
           </DialogDescription>
         </DialogHeader>
-        <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+        <form onSubmit={formik.handleSubmit} className="flex flex-col gap-4">
           <Input
             type="text"
             placeholder="Oda Numarası"
-            value={roomNumber}
-            onChange={(e) => setRoomNumber(e.target.value)}
-            disabled={loading}
+            id="roomNumber"
+            {...formik.getFieldProps("roomNumber")}
+            disabled={formik.isSubmitting}
             required
           />
+          {formik.touched.roomNumber && formik.errors.roomNumber && (
+            <p className="text-red-500 text-center">
+              {formik.errors.roomNumber}
+            </p>
+          )}
+
           <Input
             type="date"
-            value={birthDate}
-            onChange={(e) => setBirthDate(e.target.value)}
-            disabled={loading}
+            id="birthDate"
+            {...formik.getFieldProps("birthDate")}
+            disabled={formik.isSubmitting}
             required
           />
-          {error && <p className="text-red-500 text-center">{error}</p>}
-          <Button type="submit" disabled={loading}>
-            {loading ? (
+          {formik.touched.birthDate && formik.errors.birthDate && (
+            <p className="text-red-500 text-center">
+              {formik.errors.birthDate}
+            </p>
+          )}
+
+          <Input
+            type="text"
+            placeholder="Adınız Soyadınız"
+            id="name"
+            {...formik.getFieldProps("name")}
+            disabled={formik.isSubmitting}
+            required
+          />
+          {formik.touched.name && formik.errors.name && (
+            <p className="text-red-500 text-center">{formik.errors.name}</p>
+          )}
+
+          <Button type="submit" disabled={formik.isSubmitting}>
+            {formik.isSubmitting ? (
               <>
                 <Loader2 className="animate-spin w-4 h-4 mr-2" />{" "}
                 Doğrulanıyor...
@@ -103,4 +106,5 @@ const HotelAuthModal: React.FC<HotelAuthModalProps> = ({ open, onSuccess }) => {
     </Dialog>
   );
 };
+
 export default HotelAuthModal;

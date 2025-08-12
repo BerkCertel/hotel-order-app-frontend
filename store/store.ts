@@ -7,9 +7,10 @@ import categoryReducer from "./categorySlice";
 import subcategoryReducer from "./subcategorySlice";
 import authReducer from "./authSlice";
 import qrcodeReducer from "./qrcodeSlice";
-import roomReducer from "./roomSlice";
+import orderuserReducer from "./orderuserSlice";
 import cartReducer from "./cartSlice";
-// import orderReducer from "./orderSlice";
+import orderReducer from "./orderSlice";
+import modalReducer from "./modalSlice";
 
 export const store = configureStore({
   reducer: {
@@ -20,9 +21,10 @@ export const store = configureStore({
     subcategory: subcategoryReducer,
     auth: authReducer,
     qrcode: qrcodeReducer,
-    room: roomReducer,
+    orderuser: orderuserReducer,
     cart: cartReducer,
-    // order: orderReducer,
+    order: orderReducer,
+    modal: modalReducer,
   },
 });
 

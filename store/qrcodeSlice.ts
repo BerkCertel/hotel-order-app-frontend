@@ -4,6 +4,8 @@ import { API_PATHS } from "@/constants/apiPaths";
 import { QrCode } from "@/types/QrCodeTypes";
 import { AxiosError } from "axios";
 import { RootState } from "@/store/store";
+import { persistReducer } from "redux-persist";
+import storage from "redux-persist/lib/storage";
 
 interface QrCodeState {
   loading: boolean;
@@ -11,6 +13,7 @@ interface QrCodeState {
   success: boolean;
   qrCodes: QrCode[];
   qrCodeDetail: QrCode | null;
+  activeQrCodeId: string | null; // sadece id'yi persist edeceğiz
 }
 
 const initialState: QrCodeState = {
@@ -19,6 +22,7 @@ const initialState: QrCodeState = {
   success: false,
   qrCodes: [],
   qrCodeDetail: null,
+  activeQrCodeId: null, // yeni alan
 };
 
 // CREATE QR CODE
@@ -119,6 +123,9 @@ const qrCodeSlice = createSlice({
       state.success = false;
       state.qrCodeDetail = null;
     },
+    setActiveQrCodeId(state, action) {
+      state.activeQrCodeId = action.payload;
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -176,6 +183,7 @@ const qrCodeSlice = createSlice({
         state.loading = false;
         state.qrCodeDetail = action.payload;
         state.error = null;
+        state.activeQrCodeId = action.payload._id; // id'yi güncelle
       })
       .addCase(getQrCodeById.rejected, (state, action) => {
         state.loading = false;
@@ -202,8 +210,14 @@ const qrCodeSlice = createSlice({
   },
 });
 
-export const { resetQrCodeState } = qrCodeSlice.actions;
+const persistConfig = {
+  key: "qrcode",
+  storage, // Doğru kullanım bu! redux-persist/lib/storage modülünden gelen 'storage'
+  whitelist: ["activeQrCodeId"],
+};
+
+export const { resetQrCodeState, setActiveQrCodeId } = qrCodeSlice.actions;
 
 export const selectQrCodeState = (state: RootState) => state.qrcode;
 
-export default qrCodeSlice.reducer;
+export default persistReducer(persistConfig, qrCodeSlice.reducer);

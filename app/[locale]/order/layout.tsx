@@ -1,5 +1,6 @@
 "use client";
 
+import OrderSuccessModal from "@/components/modals/OrderSuccessModal";
 import { HotelAuthProvider } from "@/context/HotelAuthProvider";
 
 import React from "react";
@@ -9,7 +10,12 @@ interface OrderLayoutProps {
 }
 
 function OrderLayout({ children }: OrderLayoutProps) {
-  return <HotelAuthProvider>{children}</HotelAuthProvider>;
+  return (
+    <HotelAuthProvider>
+      <OrderSuccessModal />
+      {children}
+    </HotelAuthProvider>
+  );
 }
 
 export default OrderLayout;

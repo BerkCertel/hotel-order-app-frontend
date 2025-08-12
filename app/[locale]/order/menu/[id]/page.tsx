@@ -13,26 +13,40 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import MenuHeader from "@/components/menu/MenuHeader";
 import { useParams } from "next/navigation";
-import { getQrCodeById, selectQrCodeState } from "@/store/qrcodeSlice";
+import {
+  getQrCodeById,
+  selectQrCodeState,
+  setActiveQrCodeId,
+} from "@/store/qrcodeSlice";
 
 function MenuPage() {
   const params = useParams();
   const dispatch = useAppDispatch();
   const navigate = useRouter();
   const { loading, error, categories } = useAppSelector(selectCategoryState);
-  const { qrCodeDetail } = useAppSelector(selectQrCodeState);
+  const { activeQrCodeId } = useAppSelector(selectQrCodeState);
 
+  console.log("menu", activeQrCodeId);
+  // Yalnızca veri çekmek için
   useEffect(() => {
     dispatch(getAllCategories());
-
+    dispatch(setActiveQrCodeId(params.id));
     if (typeof params?.id === "string") {
       dispatch(getQrCodeById(params?.id));
     }
+  }, [params?.id, dispatch]);
 
-    if (params.id !== qrCodeDetail?._id) {
-      navigate.push(`/scan-qrcode-again`);
+  // Yalnızca QR kod kontrolü için
+  useEffect(() => {
+    if (
+      typeof params.id === "string" &&
+      activeQrCodeId &&
+      activeQrCodeId &&
+      params.id !== activeQrCodeId
+    ) {
+      navigate.push("/scan-qrcode-again");
     }
-  }, [params?.id, dispatch, qrCodeDetail?._id, navigate]);
+  }, [params.id, activeQrCodeId, navigate]);
 
   const handleCategoryClick = (id: string) => {
     navigate.push(`/order/subcategory/${id}`);

@@ -16,9 +16,8 @@ import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { FaPlus, FaMinus, FaTrash } from "react-icons/fa";
 import { addToCart, removeFromCart, selectCartState } from "@/store/cartSlice";
-import OrderSuccessModal from "@/components/modals/OrderSuccessModal";
 
-function SubcategoryPage() {
+export default function SubcategoryPage() {
   const params = useParams();
   const dispatch = useAppDispatch();
   const { subcategories, loading, error } = useAppSelector(
@@ -37,8 +36,6 @@ function SubcategoryPage() {
 
   return (
     <PageContainer>
-      <OrderSuccessModal />
-
       <div className="w-full flex flex-col gap-5 mx-auto px-2 lg:px-0">
         <MenuHeader HeaderText="Subcategories" />
         {/* Loading */}
@@ -177,5 +174,3 @@ function SubcategoryPage() {
     </PageContainer>
   );
 }
-
-export default SubcategoryPage;
