@@ -10,15 +10,15 @@ import {
 import { Button } from "../ui/button";
 import { FaCheckCircle } from "react-icons/fa";
 import { useRouter } from "next/navigation";
-import { useAppSelector } from "@/store/store";
+import { useAppDispatch, useAppSelector } from "@/store/store";
 import { selectQrCodeState } from "@/store/qrcodeSlice";
-import { selectOrderState } from "@/store/orderSlice";
+import { closeOrderSuccessModal, selectOrderState } from "@/store/orderSlice";
 
 const OrderSuccessModal = () => {
   const { activeQrCodeId } = useAppSelector(selectQrCodeState);
   const { orderSuccessModalOpen } = useAppSelector(selectOrderState);
 
-  // const dispatch = useAppDispatch();
+  const dispatch = useAppDispatch();
   // // Açmak için:
   // dispatch(openOrderSuccessModal());
   // // Kapatmak için:
@@ -30,6 +30,7 @@ const OrderSuccessModal = () => {
 
   const handleMenuPage = () => {
     router.push(`/order/menu/${activeQrCodeId}`);
+    dispatch(closeOrderSuccessModal());
   };
   return (
     <Dialog open={orderSuccessModalOpen}>

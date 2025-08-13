@@ -51,4 +51,11 @@ export const API_PATHS = {
     GET_BY_CATEGORY: (categoryId: string) =>
       `/api/v1/subcategory/by-category/${categoryId}`,
   },
+
+  ORDER: {
+    CREATE_ORDER: "/api/v1/order/create-order",
+    GET_ORDERS_BY_LOCATION: "/api/v1/order/get-orders-by-location", // Lokasyona göre sipariş çekme (kullanım: /get-orders-by-location/:locationId)
+    GET_ALL_ORDERS: "/api/v1/order/get-all-orders", // Tüm siparişleri çekme
+    UPDATE_ORDER_STATUS: "/api/v1/order/update-order-status", // Sipariş durumu güncelleme (kullanım: /update-order-status/:id)
+  },
 };

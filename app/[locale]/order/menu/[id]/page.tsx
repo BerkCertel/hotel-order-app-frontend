@@ -26,11 +26,10 @@ function MenuPage() {
   const { loading, error, categories } = useAppSelector(selectCategoryState);
   const { activeQrCodeId } = useAppSelector(selectQrCodeState);
 
-  console.log("menu", activeQrCodeId);
   // Yalnızca veri çekmek için
   useEffect(() => {
     dispatch(getAllCategories());
-    dispatch(setActiveQrCodeId(params.id));
+    dispatch(setActiveQrCodeId(params?.id));
     if (typeof params?.id === "string") {
       dispatch(getQrCodeById(params?.id));
     }
@@ -40,7 +39,6 @@ function MenuPage() {
   useEffect(() => {
     if (
       typeof params.id === "string" &&
-      activeQrCodeId &&
       activeQrCodeId &&
       params.id !== activeQrCodeId
     ) {

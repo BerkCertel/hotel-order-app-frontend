@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import {
   FaThList,
   FaTimes,
@@ -17,8 +17,8 @@ import {
   SheetTrigger,
 } from "../ui/sheet";
 import { Button } from "../ui/button";
-import { RootState } from "@/store/store";
-import { useSelector, useDispatch } from "react-redux";
+import { RootState, useAppDispatch, useAppSelector } from "@/store/store";
+import { useSelector } from "react-redux";
 import Image from "next/image";
 import {
   selectCartState,
@@ -26,11 +26,35 @@ import {
   removeFromCart,
   clearCart,
 } from "@/store/cartSlice";
+import { selectQrCodeState } from "@/store/qrcodeSlice";
+import { createOrder, selectOrderState } from "@/store/orderSlice";
 
 function CartSheet() {
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const { items: cartItems } = useSelector(selectCartState);
   const { orderUser } = useSelector((state: RootState) => state.orderuser);
+  const { orderStatus } = useAppSelector(selectOrderState);
+  const { activeQrCodeId } = useAppSelector(selectQrCodeState);
+
+  const handleCreateOrder = () => {
+    dispatch(
+      createOrder({
+        items: cartItems,
+        qrCodeId: activeQrCodeId,
+        roomNumber: orderUser.roomNumber,
+        orderUserName: orderUser.name,
+      })
+    );
+  };
+
+  useEffect(() => {
+    if (orderStatus === "succeeded") {
+      dispatch(clearCart());
+      // Eğer modalı kapatınca cart temizlensin istiyorsan,
+      // bunu success modal kapatma fonksiyonunda da yapabilirsin.
+    }
+  }, [orderStatus, dispatch]);
+
   return (
     <Sheet>
       <SheetTrigger asChild>
@@ -155,6 +179,14 @@ function CartSheet() {
 
         {/* FOOTER */}
         <SheetFooter className="border-t p-4 flex justify-between">
+          <Button
+            className="w-full mt-6"
+            type="submit"
+            disabled={orderStatus === "loading"}
+            onClick={handleCreateOrder}
+          >
+            {orderStatus === "loading" ? "Sending..." : "Place Order"}
+          </Button>
           <SheetClose asChild>
             <Button variant="outline" type="button">
               <FaTimes className="w-5 h-5" />

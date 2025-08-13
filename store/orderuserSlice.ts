@@ -2,15 +2,15 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 type OrderUserState = {
   orderUser: {
-    roomNumber: string | null;
-    name: string | null;
+    roomNumber: string;
+    name: string;
   };
 };
 
 const initialState: OrderUserState = {
   orderUser: {
-    roomNumber: null,
-    name: null,
+    roomNumber: "",
+    name: "",
   },
 };
 
@@ -20,14 +20,14 @@ const orderuserSlice = createSlice({
   reducers: {
     setOrderUser(
       state,
-      action: PayloadAction<{ roomNumber: string | null; name: string | null }>
+      action: PayloadAction<{ roomNumber: string; name: string }>
     ) {
       state.orderUser = action.payload;
     },
     clearOrderUser(state) {
       state.orderUser = {
-        roomNumber: null,
-        name: null,
+        roomNumber: "",
+        name: "",
       };
     },
   },

@@ -19,7 +19,7 @@ const axiosInstance = axios.create({
     "Content-Type": "application/json",
     Accept: "application/json",
   },
-  withCredentials: true, // <-- YENİ!
+  withCredentials: true,
 });
 
 // Request interceptor //! cookie !!

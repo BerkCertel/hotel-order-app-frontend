@@ -13,7 +13,7 @@ interface QrCodeState {
   success: boolean;
   qrCodes: QrCode[];
   qrCodeDetail: QrCode | null;
-  activeQrCodeId: string | null; // sadece id'yi persist edeceğiz
+  activeQrCodeId: string;
 }
 
 const initialState: QrCodeState = {
@@ -22,7 +22,7 @@ const initialState: QrCodeState = {
   success: false,
   qrCodes: [],
   qrCodeDetail: null,
-  activeQrCodeId: null, // yeni alan
+  activeQrCodeId: "",
 };
 
 // CREATE QR CODE
@@ -212,7 +212,7 @@ const qrCodeSlice = createSlice({
 
 const persistConfig = {
   key: "qrcode",
-  storage, // Doğru kullanım bu! redux-persist/lib/storage modülünden gelen 'storage'
+  storage,
   whitelist: ["activeQrCodeId"],
 };
 
