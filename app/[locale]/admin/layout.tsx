@@ -1,6 +1,6 @@
 "use client";
 
-import DashboardLayout from "@/components/layouts/DashboardLayout";
+import AdminLayout from "@/components/layouts/AdminLayout";
 
 import { useUserAuth } from "@/hooks/useUserAuth";
 import React from "react";
@@ -12,7 +12,7 @@ interface AdminPageMainLayoutProps {
 function AdminPageMainLayout({ children }: AdminPageMainLayoutProps) {
   useUserAuth();
 
-  return <DashboardLayout>{children}</DashboardLayout>;
+  return <AdminLayout>{children}</AdminLayout>;
 }
 
 export default AdminPageMainLayout;

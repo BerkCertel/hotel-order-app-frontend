@@ -3,11 +3,11 @@ import { useContext } from "react";
 import Navbar from "./Navbar";
 import SideMenu from "./SideMenu";
 
-interface DashboardLayoutProps {
+interface AdminLayoutProps {
   children?: React.ReactNode;
 }
 
-function DashboardLayout({ children }: DashboardLayoutProps) {
+function AdminLayout({ children }: AdminLayoutProps) {
   const { user } = useContext(UserContext);
 
   return (
@@ -26,4 +26,4 @@ function DashboardLayout({ children }: DashboardLayoutProps) {
   );
 }
 
-export default DashboardLayout;
+export default AdminLayout;

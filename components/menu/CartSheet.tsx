@@ -28,15 +28,26 @@ import {
 } from "@/store/cartSlice";
 import { selectQrCodeState } from "@/store/qrcodeSlice";
 import { createOrder, selectOrderState } from "@/store/orderSlice";
+import { useRouter } from "@/i18n/navigation";
 
 function CartSheet() {
   const dispatch = useAppDispatch();
+  const navigate = useRouter();
   const { items: cartItems } = useSelector(selectCartState);
   const { orderUser } = useSelector((state: RootState) => state.orderuser);
   const { orderStatus } = useAppSelector(selectOrderState);
   const { activeQrCodeId } = useAppSelector(selectQrCodeState);
 
   const handleCreateOrder = () => {
+    if (
+      activeQrCodeId === null ||
+      activeQrCodeId === undefined ||
+      activeQrCodeId === ""
+    ) {
+      // Handle missing QR code ID
+      navigate.push("/scan-qrcode-again");
+      return;
+    }
     dispatch(
       createOrder({
         items: cartItems,

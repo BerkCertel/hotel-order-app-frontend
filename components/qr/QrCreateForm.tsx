@@ -27,7 +27,7 @@ interface Props {
 
 export const QrCreateForm = ({ locations }: Props) => {
   const dispatch = useAppDispatch();
-  const { loading, error, success } = useAppSelector(selectQrCodeState);
+  const { Qrerror, Qrloading, Qrsuccess } = useAppSelector(selectQrCodeState);
 
   const formik = useFormik({
     initialValues: { locationId: "", label: "" },
@@ -35,7 +35,7 @@ export const QrCreateForm = ({ locations }: Props) => {
     onSubmit: async (values, { resetForm }) => {
       await dispatch(createQrCode(values));
 
-      if (success) {
+      if (Qrsuccess) {
         toast.success("QR kod başarıyla oluşturuldu!");
         resetForm();
       }
@@ -43,17 +43,17 @@ export const QrCreateForm = ({ locations }: Props) => {
   });
 
   useEffect(() => {
-    if (success) {
+    if (Qrsuccess) {
       toast.success("QR kod başarıyla oluşturuldu!");
       formik.resetForm();
       dispatch(resetQrCodeState());
     }
-    if (error) {
-      toast.error(error);
+    if (Qrerror) {
+      toast.error(Qrerror);
       dispatch(resetQrCodeState());
     }
     // eslint-disable-next-line
-  }, [success, error]);
+  }, [Qrsuccess, Qrerror]);
 
   return (
     <div>
@@ -74,7 +74,7 @@ export const QrCreateForm = ({ locations }: Props) => {
         <Select
           value={formik.values.locationId}
           onValueChange={(value) => formik.setFieldValue("locationId", value)}
-          disabled={loading}
+          disabled={Qrloading}
         >
           <SelectTrigger className="w-full md:w-1/3">
             <SelectValue placeholder="Lokasyon seç" />
@@ -93,13 +93,13 @@ export const QrCreateForm = ({ locations }: Props) => {
           value={formik.values.label}
           onChange={formik.handleChange}
           onBlur={formik.handleBlur}
-          disabled={loading}
+          disabled={Qrloading}
           className="w-full md:w-1/3"
         />
         <Button
           type="submit"
           className="w-full md:w-1/3"
-          disabled={!formik.isValid || loading}
+          disabled={!formik.isValid || Qrloading}
         >
           Oluştur
         </Button>

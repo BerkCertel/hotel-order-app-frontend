@@ -8,18 +8,18 @@ import { persistReducer } from "redux-persist";
 import storage from "redux-persist/lib/storage";
 
 interface QrCodeState {
-  loading: boolean;
-  error: string | null;
-  success: boolean;
+  Qrloading: boolean;
+  Qrerror: string | null;
+  Qrsuccess: boolean;
   qrCodes: QrCode[];
   qrCodeDetail: QrCode | null;
   activeQrCodeId: string;
 }
 
 const initialState: QrCodeState = {
-  loading: false,
-  error: null,
-  success: false,
+  Qrloading: false,
+  Qrerror: null,
+  Qrsuccess: false,
   qrCodes: [],
   qrCodeDetail: null,
   activeQrCodeId: "",
@@ -118,9 +118,9 @@ const qrCodeSlice = createSlice({
   initialState,
   reducers: {
     resetQrCodeState(state) {
-      state.loading = false;
-      state.error = null;
-      state.success = false;
+      state.Qrloading = false;
+      state.Qrerror = null;
+      state.Qrsuccess = false;
       state.qrCodeDetail = null;
     },
     setActiveQrCodeId(state, action) {
@@ -131,81 +131,81 @@ const qrCodeSlice = createSlice({
     builder
       // CREATE
       .addCase(createQrCode.pending, (state) => {
-        state.loading = true;
-        state.error = null;
-        state.success = false;
+        state.Qrloading = true;
+        state.Qrerror = null;
+        state.Qrsuccess = false;
       })
       .addCase(createQrCode.fulfilled, (state, action) => {
-        state.loading = false;
-        state.success = true;
+        state.Qrloading = false;
+        state.Qrsuccess = true;
         state.qrCodes.unshift(action.payload);
       })
       .addCase(createQrCode.rejected, (state, action) => {
-        state.loading = false;
-        state.error = action.payload || "QR kodu oluşturulamadı";
-        state.success = false;
+        state.Qrloading = false;
+        state.Qrerror = action.payload || "QR kodu oluşturulamadı";
+        state.Qrsuccess = false;
       })
       // GET ALL
       .addCase(getAllQrCodes.pending, (state) => {
-        state.loading = true;
-        state.error = null;
+        state.Qrloading = true;
+        state.Qrerror = null;
       })
       .addCase(getAllQrCodes.fulfilled, (state, action) => {
-        state.loading = false;
+        state.Qrloading = false;
         state.qrCodes = action.payload;
-        state.error = null;
+        state.Qrerror = null;
       })
       .addCase(getAllQrCodes.rejected, (state, action) => {
-        state.loading = false;
-        state.error = action.payload || "QR kodlar alınamadı";
+        state.Qrloading = false;
+        state.Qrerror = action.payload || "QR kodlar alınamadı";
       })
       // GET BY LOCATION
       .addCase(getQrCodesByLocation.pending, (state) => {
-        state.loading = true;
-        state.error = null;
+        state.Qrloading = true;
+        state.Qrerror = null;
       })
       .addCase(getQrCodesByLocation.fulfilled, (state, action) => {
-        state.loading = false;
+        state.Qrloading = false;
         state.qrCodes = action.payload;
-        state.error = null;
+        state.Qrerror = null;
       })
       .addCase(getQrCodesByLocation.rejected, (state, action) => {
-        state.loading = false;
-        state.error = action.payload || "QR kodlar alınamadı";
+        state.Qrloading = false;
+        state.Qrerror = action.payload || "QR kodlar alınamadı";
       })
       // GET BY ID
       .addCase(getQrCodeById.pending, (state) => {
-        state.loading = true;
-        state.error = null;
+        state.Qrloading = true;
+        state.Qrerror = null;
         state.qrCodeDetail = null;
       })
       .addCase(getQrCodeById.fulfilled, (state, action) => {
-        state.loading = false;
+        state.Qrloading = false;
         state.qrCodeDetail = action.payload;
-        state.error = null;
+        state.Qrerror = null;
         state.activeQrCodeId = action.payload._id; // id'yi güncelle
       })
       .addCase(getQrCodeById.rejected, (state, action) => {
-        state.loading = false;
-        state.error = action.payload || "QR kod bilgisi alınamadı";
+        state.Qrloading = false;
+        state.Qrerror = action.payload || "QR kod bilgisi alınamadı";
         state.qrCodeDetail = null;
       })
       // DELETE
       .addCase(deleteQrCode.pending, (state) => {
-        state.loading = true;
-        state.error = null;
-        state.success = false;
+        state.Qrloading = true;
+        state.Qrerror = null;
+        state.Qrsuccess = false;
       })
       .addCase(deleteQrCode.fulfilled, (state, action) => {
-        state.loading = false;
+        state.Qrloading = false;
         state.qrCodes = state.qrCodes.filter((qr) => qr._id !== action.payload);
-        state.success = true;
-        state.error = null;
+        state.Qrsuccess = true;
+        state.Qrerror = null;
       })
       .addCase(deleteQrCode.rejected, (state, action) => {
-        state.loading = false;
-        state.error = action.payload || "QR kodu silinemedi";
-        state.success = false;
+        state.Qrloading = false;
+        state.Qrerror = action.payload || "QR kodu silinemedi";
+        state.Qrsuccess = false;
       });
   },
 });
@@ -217,7 +217,8 @@ const persistConfig = {
 };
 
 export const { resetQrCodeState, setActiveQrCodeId } = qrCodeSlice.actions;
-
 export const selectQrCodeState = (state: RootState) => state.qrcode;
-
-export default persistReducer(persistConfig, qrCodeSlice.reducer);
+export const persistedQrCodeReducer = persistReducer(
+  persistConfig,
+  qrCodeSlice.reducer
+);

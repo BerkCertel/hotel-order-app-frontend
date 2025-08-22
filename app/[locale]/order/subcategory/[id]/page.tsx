@@ -16,24 +16,48 @@ import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { FaPlus, FaMinus, FaTrash } from "react-icons/fa";
 import { addToCart, removeFromCart, selectCartState } from "@/store/cartSlice";
+import { useRouter } from "@/i18n/navigation";
 
 export default function SubcategoryPage() {
   const params = useParams();
   const dispatch = useAppDispatch();
+  const navigate = useRouter();
   const { subcategories, loading, error } = useAppSelector(
     selectSubcategoryState
   );
   const { items: cartItems } = useAppSelector(selectCartState);
 
   useEffect(() => {
-    if (typeof params?.id === "string") {
+    // Sadece geçerli bir id varsa veri çek
+    if (typeof params?.id === "string" && params.id.length === 24) {
       dispatch(getSubcategoriesByCategory(params.id));
     }
   }, [dispatch, params?.id]);
 
+  useEffect(() => {
+    // 1. params.id yok veya formatı yanlışsa hemen yönlendir
+    if (
+      !params?.id ||
+      typeof params.id !== "string" ||
+      params.id.length !== 24
+    ) {
+      navigate.push("/scan-qrcode-again");
+      return;
+    }
+
+    // 2. Yükleme bitmeden yönlendirme yapma, bekle!
+    if (loading) return;
+
+    // 3. API'den hata geldiyse yönlendir
+    if (error) {
+      navigate.push("/scan-qrcode-again");
+      return;
+    }
+    // 4. Alt kategori yoksa sayfa açılır, ekrana "alt kategori yok" yazılır
+  }, [params?.id, loading, error, navigate]);
+
   // Helper: get cart item by subcategory id
   const getCartItem = (id: string) => cartItems.find((item) => item._id === id);
-
   return (
     <PageContainer>
       <div className="w-full flex flex-col gap-5 mx-auto px-2 lg:px-0">

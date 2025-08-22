@@ -27,23 +27,23 @@ interface Props {
 
 export const QrList = ({ locations }: Props) => {
   const dispatch = useAppDispatch();
-  const { qrCodes, loading, error, success } =
+  const { qrCodes, Qrsuccess, Qrloading, Qrerror } =
     useAppSelector(selectQrCodeState);
 
   // Yeni QR eklendiğinde veya silindiğinde tekrar fetch et
-  const prevSuccessRef = useRef(success);
+  const prevSuccessRef = useRef(Qrsuccess);
   useEffect(() => {
     dispatch(getAllQrCodes());
     // eslint-disable-next-line
   }, []);
 
   useEffect(() => {
-    if (success !== prevSuccessRef.current && success) {
+    if (Qrsuccess !== prevSuccessRef.current && Qrsuccess) {
       dispatch(getAllQrCodes());
     }
-    prevSuccessRef.current = success;
+    prevSuccessRef.current = Qrsuccess;
     // eslint-disable-next-line
-  }, [success]);
+  }, [Qrsuccess]);
 
   const handleDelete = async (id: string) => {
     await dispatch(deleteQrCode(id));
@@ -78,7 +78,7 @@ export const QrList = ({ locations }: Props) => {
     qrCodesByLocation[locId].push(qr);
   });
 
-  if (loading) {
+  if (Qrloading) {
     return (
       <div className="space-y-2">
         {Array.from({ length: 4 }).map((_, i) => (
@@ -88,8 +88,8 @@ export const QrList = ({ locations }: Props) => {
     );
   }
 
-  if (error) {
-    return <div className="text-red-500">{error}</div>;
+  if (Qrerror) {
+    return <div className="text-red-500">{Qrerror}</div>;
   }
 
   if (locations.length === 0) {

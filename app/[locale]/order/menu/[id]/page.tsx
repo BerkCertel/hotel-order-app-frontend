@@ -6,8 +6,6 @@ import { getAllCategories, selectCategoryState } from "@/store/categorySlice";
 import { useAppDispatch, useAppSelector } from "@/store/store";
 import Image from "next/image";
 import { useEffect } from "react";
-
-// Shadcn UI bileşenleri
 import { Card, CardContent, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
@@ -19,32 +17,52 @@ import {
   setActiveQrCodeId,
 } from "@/store/qrcodeSlice";
 
+function getIdAsString(id: string | string[] | undefined): string | undefined {
+  if (typeof id === "string") return id;
+  if (Array.isArray(id) && typeof id[0] === "string") return id[0];
+  return undefined;
+}
+
 function MenuPage() {
   const params = useParams();
   const dispatch = useAppDispatch();
   const navigate = useRouter();
   const { loading, error, categories } = useAppSelector(selectCategoryState);
-  const { activeQrCodeId } = useAppSelector(selectQrCodeState);
+  const { activeQrCodeId, Qrerror, Qrloading, qrCodeDetail } =
+    useAppSelector(selectQrCodeState);
 
-  // Yalnızca veri çekmek için
+  const id = getIdAsString(params.id);
+
+  // Veri çekme
   useEffect(() => {
+    if (!id) return;
     dispatch(getAllCategories());
-    dispatch(setActiveQrCodeId(params?.id));
-    if (typeof params?.id === "string") {
-      dispatch(getQrCodeById(params?.id));
-    }
-  }, [params?.id, dispatch]);
+    dispatch(setActiveQrCodeId(id));
+    dispatch(getQrCodeById(id));
+  }, [id, dispatch]);
 
-  // Yalnızca QR kod kontrolü için
+  // Yönlendirme
   useEffect(() => {
+    // id yoksa veya formatı yanlışsa yönlendir
+    if (!id || id.length !== 24) {
+      navigate.push("/scan-qrcode-again");
+      return;
+    }
+    // QR kod verisi gelmeden yönlendirme yapma!
+    if (Qrloading) return;
+    if (!qrCodeDetail) return;
+
+    // QR kod ile params id eşleşmiyorsa veya hata varsa yönlendir
     if (
-      typeof params.id === "string" &&
-      activeQrCodeId &&
-      params.id !== activeQrCodeId
+      activeQrCodeId === "" ||
+      activeQrCodeId === null ||
+      id !== activeQrCodeId ||
+      Qrerror === "Invalid QR code ID" ||
+      Qrerror === "QR kod bilgisi alınamadı"
     ) {
       navigate.push("/scan-qrcode-again");
     }
-  }, [params.id, activeQrCodeId, navigate]);
+  }, [id, activeQrCodeId, Qrerror, Qrloading, qrCodeDetail, navigate]);
 
   const handleCategoryClick = (id: string) => {
     navigate.push(`/order/subcategory/${id}`);

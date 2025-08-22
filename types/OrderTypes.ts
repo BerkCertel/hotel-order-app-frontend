@@ -36,7 +36,7 @@ export interface Order {
   _id: string;
   items: OrderItem[];
   roomNumber: string;
-  userName: string;
+  orderUserName: string;
   qrcodeId: string;
   qrcodeLabel: string;
   location: {

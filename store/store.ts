@@ -6,7 +6,7 @@ import usersReducer from "./usersSlice";
 import categoryReducer from "./categorySlice";
 import subcategoryReducer from "./subcategorySlice";
 import authReducer from "./authSlice";
-import qrcodeReducer from "./qrcodeSlice";
+import { persistedQrCodeReducer } from "./qrcodeSlice"; // <-- dikkat!
 import orderuserReducer from "./orderuserSlice";
 import cartReducer from "./cartSlice";
 import orderReducer from "./orderSlice";
@@ -20,7 +20,7 @@ export const store = configureStore({
     category: categoryReducer,
     subcategory: subcategoryReducer,
     auth: authReducer,
-    qrcode: qrcodeReducer,
+    qrcode: persistedQrCodeReducer, // <-- dikkat!
     orderuser: orderuserReducer,
     cart: cartReducer,
     order: orderReducer,

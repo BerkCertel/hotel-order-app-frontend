@@ -1,6 +1,6 @@
 "use client";
 
-import DashboardLayout from "@/components/layouts/DashboardLayout";
+import AdminLayout from "@/components/layouts/AdminLayout";
 import { useUserAuth } from "@/hooks/useUserAuth";
 
 interface UserPageLayoutProps {
@@ -10,5 +10,5 @@ interface UserPageLayoutProps {
 export default function UserPageLayout({ children }: UserPageLayoutProps) {
   useUserAuth();
 
-  return <DashboardLayout>{children}</DashboardLayout>;
+  return <AdminLayout>{children}</AdminLayout>;
 }

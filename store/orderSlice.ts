@@ -9,6 +9,7 @@ import {
 import axiosInstance from "@/utils/axiosInstance";
 import { AxiosError } from "axios";
 import { API_PATHS } from "@/constants/apiPaths";
+import { OrderWithMeta } from "@/types";
 
 interface OrderState {
   orderSuccessModalOpen: boolean;
@@ -20,6 +21,8 @@ interface OrderState {
   totalPages: number;
   loading: boolean;
   error: string | null;
+  updating: boolean; // durum güncellenirken loading için
+  updateError: string | null; // durum güncelleme hatası için
 }
 
 const initialState: OrderState = {
@@ -32,6 +35,8 @@ const initialState: OrderState = {
   totalPages: 1,
   loading: false,
   error: null,
+  updating: false,
+  updateError: null,
 };
 
 export const createOrder = createAsyncThunk<
@@ -73,6 +78,25 @@ export const getOrdersByLocation = createAsyncThunk<
     }
   }
 );
+
+export const updateOrderStatus = createAsyncThunk<
+  OrderWithMeta,
+  { id: string; status: "pending" | "success" | "rejected" },
+  { rejectValue: string }
+>("order/updateOrderStatus", async ({ id, status }, { rejectWithValue }) => {
+  try {
+    const res = await axiosInstance.patch(
+      `${API_PATHS.ORDER.UPDATE_ORDER_STATUS}/${id}`,
+      { status }
+    );
+    return res.data as OrderWithMeta;
+  } catch (err) {
+    const error = err as AxiosError<{ message: string }>;
+    return rejectWithValue(
+      error.response?.data?.message || "Order status could not be updated"
+    );
+  }
+});
 
 const orderSlice = createSlice({
   name: "order",
@@ -123,6 +147,24 @@ const orderSlice = createSlice({
       .addCase(getOrdersByLocation.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload || "Siparişler çekilemedi";
+      })
+      // Sipariş durumunu güncelleme (pending, success, rejected)
+      .addCase(updateOrderStatus.pending, (state) => {
+        state.updating = true;
+        state.updateError = null;
+      })
+      .addCase(updateOrderStatus.fulfilled, (state, action) => {
+        state.updating = false;
+        const updatedOrder = action.payload;
+        state.orders = state.orders.map((order) =>
+          order._id === updatedOrder._id
+            ? { ...order, status: updatedOrder.status }
+            : order
+        );
+      })
+      .addCase(updateOrderStatus.rejected, (state, action) => {
+        state.updating = false;
+        state.updateError = action.payload || "Sipariş durumu güncellenemedi";
       });
   },
 });
