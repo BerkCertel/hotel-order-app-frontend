@@ -94,8 +94,6 @@ export function OrderCard({ order }: { order: Order }) {
 
   const textColor = getTextColor(order, isJustArrived);
 
-  console.log(order);
-
   return (
     <>
       <Card
@@ -106,8 +104,8 @@ export function OrderCard({ order }: { order: Order }) {
         )}
       >
         {/* Top row: Guest and Status badge */}
-        <div className="flex justify-between items-center mb-2">
-          <h3 className="font-semibold text-base truncate max-w-[140px]">
+        <div className="flex justify-between items-center mb-1">
+          <h3 className="font-semibold text-base uppercase truncate max-w-[140px]">
             {order.orderUserName || "Guest"}
           </h3>
           <span
@@ -149,7 +147,7 @@ export function OrderCard({ order }: { order: Order }) {
         </div>
         {/* Status change buttons */}
         {/* Durum değiştirme butonları */}
-        <div className="flex gap-2 mt-4 flex-wrap">
+        <div className="flex gap-2 mt-2 flex-wrap">
           {STATUS_OPTIONS.map((opt) => (
             <Button
               key={opt.key}

@@ -5,7 +5,20 @@ import { QrCode } from "@/types/QrCodeTypes";
 import { AxiosError } from "axios";
 import { RootState } from "@/store/store";
 import { persistReducer } from "redux-persist";
-import storage from "redux-persist/lib/storage";
+import createWebStorage from "redux-persist/lib/storage/createWebStorage";
+
+const createNoopStorage = () => ({
+  getItem(_key: string) {
+    return null;
+  },
+  setItem(_key: string, _value: string) {},
+  removeItem(_key: string) {},
+});
+
+const storage =
+  typeof window !== "undefined"
+    ? createWebStorage("local")
+    : createNoopStorage();
 
 interface QrCodeState {
   Qrloading: boolean;

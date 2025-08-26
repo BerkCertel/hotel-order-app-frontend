@@ -1,10 +1,4 @@
-import {
-  LuQrCode,
-  LuMapPin,
-  LuUsers,
-  LuList,
-  LuCirclePlus,
-} from "react-icons/lu";
+import { LuQrCode, LuMapPin, LuUsers, LuList } from "react-icons/lu";
 import { TbCategory } from "react-icons/tb";
 import { MdOutlineCategory } from "react-icons/md";
 
@@ -17,22 +11,22 @@ export const SUPERADMIN_SIDE_MENU_DATA = [
   },
   {
     id: "02",
-    label: "QR Code Create",
-    icon: LuCirclePlus,
-    path: "/admin/qrcode-create",
-  },
-  {
-    id: "03",
     label: "Locations",
     icon: LuMapPin,
     path: "/admin/locations",
   },
-  // {
-  //   id: "04",
-  //   label: "Location Create",
-  //   icon: MdOutlineAddLocationAlt,
-  //   path: "/admin/location-create",
-  // },
+  {
+    id: "03",
+    label: "Category",
+    icon: TbCategory,
+    path: "/admin/category",
+  },
+  {
+    id: "04",
+    label: "Subcategory",
+    icon: MdOutlineCategory,
+    path: "/admin/subcategory",
+  },
   {
     id: "05",
     label: "Users",
@@ -42,7 +36,7 @@ export const SUPERADMIN_SIDE_MENU_DATA = [
   {
     id: "06",
     label: "Orders",
-    icon: LuList,
+    icon: LuUsers,
     path: "/admin/orders",
   },
 ];
@@ -56,38 +50,26 @@ export const ADMIN_SIDE_MENU_DATA = [
   },
   {
     id: "02",
-    label: "QR Code Create",
-    icon: LuCirclePlus,
-    path: "/admin/qrcode-create",
-  },
-  {
-    id: "03",
     label: "Locations",
     icon: LuMapPin,
     path: "/admin/locations",
   },
   {
-    id: "04",
+    id: "03",
     label: "Category",
     icon: TbCategory,
     path: "/admin/category",
   },
   {
-    id: "05",
+    id: "04",
     label: "Subcategory",
     icon: MdOutlineCategory,
     path: "/admin/subcategory",
   },
   {
-    id: "06",
-    label: "Users",
-    icon: LuUsers,
-    path: "/admin/users",
-  },
-  {
-    id: "07",
+    id: "05",
     label: "Orders",
-    icon: LuList,
+    icon: LuUsers,
     path: "/admin/orders",
   },
 ];

@@ -27,15 +27,16 @@ export default function SubcategoryPage() {
   );
   const { items: cartItems } = useAppSelector(selectCartState);
 
+  // Subcategory çekimi
   useEffect(() => {
-    // Sadece geçerli bir id varsa veri çek
     if (typeof params?.id === "string" && params.id.length === 24) {
       dispatch(getSubcategoriesByCategory(params.id));
     }
   }, [dispatch, params?.id]);
 
+  // Yönlendirmeler
   useEffect(() => {
-    // 1. params.id yok veya formatı yanlışsa hemen yönlendir
+    // id yoksa veya formatı yanlışsa yönlendir
     if (
       !params?.id ||
       typeof params.id !== "string" ||
@@ -44,25 +45,28 @@ export default function SubcategoryPage() {
       navigate.push("/scan-qrcode-again");
       return;
     }
-
-    // 2. Yükleme bitmeden yönlendirme yapma, bekle!
+    // Yükleme bitmeden yönlendirme yapma
     if (loading) return;
 
-    // 3. API'den hata geldiyse yönlendir
-    if (error) {
+    // API'den error geldi, ve error 'No subcategories found.' değilse yönlendir
+    if (error && error !== "No subcategories found.") {
       navigate.push("/scan-qrcode-again");
       return;
     }
-    // 4. Alt kategori yoksa sayfa açılır, ekrana "alt kategori yok" yazılır
+    // subcategories.length === 0 durumunda yönlendirme yok!
   }, [params?.id, loading, error, navigate]);
 
-  // Helper: get cart item by subcategory id
+  // Sepet helper
   const getCartItem = (id: string) => cartItems.find((item) => item._id === id);
+
+  console.log(subcategories);
+
   return (
     <PageContainer>
       <div className="w-full flex flex-col gap-5 mx-auto px-2 lg:px-0">
         <MenuHeader HeaderText="Subcategories" />
-        {/* Loading */}
+
+        {/* Loading state with skeletons */}
         {loading && (
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
             {[...Array(6)].map((_, i) => (
@@ -71,22 +75,15 @@ export default function SubcategoryPage() {
           </div>
         )}
 
-        {/* Error */}
-        {error && (
-          <Alert variant="destructive" className="mb-6">
-            <AlertTitle>Error</AlertTitle>
-            <AlertDescription>{error}</AlertDescription>
+        {/* Empty state */}
+        {!loading && error && subcategories && subcategories.length === 0 && (
+          <Alert className="mb-6">
+            <AlertTitle>Alt kategori yok</AlertTitle>
+            <AlertDescription className="text-xs">
+              Bu kategoriye ait alt kategori bulunmamaktadır.
+            </AlertDescription>
           </Alert>
         )}
-
-        {/* Empty */}
-        {!loading &&
-          !error &&
-          (!subcategories || subcategories.length === 0) && (
-            <p className="text-center text-muted-foreground mb-6">
-              No subcategories found for this category.
-            </p>
-          )}
 
         {/* Subcategory List */}
         {!loading && !error && subcategories && subcategories.length > 0 && (

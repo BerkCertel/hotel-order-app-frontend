@@ -1,8 +1,13 @@
 "use client";
 
+import { useState } from "react";
 import { PageContainer } from "@/components/Containers/PageContainer";
 import { useRouter } from "@/i18n/navigation";
-import { getAllCategories, selectCategoryState } from "@/store/categorySlice";
+import {
+  getAllCategories,
+  selectCategoryState,
+  setSelectedCategoryId,
+} from "@/store/categorySlice";
 import { useAppDispatch, useAppSelector } from "@/store/store";
 import Image from "next/image";
 import { useEffect } from "react";
@@ -16,6 +21,7 @@ import {
   selectQrCodeState,
   setActiveQrCodeId,
 } from "@/store/qrcodeSlice";
+import SelectedSubcategoryModal from "@/components/modals/SelectedSubcategoryModal";
 
 function getIdAsString(id: string | string[] | undefined): string | undefined {
   if (typeof id === "string") return id;
@@ -31,6 +37,9 @@ function MenuPage() {
   const { activeQrCodeId, Qrerror, Qrloading, qrCodeDetail } =
     useAppSelector(selectQrCodeState);
 
+  // MODAL STATE
+  const [subcategoryModalOpen, setSubcategoryModalOpen] = useState(false);
+
   const id = getIdAsString(params.id);
 
   // Veri çekme
@@ -43,16 +52,12 @@ function MenuPage() {
 
   // Yönlendirme
   useEffect(() => {
-    // id yoksa veya formatı yanlışsa yönlendir
     if (!id || id.length !== 24) {
       navigate.push("/scan-qrcode-again");
       return;
     }
-    // QR kod verisi gelmeden yönlendirme yapma!
     if (Qrloading) return;
     if (!qrCodeDetail) return;
-
-    // QR kod ile params id eşleşmiyorsa veya hata varsa yönlendir
     if (
       activeQrCodeId === "" ||
       activeQrCodeId === null ||
@@ -64,67 +69,78 @@ function MenuPage() {
     }
   }, [id, activeQrCodeId, Qrerror, Qrloading, qrCodeDetail, navigate]);
 
-  const handleCategoryClick = (id: string) => {
-    navigate.push(`/order/subcategory/${id}`);
+  // Kategoriye tıklanınca modal açılır ve seçili id redux'a yazılır
+  const handleCategoryClick = (catId: string) => {
+    dispatch(setSelectedCategoryId(catId)); // Redux'a yaz
+    setSubcategoryModalOpen(true); // Modalı aç
   };
 
   return (
-    <PageContainer className="mx-auto  container">
-      <div className=" w-full flex flex-col md:flex-none gap-5 mx-auto px-4 lg:mx-0 lg:px-0">
-        <MenuHeader HeaderText="Kategoriler" />
+    <PageContainer className="mx-auto container">
+      <MenuHeader HeaderText="Kategoriler" />
+      {/* Loading state */}
+      {loading && (
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+          {[...Array(6)].map((_, i) => (
+            <Skeleton key={i} className="h-60 rounded-lg" />
+          ))}
+        </div>
+      )}
 
-        {loading && (
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
-            {[...Array(6)].map((_, i) => (
-              <Skeleton key={i} className="h-60 rounded-lg" />
-            ))}
-          </div>
-        )}
+      {/* Error state */}
+      {error && (
+        <Alert variant="destructive" className="mb-6">
+          <AlertTitle>Hata</AlertTitle>
+          <AlertDescription>{error}</AlertDescription>
+        </Alert>
+      )}
 
-        {error && (
-          <Alert variant="destructive" className="mb-6">
-            <AlertTitle>Hata</AlertTitle>
-            <AlertDescription>{error}</AlertDescription>
-          </Alert>
-        )}
+      {/* Empty state */}
+      {!loading && (!categories || categories.length === 0) && (
+        <Alert className="mb-6">
+          <AlertTitle>Menü bulunamadı</AlertTitle>
+          <AlertDescription>
+            Şu anda herhangi bir menü ekli değil.
+          </AlertDescription>
+        </Alert>
+      )}
 
-        {!loading && (!categories || categories.length === 0) && (
-          <Alert className="mb-6">
-            <AlertTitle>Menü bulunamadı</AlertTitle>
-            <AlertDescription>
-              Şu anda herhangi bir menü ekli değil.
-            </AlertDescription>
-          </Alert>
-        )}
-
-        {!loading && categories && categories.length > 0 && (
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-6">
-            {categories.map((category) => (
-              <Card
-                key={category._id}
-                onClick={() => handleCategoryClick(category._id)}
-                className="cursor-pointer hover:shadow-xl hover:scale-105 transition-all -duration-300"
-              >
-                <div className="relative w-full h-44 rounded-t-lg overflow-hidden">
+      {/* Kategori listesi */}
+      {!loading && categories && categories.length > 0 && (
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
+          {categories.map((category) => (
+            <Card
+              key={category._id}
+              onClick={() => handleCategoryClick(category._id)}
+              className="cursor-pointer hover:shadow-xl hover:scale-105 transition-all -duration-300"
+            >
+              {/* Alt içerik */}
+              <CardContent className="flex flex-col items-center ">
+                <div className="w-full h-32 relative rounded-lg overflow-hidden border border-gray-200">
                   <Image
                     src={category.image}
                     alt={category.name}
                     fill
-                    className="object-cover  border-b"
-                    sizes="(max-width: 768px) 100vw, 33vw"
-                    priority
+                    className="object-cover w-full h-full"
                   />
                 </div>
-                <CardContent className="flex flex-col items-center pt-4 pb-6">
-                  <CardTitle className="text-lg font-semibold text-center">
-                    {category.name}
-                  </CardTitle>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-        )}
-      </div>
+                <CardTitle className="text-sm font-semibold text-center">
+                  {category.name}
+                </CardTitle>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+      )}
+
+      {/* MODAL BURADA */}
+      <SelectedSubcategoryModal
+        open={subcategoryModalOpen}
+        onClose={() => {
+          setSubcategoryModalOpen(false);
+          dispatch(setSelectedCategoryId(null)); // Modal kapanınca seçimi sil
+        }}
+      />
     </PageContainer>
   );
 }

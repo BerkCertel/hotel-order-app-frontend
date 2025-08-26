@@ -32,7 +32,6 @@ export default function Locations() {
   const { loading, error, success, locations } =
     useAppSelector(selectLocationState);
 
-  console.log(locations);
   useEffect(() => {
     dispatch(getAllLocations());
     // eslint-disable-next-line

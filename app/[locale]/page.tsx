@@ -1,5 +1,9 @@
 "use client";
 
+import { useState, useContext } from "react";
+import { useFormik } from "formik";
+import { toast } from "sonner";
+import { useRouter } from "@/i18n/navigation";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -12,14 +16,12 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { API_PATHS } from "@/constants/apiPaths";
 import { UserContext } from "@/context/userContext";
-import { Link, useRouter } from "@/i18n/navigation";
 import { LoginFormSchema } from "@/schemas/LoginFormSchema";
 import axiosInstance from "@/utils/axiosInstance";
 import { AxiosError } from "axios";
-import { useContext, useState } from "react";
-import { toast } from "sonner";
-import { useFormik } from "formik";
 import { FaUser } from "react-icons/fa";
+import { Link } from "@/i18n/navigation";
+import { LoadingModal } from "@/components/modals/LoadingModal";
 
 export default function Home() {
   const [Loading, setLoading] = useState(false);
@@ -31,26 +33,21 @@ export default function Home() {
     validationSchema: LoginFormSchema,
     onSubmit: async (values, { resetForm }) => {
       try {
-        setLoading(true);
+        setLoading(true); // Modal açılır!
         const response = await axiosInstance.post(API_PATHS.AUTH.LOGIN, {
           email: values.email,
           password: values.password,
         });
-
-        // DİKKAT: Artık token yok, sadece user var!
         const { user } = response.data;
         if (user) {
-          updateUser(user); // Update user context with user data
-
-          // Rol kontrolü ve yönlendirme
+          updateUser(user);
+          toast.success("Login successful!");
           if (user.role === "ADMIN" || user.role === "SUPERADMIN") {
             router.push("/admin");
           } else if (user.role === "USER") {
             router.push("/user");
           }
         }
-
-        toast.success("Login successful!");
       } catch (error) {
         const err = error as AxiosError<{ message?: string }>;
         if (err.response && err.response.data.message) {
@@ -59,14 +56,15 @@ export default function Home() {
           toast.error("Something went wrong. Please try again later.");
         }
       } finally {
-        setLoading(false);
+        setLoading(false); // Modal kapanır!
       }
       resetForm();
     },
   });
 
   return (
-    <div className="flex-center flex-col gap-4 h-screen ">
+    <div className="flex-center flex-col gap-4 h-screen">
+      <LoadingModal open={Loading} text="Logging in, please wait..." />
       <h5 className="text-2xl lg:text-4xl font-semibold">
         Welcome To Hotel System
       </h5>

@@ -159,6 +159,11 @@ const subcategorySlice = createSlice({
       state.error = null;
       state.success = false;
     },
+    clearSubcategories(state) {
+      state.subcategories = [];
+      state.error = null;
+      state.loading = false;
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -246,7 +251,8 @@ const subcategorySlice = createSlice({
   },
 });
 
-export const { resetSubcategoryState } = subcategorySlice.actions;
+export const { resetSubcategoryState, clearSubcategories } =
+  subcategorySlice.actions;
 
 export const selectSubcategoryState = (state: RootState) => state.subcategory;
 

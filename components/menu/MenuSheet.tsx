@@ -36,7 +36,7 @@ function MenuSheet() {
   return (
     <Sheet>
       <SheetTrigger asChild>
-        <Button>
+        <Button className="text-xs md:text-base">
           <FaBars className="w-6 h-6" />
           Menu
         </Button>

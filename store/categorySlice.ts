@@ -1,4 +1,4 @@
-import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
 import { RootState } from "@/store/store";
 import axiosInstance from "@/utils/axiosInstance";
 import { Category } from "@/types/CategoryTypes";
@@ -10,6 +10,7 @@ interface CategoryState {
   error: string | null;
   success: boolean;
   categories: Category[];
+  selectedCategoryId: string | null; // <-- EKLENDİ
 }
 
 const initialState: CategoryState = {
@@ -17,6 +18,7 @@ const initialState: CategoryState = {
   error: null,
   success: false,
   categories: [],
+  selectedCategoryId: null,
 };
 
 // CREATE CATEGORY
@@ -125,6 +127,10 @@ const categorySlice = createSlice({
       state.error = null;
       state.success = false;
     },
+    setSelectedCategoryId(state, action: PayloadAction<string | null>) {
+      // <-- EKLENDİ
+      state.selectedCategoryId = action.payload;
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -202,7 +208,8 @@ const categorySlice = createSlice({
   },
 });
 
-export const { resetCategoryState } = categorySlice.actions;
+export const { resetCategoryState, setSelectedCategoryId } =
+  categorySlice.actions;
 
 export const selectCategoryState = (state: RootState) => state.category;
 

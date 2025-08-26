@@ -1,13 +1,15 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { useParams } from "next/navigation";
+import React, { useEffect } from "react";
 import { useAppDispatch, useAppSelector } from "@/store/store";
-import { getOrdersByLocation, addOrder, updateOrder } from "@/store/orderSlice";
-import { getSocket } from "@/utils/socket";
-import { AlertCircle, Inbox, Loader2 } from "lucide-react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
+import {
+  selectOrderState,
+  getOrdersByLocation,
+  addOrder,
+  updateOrder,
+} from "@/store/orderSlice";
+import { Loader2, AlertCircle, Inbox } from "lucide-react";
+import { OrderCard } from "@/components/cards/OrderCard";
 import {
   Pagination,
   PaginationContent,
@@ -16,38 +18,38 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from "@/components/ui/pagination";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { getSocket } from "@/utils/socket";
 import { Order } from "@/types/OrderTypes";
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { OrderCard } from "@/components/cards/OrderCard";
 
-// Order tipini meta property ile genişlet
 type OrderWithMeta = Order & { __justArrived?: boolean };
 
-export default function OrdersByLocation() {
+type Props = {
+  selectedLocationId: string;
+};
+
+export default function AdminOrdersList({ selectedLocationId }: Props) {
   const dispatch = useAppDispatch();
-  const { orders, loading, error, total, page, totalPages } = useAppSelector(
-    (s) => s.order
-  );
-  const params = useParams();
-  const locationId = params.locationId as string;
+  const { orders, loading, error, total, page, totalPages } =
+    useAppSelector(selectOrderState);
 
-  // Limit 10
-  const [limit] = useState<number>(12);
+  const limit = 12;
 
-  // İlk fetch
+  // Fetch orders when selectedLocationId or page changes
   useEffect(() => {
-    if (locationId) {
+    if (selectedLocationId) {
       dispatch(
         getOrdersByLocation({
-          locationId,
-          page,
+          locationId: selectedLocationId,
+          page: 1,
           limit,
         })
       );
     }
-  }, [locationId, page, limit, dispatch]);
+  }, [selectedLocationId, dispatch]);
 
-  // Socket realtime
+  // Real-time socket updates (new/update order)
   useEffect(() => {
     const socket = getSocket();
 
@@ -57,7 +59,7 @@ export default function OrdersByLocation() {
     }) => {
       if (!payload?.order) return;
       const { type, order } = payload;
-      if (String(order.location) !== String(locationId)) return;
+      if (String(order.location) !== String(selectedLocationId)) return;
 
       if (type === "new") {
         const newOrder: OrderWithMeta = { ...order, __justArrived: true };
@@ -74,13 +76,13 @@ export default function OrdersByLocation() {
     return () => {
       socket.off("orderUpdate", handleUpdate);
     };
-  }, [dispatch, locationId]);
+  }, [dispatch, selectedLocationId]);
 
   const handlePageChange = (newPage: number) => {
     if (newPage < 1 || newPage > totalPages) return;
     dispatch(
       getOrdersByLocation({
-        locationId,
+        locationId: selectedLocationId,
         page: newPage,
         limit,
       })
@@ -109,27 +111,33 @@ export default function OrdersByLocation() {
   if (error) {
     return (
       <div className="max-w-7xl mx-auto py-10 flex flex-col items-center">
-        <Alert variant="destructive" className="max-w-md w-full">
-          <AlertCircle className="h-5 w-5 text-destructive" />
-          <AlertTitle>Failed to load orders</AlertTitle>
-          <AlertDescription>{error}</AlertDescription>
-        </Alert>
+        <Card className="max-w-md w-full flex flex-col items-center p-8 shadow-lg border border-red-200">
+          <CardHeader className="flex items-center">
+            <AlertCircle className="h-8 w-8 text-red-500 mb-2" />
+            <CardTitle className="font-semibold text-center text-red-800">
+              Failed to load orders
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <p className="text-sm text-red-600 text-center">{error}</p>
+          </CardContent>
+        </Card>
       </div>
     );
   }
 
   if (!loading && orders.length === 0) {
     return (
-      <div className="h-full w-full flex flex-col justify-center items-center">
-        <Card className="max-w-md w-full flex flex-col items-center p-8 shadow-lg">
-          <CardHeader className="flex items-center">
-            <Inbox className="h-14 w-14  " />
-            <CardTitle className=" font-semibold text-center text-gray-800">
+      <div className="w-full flex flex-col justify-center items-center py-16">
+        <Card className="max-w-sm w-full flex flex-col items-center rounded-2xl shadow-md p-0">
+          <CardHeader className="flex flex-col items-center pt-7 pb-2">
+            <Inbox className="h-12 w-12 text-gray-400 mb-2" />
+            <CardTitle className="font-bold text-lg text-center text-gray-700 tracking-tight">
               No Orders
             </CardTitle>
           </CardHeader>
-          <CardContent className="p-0 mt-2">
-            <p className="text-sm text-muted-foreground text-center">
+          <CardContent className="p-0 pb-7">
+            <p className="text-sm text-gray-500 text-center leading-relaxed px-4">
               There are currently no orders for this location.
               <br />
               Please check back later.
@@ -142,21 +150,17 @@ export default function OrdersByLocation() {
 
   return (
     <div className="max-w-[1600px] mx-auto mt-3 px-2">
-      <div className="  mb-">
-        <div>
-          <h1 className="text-2xl font-bold leading-tight text-center">
-            Orders
-          </h1>
-          <p className="text-sm text-muted-foreground my-1 flex items-center gap-2">
-            <Badge
-              variant="secondary"
-              className="px-3 py-1 mb-1 text-base font-semibold"
-            >
-              <span>Total:</span>
-              {total}
-            </Badge>
-          </p>
-        </div>
+      <div>
+        <h1 className="text-2xl font-bold leading-tight text-center">Orders</h1>
+        <p className="text-sm text-muted-foreground my-1 flex items-center gap-2">
+          <Badge
+            variant="secondary"
+            className="px-3 py-1 mb-1 text-base font-semibold"
+          >
+            <span>Total:</span>
+            {total}
+          </Badge>
+        </p>
       </div>
 
       <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">

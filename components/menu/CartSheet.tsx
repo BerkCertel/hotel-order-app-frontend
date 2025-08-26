@@ -69,7 +69,7 @@ function CartSheet() {
   return (
     <Sheet>
       <SheetTrigger asChild>
-        <Button className="relative">
+        <Button className="relative text-xs md:text-base">
           <FaShoppingBasket className="w-6 h-6" />
           Cart
           {cartItems.length > 0 && (
