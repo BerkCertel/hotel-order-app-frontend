@@ -58,7 +58,7 @@ export default function Home() {
   });
 
   useEffect(() => {
-    if (user) {
+    if (user && Loading === false) {
       if (user.role === "ADMIN" || user.role === "SUPERADMIN") {
         router.push("/admin");
       } else if (user.role === "USER") {
