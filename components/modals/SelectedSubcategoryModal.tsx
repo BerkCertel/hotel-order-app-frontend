@@ -110,6 +110,13 @@ const SelectedSubcategoryModal = ({
                       <CardTitle className="w-full text-sm md:text-base lg:text-lg font-semibold text-center mt-1 mb-1 break-words line-clamp-1">
                         {subcategory.name}
                       </CardTitle>
+
+                      {subcategory.price !== 0 && (
+                        <span className="font-semibold bg-blue-400 px-2 rounded-md text-white">
+                          {subcategory.price}$
+                        </span>
+                      )}
+
                       <span className="w-full text-[10px] text-gray-500 text-center mb-2 break-words line-clamp-2">
                         {subcategory.description}
                       </span>
@@ -125,6 +132,7 @@ const SelectedSubcategoryModal = ({
                                 name: subcategory.name,
                                 quantity: 1,
                                 image: subcategory.image,
+                                price: subcategory.price,
                               })
                             )
                           }
@@ -145,6 +153,7 @@ const SelectedSubcategoryModal = ({
                                     name: subcategory.name,
                                     quantity: -1,
                                     image: subcategory.image,
+                                    price: subcategory.price,
                                   })
                                 )
                               }
@@ -167,6 +176,7 @@ const SelectedSubcategoryModal = ({
                                     name: subcategory.name,
                                     quantity: 1,
                                     image: subcategory.image,
+                                    price: subcategory.price,
                                   })
                                 )
                               }
@@ -188,7 +198,7 @@ const SelectedSubcategoryModal = ({
                             <span className="hidden md:inline">
                               Remove from Cart
                             </span>
-                            <span className="md:hidden">Sil</span>
+                            <span className="md:hidden"> Remove from Cart</span>
                           </Button>
                         </div>
                       )}

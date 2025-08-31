@@ -23,17 +23,27 @@ const initialState: SubcategoryState = {
 // CREATE
 export const createSubcategory = createAsyncThunk<
   Subcategory,
-  { name: string; category: string; image: File; description?: string },
+  {
+    name: string;
+    category: string;
+    image: File;
+    description?: string;
+    price?: number;
+  },
   { rejectValue: string }
 >(
   "subcategory/createSubcategory",
-  async ({ name, category, image, description }, { rejectWithValue }) => {
+  async (
+    { name, category, image, description, price },
+    { rejectWithValue }
+  ) => {
     try {
       const formData = new FormData();
       formData.append("name", name);
       formData.append("category", category);
       formData.append("image", image);
       if (description) formData.append("description", description);
+      if (price !== undefined) formData.append("price", price.toString());
 
       const res = await axiosInstance.post(
         API_PATHS.SUBCATEGORY.CREATE_SUBCATEGORY,
@@ -121,17 +131,22 @@ export const updateSubcategory = createAsyncThunk<
     category: string;
     image?: File;
     description?: string;
+    price?: number;
   },
   { rejectValue: string }
 >(
   "subcategory/updateSubcategory",
-  async ({ id, name, category, image, description }, { rejectWithValue }) => {
+  async (
+    { id, name, category, image, description, price },
+    { rejectWithValue }
+  ) => {
     try {
       const formData = new FormData();
       formData.append("name", name);
       formData.append("category", category);
       if (image) formData.append("image", image);
       if (description) formData.append("description", description);
+      if (price !== undefined) formData.append("price", price.toString());
 
       const res = await axiosInstance.put(
         API_PATHS.SUBCATEGORY.UPDATE_SUBCATEGORY(id),

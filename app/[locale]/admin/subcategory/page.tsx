@@ -48,6 +48,7 @@ export default function Subcategories() {
   const [editingId, setEditingId] = useState<string | null>(null);
   const [editName, setEditName] = useState<string>("");
   const [editDesc, setEditDesc] = useState<string>("");
+  const [editPrice, setEditPrice] = useState<string>("");
   const [editImage, setEditImage] = useState<File | undefined>(undefined);
   const [editPreviewUrl, setEditPreviewUrl] = useState<string | undefined>(
     undefined
@@ -71,6 +72,7 @@ export default function Subcategories() {
       category: "",
       image: undefined as File | undefined,
       description: "",
+      price: "",
     },
     validationSchema: SubcategoryCreateSchema,
     onSubmit: async (values, { resetForm }) => {
@@ -80,6 +82,7 @@ export default function Subcategories() {
           category: values.category,
           image: values.image as File,
           description: values.description,
+          price: Number(values.price),
         })
       );
       if (success) resetForm();
@@ -138,6 +141,7 @@ export default function Subcategories() {
     setEditDesc(sc.description || "");
     setEditImage(undefined);
     setEditPreviewUrl(sc.image);
+    setEditPrice(sc.price?.toString() ?? "");
   };
 
   // Edit kaydet
@@ -149,6 +153,7 @@ export default function Subcategories() {
         category: sc.category._id,
         image: editImage,
         description: editDesc,
+        price: Number(editPrice),
       })
     );
     setEditingId(null);
@@ -206,6 +211,23 @@ export default function Subcategories() {
                     ))}
                   </SelectContent>
                 </Select>
+                <Input
+                  name="price"
+                  type="number"
+                  min={0}
+                  step="0.01"
+                  placeholder="Fiyat (opsiyonel)"
+                  value={formik.values.price}
+                  onChange={formik.handleChange}
+                  onBlur={formik.handleBlur}
+                  disabled={loading}
+                  className="bg-white"
+                />
+                {formik.touched.price && formik.errors.price && (
+                  <span className="text-red-500 text-xs ml-1">
+                    {formik.errors.price}
+                  </span>
+                )}
               </div>
               {formik.touched.name && formik.errors.name && (
                 <span className="text-red-500 text-xs ml-1">
@@ -366,6 +388,15 @@ export default function Subcategories() {
                                   setEditImage(file);
                                 }}
                               />
+                              <Input
+                                type="number"
+                                min={0}
+                                step="0.01"
+                                value={editPrice}
+                                onChange={(e) => setEditPrice(e.target.value)}
+                                placeholder="Fiyat (opsiyonel)"
+                                className="font-medium truncate"
+                              />
                             </div>
                             <div className="flex flex-col gap-1 ml-2 flex-shrink-0">
                               <Button
@@ -410,7 +441,13 @@ export default function Subcategories() {
                                 </span>
                               )}
                             </div>
-                            <div className="flex flex-col gap-1 w-8 flex-shrink-0">
+                            {typeof sc.price === "number" && (
+                              <span className="text-sm text-gray-600">
+                                Fiyat: {sc.price}$
+                              </span>
+                            )}
+
+                            <div className="flex flex-col gap-1 w-9 flex-shrink-0">
                               <Button
                                 className="edit-button"
                                 onClick={() => handleEdit(sc)}

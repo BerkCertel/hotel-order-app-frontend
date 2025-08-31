@@ -9,4 +9,5 @@ export interface Subcategory {
   description?: string;
   createdAt?: string;
   updatedAt?: string;
+  price?: number;
 }

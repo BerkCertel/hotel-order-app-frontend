@@ -18,6 +18,7 @@ import { Button } from "../ui/button";
 import { format, parseISO, differenceInSeconds } from "date-fns";
 import { Order } from "@/types/OrderTypes";
 import { STATUS_OPTIONS } from "@/constants/orderStatus";
+import { OrderItemsTable } from "./OrderTableCard";
 
 export function OrderCard({ order }: { order: Order }) {
   const dispatch = useAppDispatch();
@@ -98,7 +99,7 @@ export function OrderCard({ order }: { order: Order }) {
     <>
       <Card
         className={clsx(
-          "p-4 min-h-[220px] flex flex-col gap-3 border border-border/60 bg-background/95 backdrop-blur transition-all duration-300",
+          "p-4 min-h-[220px] max-h-[400px] flex flex-col gap-3 border border-border/60 bg-background/95 backdrop-blur transition-all duration-300",
           isJustArrived ? "bg-orange-100 border-orange-300" : meta.badge,
           isJustArrived && "ring-4 ring-orange-300 shadow-lg"
         )}
@@ -125,6 +126,11 @@ export function OrderCard({ order }: { order: Order }) {
           <div>
             <span className="font-medium">Room:</span> {order.roomNumber}
           </div>
+
+          <div>
+            <span className="font-medium ">Name:</span>{" "}
+            {order.orderUserName || "Guest"}
+          </div>
           <div>
             <span className="font-medium">QR:</span> {order.qrcodeLabel}
           </div>
@@ -132,19 +138,16 @@ export function OrderCard({ order }: { order: Order }) {
             <span className="font-medium">Date:</span>{" "}
             {format(created, "dd.MM.yyyy HH:mm:ss")}
           </div>
+
+          {order.TotalPrice && order.TotalPrice > 0 && (
+            <div>
+              <span className="font-bold ">Total Price:</span>{" "}
+              {order.TotalPrice} $
+            </div>
+          )}
         </div>
-        <div className="mt-auto overflow-auto max-h-[110px]">
-          <ul className="text-xs space-y-1">
-            {order.items.map((item, i) => (
-              <li key={i} className="flex justify-between gap-2">
-                <span className="truncate">{item.name}</span>
-                <span className={clsx("font-medium", textColor)}>
-                  x{item.quantity}
-                </span>
-              </li>
-            ))}
-          </ul>
-        </div>
+        <OrderItemsTable items={order.items} />
+
         {/* Status change buttons */}
         {/* Durum değiştirme butonları */}
         <div className="flex gap-2 mt-2 flex-wrap">

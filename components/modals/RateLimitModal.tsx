@@ -53,7 +53,12 @@ const RateLimitModal = () => {
 
   return (
     <Dialog open={rateLimitModalOpen}>
-      <DialogContent className="sm:max-w-[400px] pointer-events-none select-none">
+      <DialogContent
+        className="sm:max-w-[400px] pointer-events-none select-none"
+        onInteractOutside={(e) => e.preventDefault()}
+        onEscapeKeyDown={(e) => e.preventDefault()}
+        showCloseButton={false}
+      >
         <DialogHeader>
           <DialogTitle className="flex items-center justify-center gap-2 text-red-600">
             <FaLock className="text-xl" /> Erişiminiz Kısıtlandı

@@ -19,4 +19,8 @@ export const SubcategoryCreateSchema = Yup.object().shape({
     200,
     "Description must be at most 200 characters."
   ),
+  price: Yup.number()
+    .typeError("Price must be a number.")
+    .min(0, "Price must be at least 0.")
+    .nullable(),
 });

@@ -90,7 +90,7 @@ function MenuPage() {
       {/* Error state */}
       {error && (
         <Alert variant="destructive" className="mb-6">
-          <AlertTitle>Hata</AlertTitle>
+          <AlertTitle>Error</AlertTitle>
           <AlertDescription>{error}</AlertDescription>
         </Alert>
       )}
@@ -98,9 +98,9 @@ function MenuPage() {
       {/* Empty state */}
       {!loading && (!categories || categories.length === 0) && (
         <Alert className="mb-6">
-          <AlertTitle>Menü bulunamadı</AlertTitle>
+          <AlertTitle>No Menu Found</AlertTitle>
           <AlertDescription>
-            Şu anda herhangi bir menü ekli değil.
+            Currently, no menu has been added.
           </AlertDescription>
         </Alert>
       )}

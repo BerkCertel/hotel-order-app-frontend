@@ -54,6 +54,7 @@ function CartSheet() {
         qrCodeId: activeQrCodeId,
         roomNumber: orderUser.roomNumber,
         orderUserName: orderUser.name,
+        TotalPrice,
       })
     );
   };
@@ -65,6 +66,11 @@ function CartSheet() {
       // bunu success modal kapatma fonksiyonunda da yapabilirsin.
     }
   }, [orderStatus, dispatch]);
+
+  const TotalPrice = cartItems.reduce(
+    (acc, item) => acc + (item.price ?? 0) * item.quantity,
+    0
+  );
 
   return (
     <Sheet>
@@ -103,12 +109,12 @@ function CartSheet() {
 
           {/* Cart Content */}
           {cartItems.length === 0 ? (
-            <div className="flex flex-col items-center mt-10 text-muted-foreground">
+            <div className="border rounded-md py-2 flex flex-col items-center mt-10 text-muted-foreground">
               <FaBoxOpen className="w-12 h-12 mb-2 opacity-40" />
               <div className="font-medium text-base">Your cart is empty</div>
             </div>
           ) : (
-            <div className="flex flex-col gap-4">
+            <div className="flex flex-col gap-4 border rounded-md ">
               {cartItems.map((item) => (
                 <div
                   key={item._id}
@@ -127,9 +133,15 @@ function CartSheet() {
                   </div>
                   {/* Info */}
                   <div className="flex flex-col flex-1 min-w-0">
-                    <div className="font-semibold text-base truncate">
+                    <div className=" first-letter:uppercase font-semibold text-base truncate">
                       {item.name}
                     </div>
+                    {item.price !== undefined && item.price !== 0 && (
+                      <div className="text-xs bg-blue-200 rounded-sm w-28 text-center text-gray-600 font-bold">
+                        ${item.price} x {item.quantity} = $
+                        {item.price * item.quantity}
+                      </div>
+                    )}
                     {/* Quantity controls */}
                     <div className="flex items-center mt-1 gap-2">
                       <Button
@@ -175,8 +187,7 @@ function CartSheet() {
                   {/* Remove */}
                   <Button
                     size="icon"
-                    variant="ghost"
-                    className="text-red-500"
+                    variant="destructive"
                     onClick={() => dispatch(removeFromCart(item._id))}
                     aria-label="Remove from cart"
                   >
@@ -189,9 +200,12 @@ function CartSheet() {
         </div>
 
         {/* FOOTER */}
-        <SheetFooter className="border-t p-4 flex justify-between">
+        <SheetFooter className="border-t p-2 flex justify-between">
+          <div className=" text-md font-semibold text-center bg-blue-500 p-1.5 text-white rounded-md mx-1 ">
+            Total: ${TotalPrice}
+          </div>
           <Button
-            className="w-full mt-6"
+            className="w-full "
             type="submit"
             disabled={orderStatus === "loading"}
             onClick={handleCreateOrder}

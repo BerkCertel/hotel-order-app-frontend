@@ -31,7 +31,12 @@ const OrderSuccessModal = () => {
   return (
     <Dialog open={orderSuccessModalOpen}>
       <DialogTrigger asChild></DialogTrigger>
-      <DialogContent className="sm:max-w-[425px]">
+      <DialogContent
+        className="sm:max-w-[425px]"
+        onInteractOutside={(e) => e.preventDefault()}
+        onEscapeKeyDown={(e) => e.preventDefault()}
+        showCloseButton={false}
+      >
         <DialogHeader>
           <DialogTitle>
             <div className="text-center mb-4" id="success-modal-desc">

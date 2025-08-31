@@ -6,6 +6,7 @@ export type CartItem = {
   name: string;
   quantity: number;
   image: string;
+  price?: number;
 };
 
 type CartState = {
@@ -44,6 +45,12 @@ const cartSlice = createSlice({
     },
   },
 });
+// Toplam fiyat selector
+export const selectCartTotal = (state: RootState) =>
+  state.cart.items.reduce(
+    (acc, item) => acc + (item.price ?? 0) * item.quantity,
+    0
+  );
 
 export const { addToCart, removeFromCart, clearCart } = cartSlice.actions;
 
