@@ -13,24 +13,20 @@ import { useRouter } from "next/navigation";
 import { useAppDispatch, useAppSelector } from "@/store/store";
 import { selectQrCodeState } from "@/store/qrcodeSlice";
 import { closeOrderSuccessModal, selectOrderState } from "@/store/orderSlice";
+import { clearOrderUser } from "@/store/orderuserSlice";
 
 const OrderSuccessModal = () => {
   const { activeQrCodeId } = useAppSelector(selectQrCodeState);
   const { orderSuccessModalOpen } = useAppSelector(selectOrderState);
 
   const dispatch = useAppDispatch();
-  // // Açmak için:
-  // dispatch(openOrderSuccessModal());
-  // // Kapatmak için:
-  // dispatch(closeOrderSuccessModal());
-
-  console.log("modal qr", activeQrCodeId);
 
   const router = useRouter();
 
   const handleMenuPage = () => {
     router.push(`/order/menu/${activeQrCodeId}`);
     dispatch(closeOrderSuccessModal());
+    dispatch(clearOrderUser());
   };
   return (
     <Dialog open={orderSuccessModalOpen}>

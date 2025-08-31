@@ -90,7 +90,7 @@ export default function OrdersByLocation() {
 
   if (loading && orders.length === 0) {
     return (
-      <div className="max-w-7xl mx-auto py-10 flex flex-col items-center gap-6">
+      <div className="h-full w-full flex flex-col justify-center items-center py-12">
         <Card className="w-full max-w-xs flex flex-col items-center p-6">
           <Loader2 className="h-8 w-8 animate-spin text-primary mb-2" />
           <CardTitle className="text-center text-base">
@@ -120,16 +120,16 @@ export default function OrdersByLocation() {
 
   if (!loading && orders.length === 0) {
     return (
-      <div className="h-full w-full flex flex-col justify-center items-center">
-        <Card className="max-w-md w-full flex flex-col items-center p-8 shadow-lg">
-          <CardHeader className="flex items-center">
-            <Inbox className="h-14 w-14  " />
-            <CardTitle className=" font-semibold text-center text-gray-800">
+      <div className="h-full w-full flex flex-col justify-center items-center py-12">
+        <Card className="max-w-sm w-full flex flex-col items-center rounded-2xl shadow-lg p-0">
+          <CardHeader className="flex flex-col items-center pt-8 pb-2">
+            <Inbox className="h-12 w-12 text-gray-400 mb-2" />
+            <CardTitle className="font-bold text-lg text-center text-gray-700 tracking-tight">
               No Orders
             </CardTitle>
           </CardHeader>
-          <CardContent className="p-0 mt-2">
-            <p className="text-sm text-muted-foreground text-center">
+          <CardContent className="p-0 pb-8">
+            <p className="text-sm text-gray-500 text-center leading-relaxed px-2">
               There are currently no orders for this location.
               <br />
               Please check back later.

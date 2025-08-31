@@ -32,7 +32,7 @@ const HotelAuthModal: React.FC<HotelAuthModalProps> = ({ open, onSuccess }) => {
         setSubmitting(false);
         onSuccess(values.roomNumber, values.name); // ismi de ilet!
       } else {
-        setFieldError("roomNumber", "Bilgiler hatalı. Lütfen tekrar deneyin.");
+        setFieldError("Room Number", "Invalid room number.");
         setSubmitting(false);
       }
     },
@@ -40,6 +40,7 @@ const HotelAuthModal: React.FC<HotelAuthModalProps> = ({ open, onSuccess }) => {
 
   return (
     <Dialog open={open} onOpenChange={() => {}}>
+      <DialogDescription></DialogDescription>
       <DialogContent
         aria-describedby="auth-modal-desc"
         onInteractOutside={(e) => e.preventDefault()}

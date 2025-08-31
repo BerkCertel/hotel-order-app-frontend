@@ -57,6 +57,24 @@ export const getAllLocations = createAsyncThunk<
   }
 });
 
+// Fetch user locations
+// Fetch user locations
+export const getUserLocations = createAsyncThunk<
+  Location[],
+  void,
+  { rejectValue: string }
+>("userLocations/fetch", async (_, { rejectWithValue }) => {
+  try {
+    const res = await axiosInstance.get(API_PATHS.LOCATION.GET_USER_LOCATIONS);
+    return res.data as Location[];
+  } catch (error: unknown) {
+    const err = error as AxiosError<{ message?: string }>;
+    return rejectWithValue(
+      err.response?.data?.message || "Kullanıcı lokasyonları alınamadı"
+    );
+  }
+});
+
 // LOCATION UPDATE
 export const updateLocation = createAsyncThunk<
   Location,
@@ -141,6 +159,20 @@ const locationsSlice = createSlice({
       .addCase(getAllLocations.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload || "Lokasyonlar alınamadı";
+      })
+      // GET USER LOCATIONS
+      .addCase(getUserLocations.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(getUserLocations.fulfilled, (state, action) => {
+        state.loading = false;
+        state.locations = action.payload;
+        state.error = null;
+      })
+      .addCase(getUserLocations.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload || "Kullanıcı lokasyonları alınamadı";
       })
       // UPDATE
       .addCase(updateLocation.pending, (state) => {

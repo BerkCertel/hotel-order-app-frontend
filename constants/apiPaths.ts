@@ -22,6 +22,7 @@ export const API_PATHS = {
       `/api/v1/location/update-location/${locationId}`,
     DELETE_LOCATION: (locationId: string) =>
       `/api/v1/location/delete-location/${locationId}`,
+    GET_USER_LOCATIONS: "/api/v1/location/user-locations",
     // DOWNLOAD_LOCATION: `/api/v1/location/download-excel`,
   },
 

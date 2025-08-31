@@ -12,6 +12,12 @@ interface UserState {
   users: User[];
 }
 
+type UpdateUserRolePayload = {
+  id: string;
+  role: string;
+  locations?: string[];
+};
+
 const initialState: UserState = {
   loading: false,
   error: null,
@@ -22,24 +28,28 @@ const initialState: UserState = {
 // CREATE USER
 export const createUser = createAsyncThunk<
   User, // response type
-  { email: string; password: string; role: string }, // parametreler
+  { email: string; password: string; role: string; locations: string[] }, // parametreler
   { rejectValue: string }
->("user/createUser", async ({ email, password, role }, { rejectWithValue }) => {
-  try {
-    const res = await axiosInstance.post(API_PATHS.AUTH.ADD_USER, {
-      email,
-      password,
-      role,
-    });
-    // Backend { id, user, token } dönüyor, user nesnesini alalım:
-    return res.data.user as User;
-  } catch (error: unknown) {
-    const err = error as AxiosError<{ message?: string }>;
-    return rejectWithValue(
-      err.response?.data?.message || "Kullanıcı oluşturulamadı"
-    );
+>(
+  "user/createUser",
+  async ({ email, password, role, locations }, { rejectWithValue }) => {
+    try {
+      const res = await axiosInstance.post(API_PATHS.AUTH.ADD_USER, {
+        email,
+        password,
+        role,
+        locations,
+      });
+      // Backend { id, user, token } dönüyor, user nesnesini alalım:
+      return res.data.user as User;
+    } catch (error: unknown) {
+      const err = error as AxiosError<{ message?: string }>;
+      return rejectWithValue(
+        err.response?.data?.message || "Kullanıcı oluşturulamadı"
+      );
+    }
   }
-});
+);
 
 // GET ALL USERS
 export const getAllUsers = createAsyncThunk<
@@ -61,22 +71,26 @@ export const getAllUsers = createAsyncThunk<
 // USER UPDATE
 export const updateUserRole = createAsyncThunk<
   User,
-  { id: string; role: string },
+  UpdateUserRolePayload,
   { rejectValue: string }
->("user/updateUserRole", async ({ id, role }, { rejectWithValue }) => {
-  try {
-    const res = await axiosInstance.put(API_PATHS.AUTH.UPDATE_USER_ROLE, {
-      userId: id,
-      newRole: role,
-    });
-    return res.data.user as User;
-  } catch (error: unknown) {
-    const err = error as AxiosError<{ message?: string }>;
-    return rejectWithValue(
-      err.response?.data?.message || "Kullanıcı rolü güncellenemedi"
-    );
+>(
+  "user/updateUserRole",
+  async ({ id, role, locations }, { rejectWithValue }) => {
+    try {
+      const res = await axiosInstance.put(API_PATHS.AUTH.UPDATE_USER_ROLE, {
+        userId: id,
+        newRole: role,
+        newLocations: locations,
+      });
+      return res.data.user as User;
+    } catch (error: unknown) {
+      const err = error as AxiosError<{ message?: string }>;
+      return rejectWithValue(
+        err.response?.data?.message || "Kullanıcı rolü güncellenemedi"
+      );
+    }
   }
-});
+);
 
 // USER DELETE
 export const deleteUser = createAsyncThunk<

@@ -2,11 +2,15 @@ import { useRouter } from "@/i18n/navigation";
 import { useLogout } from "@/hooks/useLogout";
 import { LuLogOut } from "react-icons/lu";
 import { PiQrCodeDuotone } from "react-icons/pi";
+import { FaExclamationTriangle } from "react-icons/fa";
+import { MdOutlineMenuBook } from "react-icons/md";
 import { useEffect } from "react";
-
-import { getAllLocations, selectLocationState } from "@/store/locationsSlice";
+import {
+  getAllLocations,
+  getUserLocations,
+  selectLocationState,
+} from "@/store/locationsSlice";
 import { useAppDispatch, useAppSelector } from "@/store/store";
-import { FaExclamationTriangle } from "react-icons/fa"; // Hata ikonu eklendi
 
 export default function UserSideMenu() {
   const dispatch = useAppDispatch();
@@ -15,7 +19,7 @@ export default function UserSideMenu() {
   const logout = useLogout();
 
   useEffect(() => {
-    dispatch(getAllLocations());
+    dispatch(getUserLocations());
   }, [dispatch]);
 
   const handleNavigate = (locId: string) => {
@@ -23,17 +27,16 @@ export default function UserSideMenu() {
   };
 
   const handleQrPage = () => {
-    navigate.push("/user/qrcodes");
+    navigate.push("/user");
   };
 
   if (loading)
     return (
       <div className="flex flex-col gap-4 p-8">
-        {/* 3 adet dikdörtgen skeleton kart örneği */}
         {[1, 2, 3].map((item) => (
           <div
             key={item}
-            className="w-full h-12 bg-gray-200 rounded-lg animate-pulse"
+            className="w-full h-12 bg-gradient-to-r from-indigo-100 via-indigo-300 to-indigo-100 rounded-lg animate-pulse"
           />
         ))}
       </div>
@@ -49,7 +52,7 @@ export default function UserSideMenu() {
             : "An error occurred while loading locations."}
         </div>
         <button
-          className="mt-4 px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-all"
+          className="mt-4 px-5 py-2 bg-red-600 text-white rounded-lg shadow hover:bg-red-700 transition-all"
           onClick={() => dispatch(getAllLocations())}
         >
           Try Again
@@ -58,39 +61,43 @@ export default function UserSideMenu() {
     );
 
   return (
-    <aside className="w-64 h-[calc(100vh-61px)] bg-white border-r border-black/20 p-5 sticky top-[61px] z-50 overflow-y-auto flex flex-col">
+    <aside className="w-64 h-[calc(100vh-61px)] bg-gradient-to-b from-indigo-50 via-white to-indigo-100 border-r border-black/10 px-6 py-6 sticky top-[61px] z-50 overflow-y-auto flex flex-col gap-6 shadow-sm">
       {/* QR Codes butonu */}
       <button
         onClick={handleQrPage}
-        className="w-full flex items-center gap-3 text-[15px] font-semibold bg-indigo-50 text-indigo-900 py-3 px-6 rounded-lg mb-5 hover:bg-indigo-600 hover:text-white transition-all duration-200"
+        className="cursor-pointer w-full flex items-center gap-3 text-[15px] font-semibold bg-indigo-100 text-indigo-900 py-3 px-6 rounded-xl mb-3 shadow hover:bg-indigo-600 hover:text-white transition-all duration-200 group"
       >
-        <PiQrCodeDuotone className="text-xl" />
-        Qr Codes
+        <PiQrCodeDuotone className="text-xl group-hover:text-white transition-colors" />
+        <span>QR Codes</span>
       </button>
 
       {/* Orders başlığı ve locations listesi */}
-      <div className="mb-6">
-        <h5 className="text-lg font-bold mb-2 text-black/80">Orders</h5>
+      <div>
+        <h5 className="flex items-center gap-2 text-lg font-extrabold mb-3 text-black/80 tracking-wide">
+          <MdOutlineMenuBook className="text-indigo-400" />
+          <span>Orders</span>
+        </h5>
         <div className="flex flex-col gap-2">
           {locations.map((loc, index) => (
             <button
               key={`menu_${index}`}
               onClick={() => handleNavigate(loc._id as string)}
-              className="w-full flex items-center gap-3 text-[15px] text-black bg-black/10 py-2 px-5 rounded-lg hover:bg-black hover:text-white transition-all duration-200"
+              className="cursor-pointer w-full flex items-center gap-3 text-[15px] text-black bg-white/60 py-2 px-5 rounded-xl shadow hover:bg-indigo-500 hover:text-white transition-all duration-200 group"
             >
-              {/* Dilersen buraya icon ekleyebilirsin */}
               <span className="font-semibold truncate">{loc.location}</span>
             </button>
           ))}
         </div>
       </div>
 
+      <div className="flex-1" />
+
       <div
         onClick={logout}
-        className="w-full flex items-center gap-4 text-[15px]  py-3 px-6 rounded-lg mb-3  bg-red-600 text-white cursor-pointer hover:opacity-65 transition-all duration-200"
+        className="w-full flex items-center gap-4 text-[15px] py-3 px-6 rounded-xl mb-3 bg-gradient-to-r from-red-600 to-red-500 text-white cursor-pointer shadow hover:opacity-80 transition-all duration-200 font-semibold"
       >
-        <LuLogOut />
-        Logout
+        <LuLogOut className="text-lg" />
+        <span>Logout</span>
       </div>
     </aside>
   );

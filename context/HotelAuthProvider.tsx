@@ -1,7 +1,8 @@
 import HotelAuthModal from "@/components/modals/HotelAuthModal";
 import { setOrderUser } from "@/store/orderuserSlice";
-import { useAppDispatch } from "@/store/store";
+import { RootState, useAppDispatch } from "@/store/store";
 import React, { createContext, useContext, useState } from "react";
+import { useSelector } from "react-redux";
 
 type HotelAuthContextType = {
   isAuthenticated: boolean;
@@ -17,12 +18,13 @@ export const HotelAuthProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
   const [isAuthenticated, setAuthenticated] = useState(false);
+  const { orderUser } = useSelector((state: RootState) => state.orderuser);
   const dispatch = useAppDispatch();
 
   return (
     <HotelAuthContext.Provider value={{ isAuthenticated }}>
       <HotelAuthModal
-        open={!isAuthenticated}
+        open={(!isAuthenticated && !orderUser) || !orderUser.roomNumber}
         onSuccess={(roomNumber, name) => {
           dispatch(setOrderUser({ roomNumber, name })); // isim de redux’a kaydolur
           setAuthenticated(true);
