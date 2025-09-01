@@ -1,10 +1,10 @@
-import { BASE_URL } from "@/constants/apiPaths";
 import { openRateLimitModal } from "@/store/modalSlice";
 import { store } from "@/store/store";
 import axios from "axios";
 
 const axiosInstance = axios.create({
-  baseURL: BASE_URL,
+  // baseURL: process.env.BACKEND_URL,
+  baseURL: process.env.NEXT_PUBLIC_API_URL,
   timeout: 10000,
   headers: {
     "Content-Type": "application/json",

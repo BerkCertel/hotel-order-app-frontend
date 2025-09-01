@@ -24,7 +24,8 @@ import { Link } from "@/i18n/navigation";
 import { LoadingModal } from "@/components/modals/LoadingModal";
 
 export default function Home() {
-  const [Loading, setLoading] = useState(false);
+  const [Loading, setLoading] = useState(false); // Login işlemi için modal
+  const [Redirecting, setRedirecting] = useState(false); // Redirect için modal
   const router = useRouter();
   const { updateUser } = useContext(UserContext);
 
@@ -33,7 +34,7 @@ export default function Home() {
     validationSchema: LoginFormSchema,
     onSubmit: async (values, { resetForm }) => {
       try {
-        setLoading(true); // Modal açılır!
+        setLoading(true); // Login modalı açılır!
         const response = await axiosInstance.post(API_PATHS.AUTH.LOGIN, {
           email: values.email,
           password: values.password,
@@ -42,21 +43,24 @@ export default function Home() {
         if (user) {
           updateUser(user);
           toast.success("Login successful!");
-          if (user.role === "ADMIN" || user.role === "SUPERADMIN") {
-            router.push("/admin");
-          } else if (user.role === "USER") {
-            router.push("/user");
-          }
+          setLoading(false); // Login modalı kapatılır
+          setRedirecting(true); // Redirect modalı açılır
+          setTimeout(() => {
+            if (user.role === "ADMIN" || user.role === "SUPERADMIN") {
+              router.push("/admin");
+            } else if (user.role === "USER") {
+              router.push("/user");
+            }
+          }, 1500); // 1.5 saniye boyunca redirect modalı açık kalsın
         }
       } catch (error) {
+        setLoading(false);
         const err = error as AxiosError<{ message?: string }>;
         if (err.response && err.response.data.message) {
           toast.error(err.response.data.message);
         } else {
           toast.error("Something went wrong. Please try again later.");
         }
-      } finally {
-        setLoading(false); // Modal kapanır!
       }
       resetForm();
     },
@@ -65,6 +69,7 @@ export default function Home() {
   return (
     <div className="flex-center flex-col gap-4 h-screen">
       <LoadingModal open={Loading} text="Logging in, please wait..." />
+      <LoadingModal open={Redirecting} text="Redirecting, please wait..." />
       <h5 className="text-2xl lg:text-4xl font-semibold">
         Welcome To Hotel System
       </h5>
@@ -112,9 +117,13 @@ export default function Home() {
               <Button
                 type="submit"
                 className="w-full max-w-3/4"
-                disabled={Loading}
+                disabled={Loading || Redirecting}
               >
-                {Loading ? "Logging in..." : "Login"}
+                {Loading
+                  ? "Logging in..."
+                  : Redirecting
+                  ? "Redirecting..."
+                  : "Login"}
               </Button>
               <Button variant={"link"} asChild>
                 <Link href="forgot-password">Forgot your password?</Link>
