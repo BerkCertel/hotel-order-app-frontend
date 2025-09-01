@@ -44,7 +44,6 @@ export const QrCreateForm = ({ locations }: Props) => {
 
   useEffect(() => {
     if (Qrsuccess) {
-      toast.success("QR kod başarıyla oluşturuldu!");
       formik.resetForm();
       dispatch(resetQrCodeState());
     }

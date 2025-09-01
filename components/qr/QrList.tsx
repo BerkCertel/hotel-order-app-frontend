@@ -116,7 +116,7 @@ export const QrList = ({ locations }: Props) => {
               <ScrollArea className="w-full h-60 px-2">
                 {qrCodesByLocation[loc._id] &&
                 qrCodesByLocation[loc._id].length > 0 ? (
-                  <div className="grid grid-cols-2 md:grid-cols-3 gap-3 py-2">
+                  <div className="grid  grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 py-2">
                     {qrCodesByLocation[loc._id].map((qr) => (
                       <div
                         key={qr._id}
