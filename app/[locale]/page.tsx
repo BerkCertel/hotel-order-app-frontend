@@ -64,8 +64,8 @@ export default function Home() {
       } finally {
         setLoading(false);
         setRedirecting(false);
+        resetForm();
       }
-      resetForm();
     },
   });
 
