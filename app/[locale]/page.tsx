@@ -61,6 +61,9 @@ export default function Home() {
         } else {
           toast.error("Something went wrong. Please try again later.");
         }
+      } finally {
+        setLoading(false);
+        setRedirecting(false);
       }
       resetForm();
     },
