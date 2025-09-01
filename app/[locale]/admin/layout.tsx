@@ -1,7 +1,7 @@
 "use client";
 
 import AdminLayout from "@/components/layouts/AdminLayout";
-// import ProtectedPageProvider from "@/components/Providers/ProtectedPageProvider";
+import ProtectedPageProvider from "@/components/Providers/ProtectedPageProvider";
 
 import { useUserAuth } from "@/hooks/useUserAuth";
 import React from "react";
@@ -15,13 +15,12 @@ function AdminPageMainLayout({ children }: AdminPageMainLayoutProps) {
 
   return (
     <AdminLayout>
-      {/* <ProtectedPageProvider
+      <ProtectedPageProvider
         allowedRoles={["ADMIN", "SUPERADMIN"]}
         redirectTo="/"
       >
-  
-      </ProtectedPageProvider> */}
-      {children}
+        {children}
+      </ProtectedPageProvider>
     </AdminLayout>
   );
 }

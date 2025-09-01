@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useContext, useEffect } from "react";
+import { useState, useContext } from "react";
 import { useFormik } from "formik";
 import { toast } from "sonner";
 import { useRouter } from "@/i18n/navigation";
@@ -26,7 +26,7 @@ import { LoadingModal } from "@/components/modals/LoadingModal";
 export default function Home() {
   const [Loading, setLoading] = useState(false);
   const router = useRouter();
-  const { updateUser, user } = useContext(UserContext);
+  const { updateUser } = useContext(UserContext);
 
   const formik = useFormik({
     initialValues: { email: "", password: "" },
@@ -42,6 +42,11 @@ export default function Home() {
         if (user) {
           updateUser(user);
           toast.success("Login successful!");
+          if (user.role === "ADMIN" || user.role === "SUPERADMIN") {
+            router.push("/admin");
+          } else if (user.role === "USER") {
+            router.push("/user");
+          }
         }
       } catch (error) {
         const err = error as AxiosError<{ message?: string }>;
@@ -56,16 +61,6 @@ export default function Home() {
       resetForm();
     },
   });
-
-  useEffect(() => {
-    if (user && Loading === false) {
-      if (user.role === "ADMIN" || user.role === "SUPERADMIN") {
-        router.push("/admin");
-      } else if (user.role === "USER") {
-        router.push("/user");
-      }
-    }
-  }, [user]);
 
   return (
     <div className="flex-center flex-col gap-4 h-screen">
