@@ -24,8 +24,8 @@ import { Link } from "@/i18n/navigation";
 import { LoadingModal } from "@/components/modals/LoadingModal";
 
 export default function Home() {
-  const [Loading, setLoading] = useState(false); // Login işlemi için modal
-  const [Redirecting, setRedirecting] = useState(false); // Redirect için modal
+  const [Loading, setLoading] = useState(false);
+  const [Redirecting, setRedirecting] = useState(false);
   const router = useRouter();
   const { updateUser } = useContext(UserContext);
 
@@ -34,24 +34,33 @@ export default function Home() {
     validationSchema: LoginFormSchema,
     onSubmit: async (values, { resetForm }) => {
       try {
-        setLoading(true); // Login modalı açılır!
-        const response = await axiosInstance.post(API_PATHS.AUTH.LOGIN, {
+        setLoading(true);
+
+        // 1. Login ile cookie setlenir
+        await axiosInstance.post(API_PATHS.AUTH.LOGIN, {
           email: values.email,
           password: values.password,
         });
-        const { user } = response.data;
-        if (user) {
-          updateUser(user);
+
+        // 2. Cookie ile user bilgisini backend'den çek
+        const userRes = await axiosInstance.get(API_PATHS.AUTH.GET_USER_INFO);
+
+        if (userRes.data) {
+          updateUser(userRes.data);
           toast.success("Login successful!");
-          setLoading(false); // Login modalı kapatılır
-          setRedirecting(true); // Redirect modalı açılır
+          setLoading(false);
+          setRedirecting(true);
+
           setTimeout(() => {
-            if (user.role === "ADMIN" || user.role === "SUPERADMIN") {
+            if (
+              userRes.data.role === "ADMIN" ||
+              userRes.data.role === "SUPERADMIN"
+            ) {
               router.push("/admin");
-            } else if (user.role === "USER") {
+            } else if (userRes.data.role === "USER") {
               router.push("/user");
             }
-          }, 1500); // 1.5 saniye boyunca redirect modalı açık kalsın
+          }, 1500);
         }
       } catch (error) {
         setLoading(false);

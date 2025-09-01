@@ -1,10 +1,10 @@
 import React from "react";
-import { FaRegSadCry } from "react-icons/fa";
+import { TbError404 } from "react-icons/tb";
 
 const NotFoundPage = () => {
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-gradient-to-br from-gray-50 via-teal-50 to-gray-100 px-4 py-12">
-      <FaRegSadCry className="text-teal-500 text-5xl md:text-6xl mb-6 animate-bounce" />
+      <TbError404 className="text-teal-500 text-5xl md:text-6xl mb-6 animate-bounce" />
       <h1 className="text-2xl md:text-4xl font-bold mb-2 text-gray-900 text-center">
         404 - Page Not Found
       </h1>
