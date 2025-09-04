@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useContext } from "react";
+import { useState, useContext, useEffect } from "react";
 import { useFormik } from "formik";
 import { toast } from "sonner";
 import { useRouter } from "@/i18n/navigation";
@@ -22,12 +22,27 @@ import { AxiosError } from "axios";
 import { FaUser } from "react-icons/fa";
 import { Link } from "@/i18n/navigation";
 import { LoadingModal } from "@/components/modals/LoadingModal";
+import { useAppDispatch, useAppSelector } from "@/store/store";
+import { selectAuthState, setLoggedInUser } from "@/store/authSlice";
 
 export default function Home() {
-  const [Loading, setLoading] = useState(false);
-  const [Redirecting, setRedirecting] = useState(false);
+  const dispatch = useAppDispatch();
   const router = useRouter();
+  const [Loading, setLoading] = useState(false);
+
   const { updateUser } = useContext(UserContext);
+
+  const { loggedInUser } = useAppSelector(selectAuthState);
+
+  useEffect(() => {
+    if (loggedInUser && loggedInUser !== null) {
+      if (loggedInUser.role === "ADMIN" || loggedInUser.role === "SUPERADMIN") {
+        router.push("/admin");
+      } else if (loggedInUser.role === "USER") {
+        router.push("/user");
+      }
+    }
+  }, [loggedInUser, router]);
 
   const formik = useFormik({
     initialValues: { email: "", password: "" },
@@ -37,30 +52,27 @@ export default function Home() {
         setLoading(true);
 
         // 1. Login ile cookie setlenir
-        await axiosInstance.post(API_PATHS.AUTH.LOGIN, {
+        const res = await axiosInstance.post(API_PATHS.AUTH.LOGIN, {
           email: values.email,
           password: values.password,
         });
 
-        // 2. Cookie ile user bilgisini backend'den çek
-        const userRes = await axiosInstance.get(API_PATHS.AUTH.GET_USER_INFO);
+        console.log(res.data.user);
 
-        if (userRes.data) {
-          updateUser(userRes.data);
+        if (res.data.user) {
+          updateUser(res.data.user);
+          dispatch(setLoggedInUser(res.data.user));
           toast.success("Login successful!");
           setLoading(false);
-          setRedirecting(true);
 
-          setTimeout(() => {
-            if (
-              userRes.data.role === "ADMIN" ||
-              userRes.data.role === "SUPERADMIN"
-            ) {
-              router.push("/admin");
-            } else if (userRes.data.role === "USER") {
-              router.push("/user");
-            }
-          }, 1500);
+          if (
+            res.data.user.role === "ADMIN" ||
+            res.data.user.role === "SUPERADMIN"
+          ) {
+            router.push("/admin");
+          } else if (res.data.user.role === "USER") {
+            router.push("/user");
+          }
         }
       } catch (error) {
         setLoading(false);
@@ -72,7 +84,6 @@ export default function Home() {
         }
       } finally {
         setLoading(false);
-        setRedirecting(false);
         resetForm();
       }
     },
@@ -81,7 +92,6 @@ export default function Home() {
   return (
     <div className="flex-center flex-col gap-4 h-screen">
       <LoadingModal open={Loading} text="Logging in, please wait..." />
-      <LoadingModal open={Redirecting} text="Redirecting, please wait..." />
       <h5 className="text-2xl lg:text-4xl font-semibold">
         Welcome To Hotel System
       </h5>
@@ -129,16 +139,18 @@ export default function Home() {
               <Button
                 type="submit"
                 className="w-full max-w-3/4"
-                disabled={Loading || Redirecting}
+                disabled={Loading}
               >
-                {Loading
-                  ? "Logging in..."
-                  : Redirecting
-                  ? "Redirecting..."
-                  : "Login"}
+                {Loading ? "Logging in..." : "Login"}
               </Button>
-              <Button variant={"link"} asChild>
-                <Link href="forgot-password">Forgot your password?</Link>
+              <Button
+                variant={"link"}
+                onClick={() => router.push("/forgot-password")}
+                asChild
+              >
+                <Link className="text-sm" href="/forgot-password">
+                  Forgot Password?
+                </Link>
               </Button>
             </CardFooter>
           </form>

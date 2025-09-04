@@ -3,22 +3,44 @@ import axiosInstance from "@/utils/axiosInstance";
 import { API_PATHS } from "@/constants/apiPaths";
 import { AxiosError } from "axios";
 import { RootState } from "./store";
+import { persistReducer } from "redux-persist";
+import createWebStorage from "redux-persist/lib/storage/createWebStorage";
+
+const createNoopStorage = () => ({
+  getItem(_key: string) {
+    return null;
+  },
+  setItem(_key: string, _value: string) {},
+  removeItem(_key: string) {},
+});
+
+const storage =
+  typeof window !== "undefined"
+    ? createWebStorage("local")
+    : createNoopStorage();
 
 // Backend'den dönen yanıt tipi
 interface MessageResponse {
   message: string;
 }
 
+interface loggedInUser {
+  email: string | null;
+  role: "USER" | "ADMIN" | "SUPERADMIN" | null;
+}
+
 interface AuthState {
   loading: boolean;
   error: string | null;
   success: boolean;
+  loggedInUser: loggedInUser | null;
 }
 
 const initialState: AuthState = {
   loading: false,
   error: null,
   success: false,
+  loggedInUser: null,
 };
 
 export const sendResetEmail = createAsyncThunk<
@@ -64,6 +86,12 @@ const authSlice = createSlice({
       state.error = null;
       state.success = false;
     },
+    setLoggedInUser(state, action) {
+      state.loggedInUser = action.payload;
+    },
+    clearLoggedInUser(state) {
+      state.loggedInUser = null;
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -98,6 +126,13 @@ const authSlice = createSlice({
   },
 });
 
-export const { resetAuthState } = authSlice.actions;
+const persistConfig = {
+  key: "auth",
+  storage,
+  whitelist: ["loggedInUser"],
+};
+
+export const { resetAuthState, setLoggedInUser, clearLoggedInUser } =
+  authSlice.actions;
 export const selectAuthState = (state: RootState) => state.auth;
-export default authSlice.reducer;
+export default persistReducer(persistConfig, authSlice.reducer);

@@ -1,11 +1,14 @@
 import { API_PATHS } from "@/constants/apiPaths";
 import { UserContext } from "@/context/userContext";
 import { useRouter } from "@/i18n/navigation";
+import { clearLoggedInUser } from "@/store/authSlice";
+import { useAppDispatch } from "@/store/store";
 import axiosInstance from "@/utils/axiosInstance";
 import { useContext } from "react";
 import { toast } from "sonner";
 
 export function useLogout() {
+  const dispatch = useAppDispatch();
   const router = useRouter();
   const { clearUser } = useContext(UserContext);
 
@@ -13,6 +16,7 @@ export function useLogout() {
     try {
       await axiosInstance.post(API_PATHS.AUTH.LOGOUT);
       clearUser();
+      dispatch(clearLoggedInUser());
       toast.success("Logout successful!");
       router.push("/");
     } catch (err) {

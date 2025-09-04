@@ -11,6 +11,7 @@ import orderuserReducer from "./orderuserSlice";
 import cartReducer from "./cartSlice";
 import orderReducer from "./orderSlice";
 import modalReducer from "./modalSlice";
+import { persistStore } from "redux-persist";
 
 export const store = configureStore({
   reducer: {
@@ -20,12 +21,25 @@ export const store = configureStore({
     category: categoryReducer,
     subcategory: subcategoryReducer,
     auth: authReducer,
-    qrcode: persistedQrCodeReducer, // <-- dikkat!
+    qrcode: persistedQrCodeReducer,
     orderuser: orderuserReducer,
     cart: cartReducer,
     order: orderReducer,
     modal: modalReducer,
   },
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware({
+      serializableCheck: {
+        ignoredActions: [
+          "persist/PERSIST",
+          "persist/REHYDRATE",
+          "persist/PAUSE",
+          "persist/FLUSH",
+          "persist/PURGE",
+          "persist/REGISTER",
+        ],
+      },
+    }),
 });
 
 export type RootState = ReturnType<typeof store.getState>;
