@@ -31,8 +31,8 @@ export default function OrdersByLocation() {
   const params = useParams();
   const locationId = params.locationId as string;
 
-  // Limit 10
-  const [limit] = useState<number>(12);
+  // Limit 6
+  const [limit] = useState<number>(6);
 
   // İlk fetch
   useEffect(() => {
@@ -159,7 +159,7 @@ export default function OrdersByLocation() {
         </div>
       </div>
 
-      <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+      <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 ">
         {orders.map((order: Order) => (
           <OrderCard key={order._id} order={order} />
         ))}

@@ -34,7 +34,7 @@ export default function AdminOrdersList({ selectedLocationId }: Props) {
   const { orders, loading, error, total, page, totalPages } =
     useAppSelector(selectOrderState);
 
-  const limit = 12;
+  const limit = 6;
 
   // Fetch orders when selectedLocationId or page changes
   useEffect(() => {
@@ -163,7 +163,7 @@ export default function AdminOrdersList({ selectedLocationId }: Props) {
         </p>
       </div>
 
-      <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+      <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 ">
         {orders.map((order: Order) => (
           <OrderCard key={order._id} order={order} />
         ))}

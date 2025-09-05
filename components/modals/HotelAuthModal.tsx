@@ -13,6 +13,7 @@ import { DialogTitle } from "@radix-ui/react-dialog";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { FaDoorOpen, FaRegCalendarAlt, FaRegUser } from "react-icons/fa";
+import { toast } from "sonner";
 
 type HotelAuthModalProps = {
   open: boolean;
@@ -32,8 +33,9 @@ const HotelAuthModal: React.FC<HotelAuthModalProps> = ({ open, onSuccess }) => {
       await new Promise((resolve) => setTimeout(resolve, 1000));
       if (values.roomNumber === "101" && values.birthDate === "2000-01-01") {
         setSubmitting(false);
-        onSuccess(values.roomNumber, values.name); // ismi de ilet!
+        onSuccess(values.roomNumber, values.name);
       } else {
+        toast.error("Invalid room number or birth date.");
         setFieldError("Room Number", "Invalid room number.");
         setSubmitting(false);
       }

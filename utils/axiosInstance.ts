@@ -3,7 +3,6 @@ import { store } from "@/store/store";
 import axios from "axios";
 
 const axiosInstance = axios.create({
-  // baseURL: process.env.BACKEND_URL,
   baseURL: process.env.NEXT_PUBLIC_API_URL,
   timeout: 100000,
   headers: {
@@ -13,7 +12,6 @@ const axiosInstance = axios.create({
   withCredentials: true,
 });
 
-// Response interceptor (429 için ekleme yapıldı)
 axiosInstance.interceptors.response.use(
   (response) => response,
   (error) => {
@@ -21,7 +19,6 @@ axiosInstance.interceptors.response.use(
       const { status, data } = error.response;
 
       if (status === 429) {
-        // Rate limit yedik! Backend'den kalan saniyeyi al ve modalı aç
         const retryAfter = data?.retryAfter || 900;
         store.dispatch(openRateLimitModal(retryAfter));
       } else if (status === 401) {

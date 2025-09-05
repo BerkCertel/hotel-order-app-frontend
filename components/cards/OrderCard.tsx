@@ -56,6 +56,7 @@ export function OrderCard({ order }: { order: Order }) {
       setOpen(true);
     } else {
       dispatch(updateOrderStatus({ id: order._id, status }));
+      setIsJustArrived(false);
     }
   };
 

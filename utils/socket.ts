@@ -7,13 +7,13 @@ export const getSocket = () => {
     const SOCKET_URL = process.env.NEXT_PUBLIC_API_URL;
     socket = io(SOCKET_URL, {
       transports: ["websocket"],
-      withCredentials: true, // gerekiyorsa (cookie auth vs.)
+      withCredentials: true,
       autoConnect: true,
       reconnectionAttempts: 10,
     });
 
     socket.on("connect", () => {
-      console.log("[SOCKET] Connected:", socket?.id);
+      console.log("[SOCKET] Connected:");
     });
     socket.on("disconnect", (reason) => {
       console.log("[SOCKET] Disconnected:", reason);

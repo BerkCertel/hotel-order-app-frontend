@@ -12,6 +12,7 @@ export interface OrderPayload {
   orderUserName: string;
   qrCodeId: string;
   TotalPrice: number;
+  orderNote?: string;
 }
 
 export interface OrderResponse {

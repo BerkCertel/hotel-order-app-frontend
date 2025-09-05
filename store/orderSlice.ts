@@ -10,6 +10,7 @@ import axiosInstance from "@/utils/axiosInstance";
 import { AxiosError } from "axios";
 import { API_PATHS } from "@/constants/apiPaths";
 import { OrderWithMeta } from "@/types";
+import { toast } from "sonner";
 
 interface OrderState {
   orderSuccessModalOpen: boolean;
@@ -52,8 +53,10 @@ export const createOrder = createAsyncThunk<
     return response.data;
   } catch (err) {
     const error = err as AxiosError<{ message: string }>;
+    console.log(error);
+    toast.error(error.response?.data?.message || "Order could not be created.");
     return rejectWithValue(
-      error.response?.data?.message || "Sipariş oluşturulamadı"
+      error.response?.data?.message || "Order could not be created."
     );
   }
 });
