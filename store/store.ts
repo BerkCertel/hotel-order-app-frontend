@@ -1,5 +1,3 @@
-"use client";
-
 import { combineReducers, configureStore } from "@reduxjs/toolkit";
 import { TypedUseSelectorHook, useDispatch, useSelector } from "react-redux";
 import locationsReducer from "./locationsSlice";
@@ -7,29 +5,32 @@ import usersReducer from "./usersSlice";
 import categoryReducer from "./categorySlice";
 import subcategoryReducer from "./subcategorySlice";
 import authReducer from "./authSlice";
-import qrcodeReducer from "./qrcodeSlice"; // Eğer bu slice'da persist varsa, sadeleştir
+import qrcodeReducer from "./qrcodeSlice";
 import orderuserReducer from "./orderuserSlice";
 import cartReducer from "./cartSlice";
 import orderReducer from "./orderSlice";
 import modalReducer from "./modalSlice";
 import storage from "redux-persist/lib/storage";
-import {
-  persistStore,
-  persistReducer,
-  FLUSH,
-  REHYDRATE,
-  PAUSE,
-  PERSIST,
-  PURGE,
-  REGISTER,
-} from "redux-persist";
+import { persistStore, persistReducer } from "redux-persist";
 
 // Tek bir root persist config!
 const persistConfig = {
   key: "root",
   version: 1,
   storage,
-  whitelist: ["auth", "qrcode", "subcategory"],
+  whitelist: ["auth", "qrcode"],
+};
+
+const authPersistConfig = {
+  key: "auth",
+  storage,
+  whitelist: ["loggedInUser"], // sadece loggedInUser persist edilecek
+};
+
+const qrPersistConfig = {
+  key: "qrcode",
+  storage,
+  whitelist: ["activeQrCodeId"], // sadece activeQrCodeId persist edilecek
 };
 
 const rootReducer = combineReducers({
@@ -37,23 +38,21 @@ const rootReducer = combineReducers({
   users: usersReducer,
   category: categoryReducer,
   subcategory: subcategoryReducer,
-  auth: authReducer,
-  qrcode: qrcodeReducer,
+  auth: persistReducer(authPersistConfig, authReducer),
+  qrcode: persistReducer(qrPersistConfig, qrcodeReducer),
   orderuser: orderuserReducer,
   cart: cartReducer,
   order: orderReducer,
   modal: modalReducer,
 });
 
-const persistedReducer = persistReducer(persistConfig, rootReducer);
+const persistedReducer = persistReducer(authPersistConfig, rootReducer);
 
 export const store = configureStore({
   reducer: persistedReducer,
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
-      serializableCheck: {
-        ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
-      },
+      serializableCheck: false,
     }),
 });
 
