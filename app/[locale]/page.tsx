@@ -57,8 +57,6 @@ export default function Home() {
           password: values.password,
         });
 
-        console.log(res.data.user);
-
         if (res.data.user) {
           updateUser(res.data.user);
           dispatch(setLoggedInUser(res.data.user));
