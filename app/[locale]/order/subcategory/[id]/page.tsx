@@ -1,11 +1,13 @@
 "use client";
 
 import React, { useEffect } from "react";
-import { useAppDispatch, useAppSelector } from "@/store/store";
 import {
-  getSubcategoriesByCategory,
+  selectCartState,
   selectSubcategoryState,
-} from "@/store/subcategorySlice";
+  useAppDispatch,
+  useAppSelector,
+} from "@/store/store";
+import { getSubcategoriesByCategory } from "@/store/subcategorySlice";
 import { useParams } from "next/navigation";
 import { PageContainer } from "@/components/Containers/PageContainer";
 import { Card, CardContent, CardTitle } from "@/components/ui/card";
@@ -15,7 +17,7 @@ import MenuHeader from "@/components/menu/MenuHeader";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { FaPlus, FaMinus, FaTrash } from "react-icons/fa";
-import { addToCart, removeFromCart, selectCartState } from "@/store/cartSlice";
+import { addToCart, removeFromCart } from "@/store/cartSlice";
 import { useRouter } from "@/i18n/navigation";
 
 export default function SubcategoryPage() {

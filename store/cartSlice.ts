@@ -1,5 +1,4 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { RootState } from "./store";
 
 export type CartItem = {
   _id: string;
@@ -27,16 +26,13 @@ const cartSlice = createSlice({
 
       if (existingProduct) {
         existingProduct.quantity += quantity;
-        // Eğer azaltma sonucu sıfır veya altı olursa ürünü sil
         if (existingProduct.quantity <= 0) {
           state.items = state.items.filter((item) => item._id !== _id);
         }
       } else if (quantity > 0) {
-        // Yalnızca pozitif quantity ile yeni ürün eklenir
         state.items.push({ ...action.payload });
       }
     },
-
     removeFromCart(state, action: PayloadAction<string>) {
       state.items = state.items.filter((i) => i._id !== action.payload);
     },
@@ -45,15 +41,6 @@ const cartSlice = createSlice({
     },
   },
 });
-// Toplam fiyat selector
-export const selectCartTotal = (state: RootState) =>
-  state.cart.items.reduce(
-    (acc, item) => acc + (item.price ?? 0) * item.quantity,
-    0
-  );
 
 export const { addToCart, removeFromCart, clearCart } = cartSlice.actions;
-
-export const selectCartState = (state: RootState) => state.cart;
-
 export default cartSlice.reducer;

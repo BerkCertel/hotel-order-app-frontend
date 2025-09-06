@@ -15,14 +15,18 @@ import {
 import { Skeleton } from "@/components/ui/skeleton";
 import { Textarea } from "@/components/ui/textarea";
 import { SubcategoryCreateSchema } from "@/schemas/SubCategorySchema";
-import { getAllCategories, selectCategoryState } from "@/store/categorySlice";
-import { useAppDispatch, useAppSelector } from "@/store/store";
+import { getAllCategories } from "@/store/categorySlice";
+import {
+  selectCategoryState,
+  selectSubcategoryState,
+  useAppDispatch,
+  useAppSelector,
+} from "@/store/store";
 import {
   createSubcategory,
   deleteSubcategory,
   getAllSubcategories,
   resetSubcategoryState,
-  selectSubcategoryState,
   updateSubcategory,
 } from "@/store/subcategorySlice";
 import { Category } from "@/types/CategoryTypes";

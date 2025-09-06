@@ -1,5 +1,4 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import { RootState } from "@/store/store";
 import axiosInstance from "@/utils/axiosInstance";
 import { API_PATHS } from "@/constants/apiPaths";
 import { Location, LocationItem } from "@/types/LocationTypes";
@@ -221,7 +220,5 @@ const locationsSlice = createSlice({
 });
 
 export const { resetLocationState } = locationsSlice.actions;
-
-export const selectLocationState = (state: RootState) => state.locations;
 
 export default locationsSlice.reducer;

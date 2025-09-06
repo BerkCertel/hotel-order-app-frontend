@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { RootState } from "@/store/store";
+
 import {
   Order,
   OrderPayload,
@@ -178,7 +178,5 @@ export const {
   addOrder,
   updateOrder,
 } = orderSlice.actions;
-
-export const selectOrderState = (state: RootState) => state.order;
 
 export default orderSlice.reducer;

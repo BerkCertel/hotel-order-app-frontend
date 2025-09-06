@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
 import "./globals.css";
-import ProvidersWrapper from "@/components/Providers/ProvidersWrapper";
 import { notFound } from "next/navigation";
 import { hasLocale, NextIntlClientProvider } from "next-intl";
 import { routing } from "@/i18n/routing";
+import ProvidersWrapper from "@/components/Providers/ProvidersWrapper";
 
 export const metadata: Metadata = {
   title: "Hotel Order App",

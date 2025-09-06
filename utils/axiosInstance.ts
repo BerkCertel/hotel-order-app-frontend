@@ -20,10 +20,14 @@ axiosInstance.interceptors.response.use(
 
       if (status === 429) {
         const retryAfter = data?.retryAfter || 900;
-        store.dispatch(openRateLimitModal(retryAfter));
+        if (typeof window !== "undefined") {
+          store.dispatch(openRateLimitModal(retryAfter));
+        }
       } else if (status === 401) {
-        console.error("Unauthorized access - redirecting to login");
-        window.location.href = "/";
+        if (typeof window !== "undefined") {
+          console.error("Unauthorized access - redirecting to login");
+          window.location.href = "/";
+        }
       } else if (status === 403) {
         console.error("Forbidden access - you do not have permission");
       } else if (error.code === "ECONNABORTED") {

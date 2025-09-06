@@ -1,8 +1,12 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useAppDispatch, useAppSelector } from "@/store/store";
-import { getAllLocations, selectLocationState } from "@/store/locationsSlice";
+import {
+  selectLocationState,
+  useAppDispatch,
+  useAppSelector,
+} from "@/store/store";
+import { getAllLocations } from "@/store/locationsSlice";
 import AdminLocationsMenu from "@/components/layouts/admin/AdminLocationsMenu";
 import AdminOrdersList from "@/components/layouts/admin/AdminOrdersList";
 

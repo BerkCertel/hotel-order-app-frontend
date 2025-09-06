@@ -4,8 +4,12 @@ import { useEffect } from "react";
 import { QrCreateForm } from "@/components/qr/QrCreateForm";
 import { QrList } from "@/components/qr/QrList";
 import { PageContainer } from "@/components/Containers/PageContainer";
-import { getAllLocations, selectLocationState } from "@/store/locationsSlice";
-import { useAppDispatch, useAppSelector } from "@/store/store";
+import { getAllLocations } from "@/store/locationsSlice";
+import {
+  selectLocationState,
+  useAppDispatch,
+  useAppSelector,
+} from "@/store/store";
 
 export default function QRCodesPage() {
   const dispatch = useAppDispatch();

@@ -1,7 +1,11 @@
 "use client";
 
-import { closeRateLimitModal, selectModalState } from "@/store/modalSlice";
-import { useAppDispatch, useAppSelector } from "@/store/store";
+import { closeRateLimitModal } from "@/store/modalSlice";
+import {
+  selectModalState,
+  useAppDispatch,
+  useAppSelector,
+} from "@/store/store";
 import { useEffect, useState, useRef } from "react";
 import {
   Dialog,

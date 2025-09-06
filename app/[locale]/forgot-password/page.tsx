@@ -1,11 +1,11 @@
 "use client";
 import { useState } from "react";
 
-import { sendResetEmail, selectAuthState } from "@/store/authSlice";
+import { sendResetEmail } from "@/store/authSlice";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
-import { useAppDispatch, useAppSelector } from "@/store/store";
+import { selectAuthState, useAppDispatch, useAppSelector } from "@/store/store";
 import { Link } from "@/i18n/navigation";
 
 export default function ForgotPassword() {

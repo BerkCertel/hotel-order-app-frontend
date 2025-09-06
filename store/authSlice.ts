@@ -2,22 +2,6 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axiosInstance from "@/utils/axiosInstance";
 import { API_PATHS } from "@/constants/apiPaths";
 import { AxiosError } from "axios";
-import { RootState } from "./store";
-import { persistReducer } from "redux-persist";
-import createWebStorage from "redux-persist/lib/storage/createWebStorage";
-
-const createNoopStorage = () => ({
-  getItem(_key: string) {
-    return null;
-  },
-  setItem(_key: string, _value: string) {},
-  removeItem(_key: string) {},
-});
-
-const storage =
-  typeof window !== "undefined"
-    ? createWebStorage("local")
-    : createNoopStorage();
 
 // Backend'den dönen yanıt tipi
 interface MessageResponse {
@@ -126,13 +110,7 @@ const authSlice = createSlice({
   },
 });
 
-const persistConfig = {
-  key: "auth",
-  storage,
-  whitelist: ["loggedInUser"],
-};
-
 export const { resetAuthState, setLoggedInUser, clearLoggedInUser } =
   authSlice.actions;
-export const selectAuthState = (state: RootState) => state.auth;
-export default persistReducer(persistConfig, authSlice.reducer);
+// PERSIST YOK! SELECTOR YOK!
+export default authSlice.reducer;

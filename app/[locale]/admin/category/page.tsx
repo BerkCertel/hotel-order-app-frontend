@@ -15,10 +15,13 @@ import {
   deleteCategory,
   getAllCategories,
   resetCategoryState,
-  selectCategoryState,
   updateCategory,
 } from "@/store/categorySlice";
-import { useAppDispatch, useAppSelector } from "@/store/store";
+import {
+  selectCategoryState,
+  useAppDispatch,
+  useAppSelector,
+} from "@/store/store";
 import { Category } from "@/types/CategoryTypes";
 import { useFormik } from "formik";
 import Image from "next/image";

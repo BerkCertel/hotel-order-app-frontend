@@ -22,8 +22,8 @@ import { AxiosError } from "axios";
 import { FaUser } from "react-icons/fa";
 import { Link } from "@/i18n/navigation";
 import { LoadingModal } from "@/components/modals/LoadingModal";
-import { useAppDispatch, useAppSelector } from "@/store/store";
-import { selectAuthState, setLoggedInUser } from "@/store/authSlice";
+import { selectAuthState, useAppDispatch, useAppSelector } from "@/store/store";
+import { setLoggedInUser } from "@/store/authSlice";
 
 export default function Home() {
   const dispatch = useAppDispatch();

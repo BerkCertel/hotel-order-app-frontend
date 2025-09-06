@@ -3,22 +3,6 @@ import axiosInstance from "@/utils/axiosInstance";
 import { API_PATHS } from "@/constants/apiPaths";
 import { QrCode } from "@/types/QrCodeTypes";
 import { AxiosError } from "axios";
-import { RootState } from "@/store/store";
-import { persistReducer } from "redux-persist";
-import createWebStorage from "redux-persist/lib/storage/createWebStorage";
-
-const createNoopStorage = () => ({
-  getItem(_key: string) {
-    return null;
-  },
-  setItem(_key: string, _value: string) {},
-  removeItem(_key: string) {},
-});
-
-const storage =
-  typeof window !== "undefined"
-    ? createWebStorage("local")
-    : createNoopStorage();
 
 interface QrCodeState {
   Qrloading: boolean;
@@ -142,7 +126,6 @@ const qrCodeSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
-      // CREATE
       .addCase(createQrCode.pending, (state) => {
         state.Qrloading = true;
         state.Qrerror = null;
@@ -158,7 +141,6 @@ const qrCodeSlice = createSlice({
         state.Qrerror = action.payload || "QR kodu oluşturulamadı";
         state.Qrsuccess = false;
       })
-      // GET ALL
       .addCase(getAllQrCodes.pending, (state) => {
         state.Qrloading = true;
         state.Qrerror = null;
@@ -172,7 +154,6 @@ const qrCodeSlice = createSlice({
         state.Qrloading = false;
         state.Qrerror = action.payload || "QR kodlar alınamadı";
       })
-      // GET BY LOCATION
       .addCase(getQrCodesByLocation.pending, (state) => {
         state.Qrloading = true;
         state.Qrerror = null;
@@ -186,7 +167,6 @@ const qrCodeSlice = createSlice({
         state.Qrloading = false;
         state.Qrerror = action.payload || "QR kodlar alınamadı";
       })
-      // GET BY ID
       .addCase(getQrCodeById.pending, (state) => {
         state.Qrloading = true;
         state.Qrerror = null;
@@ -196,14 +176,13 @@ const qrCodeSlice = createSlice({
         state.Qrloading = false;
         state.qrCodeDetail = action.payload;
         state.Qrerror = null;
-        state.activeQrCodeId = action.payload._id; // id'yi güncelle
+        state.activeQrCodeId = action.payload._id;
       })
       .addCase(getQrCodeById.rejected, (state, action) => {
         state.Qrloading = false;
         state.Qrerror = action.payload || "QR kod bilgisi alınamadı";
         state.qrCodeDetail = null;
       })
-      // DELETE
       .addCase(deleteQrCode.pending, (state) => {
         state.Qrloading = true;
         state.Qrerror = null;
@@ -223,15 +202,5 @@ const qrCodeSlice = createSlice({
   },
 });
 
-const persistConfig = {
-  key: "qrcode",
-  storage,
-  whitelist: ["activeQrCodeId"],
-};
-
 export const { resetQrCodeState, setActiveQrCodeId } = qrCodeSlice.actions;
-export const selectQrCodeState = (state: RootState) => state.qrcode;
-export const persistedQrCodeReducer = persistReducer(
-  persistConfig,
-  qrCodeSlice.reducer
-);
+export default qrCodeSlice.reducer;

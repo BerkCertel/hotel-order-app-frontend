@@ -5,12 +5,12 @@ import { PiQrCodeDuotone } from "react-icons/pi";
 import { FaExclamationTriangle } from "react-icons/fa";
 import { MdOutlineMenuBook } from "react-icons/md";
 import { useEffect } from "react";
+import { getAllLocations, getUserLocations } from "@/store/locationsSlice";
 import {
-  getAllLocations,
-  getUserLocations,
   selectLocationState,
-} from "@/store/locationsSlice";
-import { useAppDispatch, useAppSelector } from "@/store/store";
+  useAppDispatch,
+  useAppSelector,
+} from "@/store/store";
 
 export default function UserSideMenu() {
   const dispatch = useAppDispatch();

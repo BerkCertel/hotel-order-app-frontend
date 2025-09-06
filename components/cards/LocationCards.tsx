@@ -10,8 +10,7 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Download } from "lucide-react";
-import { useAppSelector } from "@/store/store";
-import { selectLocationState } from "@/store/locationsSlice";
+import { selectLocationState, useAppSelector } from "@/store/store";
 import Image from "next/image";
 
 // Slice ile uyumlu tipler

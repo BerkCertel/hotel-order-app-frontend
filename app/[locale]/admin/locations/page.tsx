@@ -14,10 +14,13 @@ import {
   deleteLocation,
   getAllLocations,
   resetLocationState,
-  selectLocationState,
   updateLocation,
 } from "@/store/locationsSlice";
-import { useAppDispatch, useAppSelector } from "@/store/store";
+import {
+  selectLocationState,
+  useAppDispatch,
+  useAppSelector,
+} from "@/store/store";
 import { Location } from "@/types/LocationTypes";
 import { useFormik } from "formik";
 import React, { useEffect, useState } from "react";

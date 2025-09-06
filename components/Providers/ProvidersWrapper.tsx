@@ -1,12 +1,9 @@
 "use client";
-import React from "react";
+
 import { Toaster } from "../ui/sonner";
 import UserProvider from "@/context/userContext";
 import RateLimitModal from "../modals/RateLimitModal";
-import dynamic from "next/dynamic";
-const StoreProvider = dynamic(() => import("../Providers/StoreProvider"), {
-  ssr: false,
-});
+import StoreProvider from "./StoreProvider";
 
 interface ProvidersWrapperProps {
   children: React.ReactNode;
@@ -14,12 +11,12 @@ interface ProvidersWrapperProps {
 
 function ProvidersWrapper({ children }: ProvidersWrapperProps) {
   return (
-    <UserProvider>
-      <StoreProvider>
+    <StoreProvider>
+      <UserProvider>
         <RateLimitModal />
         {children} <Toaster />
-      </StoreProvider>
-    </UserProvider>
+      </UserProvider>
+    </StoreProvider>
   );
 }
 

@@ -1,8 +1,12 @@
 "use client";
 
-import { selectLocationState } from "@/store/locationsSlice";
-import { getAllQrCodes, selectQrCodeState } from "@/store/qrcodeSlice";
-import { useAppDispatch, useAppSelector } from "@/store/store";
+import { getAllQrCodes } from "@/store/qrcodeSlice";
+import {
+  selectLocationState,
+  selectQrCodeState,
+  useAppDispatch,
+  useAppSelector,
+} from "@/store/store";
 import { useEffect, useRef } from "react";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Button } from "@/components/ui/button";

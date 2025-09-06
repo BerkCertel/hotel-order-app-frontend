@@ -1,5 +1,4 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import { RootState } from "@/store/store";
 import axiosInstance from "@/utils/axiosInstance";
 import { API_PATHS } from "@/constants/apiPaths";
 import { AxiosError } from "axios";
@@ -189,7 +188,5 @@ const usersSlice = createSlice({
 });
 
 export const { resetUserState } = usersSlice.actions;
-
-export const selectUserState = (state: RootState) => state.users;
 
 export default usersSlice.reducer;

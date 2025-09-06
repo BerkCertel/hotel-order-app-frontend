@@ -1,3 +1,4 @@
+"use client";
 import React, { useEffect, useState } from "react";
 import {
   FaThList,
@@ -17,17 +18,19 @@ import {
   SheetTrigger,
 } from "../ui/sheet";
 import { Button } from "../ui/button";
-import { RootState, useAppDispatch, useAppSelector } from "@/store/store";
-import { useSelector } from "react-redux";
-import Image from "next/image";
 import {
   selectCartState,
-  addToCart,
-  removeFromCart,
-  clearCart,
-} from "@/store/cartSlice";
-import { selectQrCodeState } from "@/store/qrcodeSlice";
-import { createOrder, selectOrderState } from "@/store/orderSlice";
+  selectOrderState,
+  selectOrderUserState,
+  selectQrCodeState,
+  useAppDispatch,
+  useAppSelector,
+} from "@/store/store";
+import { useSelector } from "react-redux";
+import Image from "next/image";
+import { addToCart, removeFromCart, clearCart } from "@/store/cartSlice";
+
+import { createOrder } from "@/store/orderSlice";
 import { useRouter } from "@/i18n/navigation";
 import { ScrollArea } from "@radix-ui/react-scroll-area";
 import {
@@ -47,7 +50,7 @@ function CartSheet() {
   const dispatch = useAppDispatch();
   const navigate = useRouter();
   const { items: cartItems } = useSelector(selectCartState);
-  const { orderUser } = useSelector((state: RootState) => state.orderuser);
+  const { orderUser } = useSelector(selectOrderUserState);
   const { orderStatus } = useAppSelector(selectOrderState);
   const { activeQrCodeId } = useAppSelector(selectQrCodeState);
   const [sheetStatus, setSheetStatus] = useState(false);

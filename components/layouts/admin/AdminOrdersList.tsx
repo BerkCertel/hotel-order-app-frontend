@@ -1,13 +1,12 @@
 "use client";
 
 import React, { useEffect } from "react";
-import { useAppDispatch, useAppSelector } from "@/store/store";
 import {
   selectOrderState,
-  getOrdersByLocation,
-  addOrder,
-  updateOrder,
-} from "@/store/orderSlice";
+  useAppDispatch,
+  useAppSelector,
+} from "@/store/store";
+import { getOrdersByLocation, addOrder, updateOrder } from "@/store/orderSlice";
 import { Loader2, AlertCircle, Inbox } from "lucide-react";
 import { OrderCard } from "@/components/cards/OrderCard";
 import {

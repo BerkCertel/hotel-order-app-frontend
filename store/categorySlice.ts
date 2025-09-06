@@ -1,5 +1,4 @@
 import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
-import { RootState } from "@/store/store";
 import axiosInstance from "@/utils/axiosInstance";
 import { Category } from "@/types/CategoryTypes";
 import { AxiosError } from "axios";
@@ -210,7 +209,5 @@ const categorySlice = createSlice({
 
 export const { resetCategoryState, setSelectedCategoryId } =
   categorySlice.actions;
-
-export const selectCategoryState = (state: RootState) => state.category;
 
 export default categorySlice.reducer;

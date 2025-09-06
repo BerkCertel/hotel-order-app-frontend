@@ -3,7 +3,6 @@ import { Subcategory } from "@/types/SubCategoryTypes";
 import axiosInstance from "@/utils/axiosInstance";
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { AxiosError } from "axios";
-import { RootState } from "./store";
 
 // STATE
 interface SubcategoryState {
@@ -84,7 +83,7 @@ export const getAllSubcategories = createAsyncThunk<
 // GET SubCategory with CategoryId
 export const getSubcategoriesByCategory = createAsyncThunk<
   Subcategory[],
-  string, // sadece categoryId bekliyor
+  string,
   { rejectValue: string }
 >(
   "subcategory/getSubcategoriesByCategory",
@@ -122,7 +121,7 @@ export const deleteSubcategory = createAsyncThunk<
   }
 });
 
-// UPDATE (Opsiyonel, örnek için ekliyorum)
+// UPDATE
 export const updateSubcategory = createAsyncThunk<
   Subcategory,
   {
@@ -182,7 +181,6 @@ const subcategorySlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
-      // CREATE
       .addCase(createSubcategory.pending, (state) => {
         state.loading = true;
         state.error = null;
@@ -197,7 +195,6 @@ const subcategorySlice = createSlice({
         state.error = action.payload || "Alt kategori oluşturulamadı";
         state.success = false;
       })
-      // GET ALL
       .addCase(getAllSubcategories.pending, (state) => {
         state.loading = true;
         state.error = null;
@@ -211,7 +208,6 @@ const subcategorySlice = createSlice({
         state.loading = false;
         state.error = action.payload || "Alt kategoriler alınamadı";
       })
-      // DELETE
       .addCase(deleteSubcategory.pending, (state) => {
         state.loading = true;
         state.error = null;
@@ -229,7 +225,6 @@ const subcategorySlice = createSlice({
         state.error = action.payload || "Alt kategori silinemedi";
         state.success = false;
       })
-      // UPDATE (opsiyonel)
       .addCase(updateSubcategory.pending, (state) => {
         state.loading = true;
         state.error = null;
@@ -249,7 +244,6 @@ const subcategorySlice = createSlice({
         state.error = action.payload || "Alt kategori güncellenemedi";
         state.success = false;
       })
-      // GET WİTH CATEGORY
       .addCase(getSubcategoriesByCategory.pending, (state) => {
         state.loading = true;
         state.error = null;
@@ -268,7 +262,5 @@ const subcategorySlice = createSlice({
 
 export const { resetSubcategoryState, clearSubcategories } =
   subcategorySlice.actions;
-
-export const selectSubcategoryState = (state: RootState) => state.subcategory;
 
 export default subcategorySlice.reducer;

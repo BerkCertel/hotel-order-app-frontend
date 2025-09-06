@@ -1,6 +1,8 @@
+"use client";
+
 import HotelAuthModal from "@/components/modals/HotelAuthModal";
 import { setOrderUser } from "@/store/orderuserSlice";
-import { RootState, useAppDispatch } from "@/store/store";
+import { selectOrderUserState, useAppDispatch } from "@/store/store";
 import React, { createContext, useContext, useState } from "react";
 import { useSelector } from "react-redux";
 
@@ -18,7 +20,7 @@ export const HotelAuthProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
   const [isAuthenticated, setAuthenticated] = useState(false);
-  const { orderUser } = useSelector((state: RootState) => state.orderuser);
+  const { orderUser } = useSelector(selectOrderUserState);
   const dispatch = useAppDispatch();
 
   return (
