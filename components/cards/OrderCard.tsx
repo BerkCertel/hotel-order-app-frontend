@@ -124,28 +124,42 @@ export function OrderCard({ order }: { order: Order }) {
         </div>
 
         <div className={clsx("text-xs leading-relaxed space-y-1", textColor)}>
-          <div>
-            <span className="font-medium">Room:</span> {order.roomNumber}
-          </div>
+          <div className=" bg-white  px-2 py-1 rounded-md text-black">
+            <div className="flex flex-wrap gap-2">
+              <div>
+                <span className="font-medium">Room:</span> {order.roomNumber}
+              </div>
 
-          <div>
-            <span className="font-medium ">Name:</span>{" "}
-            {order.orderUserName || "Guest"}
-          </div>
-          <div>
-            <span className="font-medium">QR:</span> {order.qrcodeLabel}
-          </div>
-          <div>
-            <span className="font-medium">Date:</span>{" "}
-            {format(created, "dd.MM.yyyy HH:mm:ss")}
-          </div>
-
-          {order.TotalPrice && order.TotalPrice > 0 && (
-            <div>
-              <span className="font-bold ">Total Price:</span>{" "}
-              {order.TotalPrice} $
+              <div>
+                <span className="font-medium ">Name:</span>{" "}
+                {order.orderUserName || "Guest"}
+              </div>
             </div>
-          )}
+
+            <div className="flex flex-wrap gap-2">
+              <div>
+                <span className="font-medium">QR:</span> {order.qrcodeLabel}
+              </div>
+              <div className="underline">
+                <span className="font-medium">Date:</span>{" "}
+                {format(created, "dd.MM.yyyy HH:mm:ss")}
+              </div>
+            </div>
+          </div>
+          <div className=" bg-white  px-2 py-1 rounded-md text-black">
+            {order.TotalPrice && order.TotalPrice > 0 && (
+              <div className="font-bold">
+                <span>Total Price:</span> {order.TotalPrice} $
+              </div>
+            )}
+
+            {order.orderNote && (
+              <div>
+                <hr />
+                <span className="font-medium">Note:</span> {order.orderNote}
+              </div>
+            )}
+          </div>
         </div>
         <OrderItemsTable items={order.items} />
 

@@ -50,4 +50,5 @@ export interface Order {
   createdAt: string;
   updatedAt: string;
   TotalPrice: number;
+  orderNote?: string;
 }

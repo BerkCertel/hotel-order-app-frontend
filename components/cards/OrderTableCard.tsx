@@ -23,7 +23,7 @@ interface OrderItemsTableProps {
 
 export function OrderItemsTable({ items }: OrderItemsTableProps) {
   return (
-    <div className="w-full overflow-x-auto mt-3">
+    <div className="w-full overflow-x-auto mt-3 border rounded-lg  bg-white text-black">
       <Table className="min-w-[320px]">
         <TableHeader>
           <TableRow>
