@@ -325,7 +325,7 @@ export default function Subcategories() {
               />
             ))}
           </div>
-        ) : subcategories.length === 0 ? (
+        ) : subcategories.length === 0 || !subcategories ? (
           <div className="flex flex-col items-center justify-center py-20">
             <FaRegFolderOpen className="text-6xl text-gray-200 mb-5" />
             <span className="text-gray-400 text-lg font-medium">

@@ -2,6 +2,7 @@
 
 import { PageContainer } from "@/components/Containers/PageContainer";
 import { DeleteModal } from "@/components/modals/DeleteModal";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -22,9 +23,10 @@ import { Category } from "@/types/CategoryTypes";
 import { useFormik } from "formik";
 import Image from "next/image";
 import { useEffect, useState } from "react";
-import { MdDelete, MdEdit } from "react-icons/md";
+import { MdCategory, MdDelete, MdEdit } from "react-icons/md";
 import { TiPlus } from "react-icons/ti";
 import { toast } from "sonner";
+import { FiAlertCircle } from "react-icons/fi";
 
 export default function Categories() {
   const [editingId, setEditingId] = useState<string | null>(null);
@@ -198,7 +200,28 @@ export default function Categories() {
               ))}
             </div>
           ) : error ? (
-            <div className="text-red-500">{error}</div>
+            <Alert variant="destructive" className="flex items-center gap-4">
+              <FiAlertCircle className="text-red-500 text-2xl" />
+              <div>
+                <AlertTitle>Bir hata oluştu!</AlertTitle>
+                <AlertDescription>
+                  Üzgünüz, kategoriler yüklenirken bir sorun oluştu.
+                  <br />
+                  <span className="text-sm text-muted-foreground">{error}</span>
+                </AlertDescription>
+              </div>
+            </Alert>
+          ) : !categories || categories.length === 0 ? (
+            <Alert className="flex items-center gap-4">
+              <MdCategory className="text-primary text-2xl" />
+              <div>
+                <AlertTitle>Kategori bulunamadı</AlertTitle>
+                <AlertDescription>
+                  Henüz hiç kategori eklenmemiş. Yeni bir kategori ekleyerek
+                  başlayabilirsin!
+                </AlertDescription>
+              </div>
+            </Alert>
           ) : (
             <ScrollArea className="h-96">
               <div className="h-full flex flex-col gap-2 border-2 rounded-lg px-2 py-3">
