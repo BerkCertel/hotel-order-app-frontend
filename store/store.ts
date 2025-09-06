@@ -13,24 +13,18 @@ import modalReducer from "./modalSlice";
 import storage from "redux-persist/lib/storage";
 import { persistStore, persistReducer } from "redux-persist";
 
-// Tek bir root persist config!
-const persistConfig = {
-  key: "root",
-  version: 1,
-  storage,
-  whitelist: ["auth", "qrcode"],
-};
-
+// Sadece 'auth' için loggedInUser persist config
 const authPersistConfig = {
   key: "auth",
   storage,
-  whitelist: ["loggedInUser"], // sadece loggedInUser persist edilecek
+  whitelist: ["loggedInUser"],
 };
 
+// Sadece 'qrcode' için activeQrCodeId persist config
 const qrPersistConfig = {
   key: "qrcode",
   storage,
-  whitelist: ["activeQrCodeId"], // sadece activeQrCodeId persist edilecek
+  whitelist: ["activeQrCodeId"],
 };
 
 const rootReducer = combineReducers({
@@ -46,10 +40,8 @@ const rootReducer = combineReducers({
   modal: modalReducer,
 });
 
-const persistedReducer = persistReducer(authPersistConfig, rootReducer);
-
 export const store = configureStore({
-  reducer: persistedReducer,
+  reducer: rootReducer,
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
       serializableCheck: false,
