@@ -26,9 +26,9 @@ export default async function RootLayout({
   return (
     <html lang={locale} data-scroll-behavior="smooth">
       <body className={`antialiased`}>
-        <NextIntlClientProvider>
-          <ProvidersWrapper>{children}</ProvidersWrapper>
-        </NextIntlClientProvider>
+        <ProvidersWrapper>
+          <NextIntlClientProvider>{children}</NextIntlClientProvider>
+        </ProvidersWrapper>
       </body>
     </html>
   );
