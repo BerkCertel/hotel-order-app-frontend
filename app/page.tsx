@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useContext, useEffect } from "react";
+import { useState, useContext } from "react";
 import { useFormik } from "formik";
 import { toast } from "sonner";
 
@@ -22,8 +22,8 @@ import { AxiosError } from "axios";
 import { FaUser } from "react-icons/fa";
 
 import { LoadingModal } from "@/components/modals/LoadingModal";
-import { useAppDispatch, useAppSelector } from "@/store/store";
-import { selectAuthState, setLoggedInUser } from "@/store/authSlice";
+import { useAppDispatch } from "@/store/store";
+import { setLoggedInUser } from "@/store/authSlice";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 
@@ -33,18 +33,6 @@ export default function Home() {
   const [Loading, setLoading] = useState(false);
 
   const { updateUser } = useContext(UserContext);
-
-  const { loggedInUser } = useAppSelector(selectAuthState);
-
-  useEffect(() => {
-    if (loggedInUser && loggedInUser !== null) {
-      if (loggedInUser.role === "ADMIN" || loggedInUser.role === "SUPERADMIN") {
-        router.push("/admin");
-      } else if (loggedInUser.role === "USER") {
-        router.push("/user");
-      }
-    }
-  }, [loggedInUser, router]);
 
   const formik = useFormik({
     initialValues: { email: "", password: "" },

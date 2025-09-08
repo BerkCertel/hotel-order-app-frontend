@@ -1,5 +1,5 @@
-import { openRateLimitModal } from "@/store/modalSlice";
-import { store } from "@/store/store";
+// import { openRateLimitModal } from "@/store/modalSlice";
+// import { store } from "@/store/store";
 import axios from "axios";
 
 const axiosInstance = axios.create({
@@ -19,10 +19,7 @@ axiosInstance.interceptors.response.use(
       const { status, data } = error.response;
 
       if (status === 429) {
-        const retryAfter = data?.retryAfter || 900;
-        if (typeof window !== "undefined") {
-          store.dispatch(openRateLimitModal(retryAfter));
-        }
+        console.log("Rate limit exceeded - please try again later.");
       } else if (status === 401) {
         if (typeof window !== "undefined") {
           console.error("Unauthorized access - redirecting to login");

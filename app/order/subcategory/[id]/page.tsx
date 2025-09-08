@@ -1,12 +1,11 @@
 "use client";
 
 import React, { useEffect } from "react";
+import { useAppDispatch, useAppSelector } from "@/store/store";
 import {
+  getSubcategoriesByCategory,
   selectSubcategoryState,
-  useAppDispatch,
-  useAppSelector,
-} from "@/store/store";
-import { getSubcategoriesByCategory } from "@/store/subcategorySlice";
+} from "@/store/subcategorySlice";
 import { useParams, useRouter } from "next/navigation";
 import { PageContainer } from "@/components/Containers/PageContainer";
 import { Card, CardContent, CardTitle } from "@/components/ui/card";
@@ -58,8 +57,6 @@ export default function SubcategoryPage() {
 
   // Sepet helper
   const getCartItem = (id: string) => cartItems.find((item) => item._id === id);
-
-  console.log(subcategories);
 
   return (
     <PageContainer>

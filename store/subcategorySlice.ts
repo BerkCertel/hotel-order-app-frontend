@@ -3,6 +3,7 @@ import { Subcategory } from "@/types/SubCategoryTypes";
 import axiosInstance from "@/utils/axiosInstance";
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { AxiosError } from "axios";
+import { RootState } from "./store";
 
 // STATE
 interface SubcategoryState {
@@ -262,5 +263,5 @@ const subcategorySlice = createSlice({
 
 export const { resetSubcategoryState, clearSubcategories } =
   subcategorySlice.actions;
-
+export const selectSubcategoryState = (state: RootState) => state.subcategories;
 export default subcategorySlice.reducer;

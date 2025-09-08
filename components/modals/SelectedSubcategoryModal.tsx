@@ -1,14 +1,11 @@
 "use client";
 
 import { addToCart, removeFromCart, selectCartState } from "@/store/cartSlice";
-import {
-  selectSubcategoryState,
-  useAppDispatch,
-  useAppSelector,
-} from "@/store/store";
+import { useAppDispatch, useAppSelector } from "@/store/store";
 import {
   clearSubcategories,
   getSubcategoriesByCategory,
+  selectSubcategoryState,
 } from "@/store/subcategorySlice";
 import { useEffect } from "react";
 import { Dialog, DialogContent, DialogTitle } from "../ui/dialog";

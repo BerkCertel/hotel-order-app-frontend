@@ -14,7 +14,7 @@ import { Progress } from "../ui/progress";
 import { FaLock } from "react-icons/fa";
 import { useAppDispatch, useAppSelector } from "@/store/store";
 
-const RateLimitModal = () => {
+export const RateLimitModal = () => {
   const dispatch = useAppDispatch();
   const { rateLimitModalOpen, rateLimitRetryAfter } =
     useAppSelector(selectModalState);
@@ -87,5 +87,3 @@ const RateLimitModal = () => {
     </Dialog>
   );
 };
-
-export default RateLimitModal;
