@@ -10,14 +10,9 @@ import {
 import { Button } from "../ui/button";
 import { FaCheckCircle } from "react-icons/fa";
 import { useRouter } from "next/navigation";
-import {
-  selectOrderState,
-  selectQrCodeState,
-  useAppDispatch,
-  useAppSelector,
-} from "@/store/store";
-import {} from "@/store/qrcodeSlice";
-import { closeOrderSuccessModal } from "@/store/orderSlice";
+import { useAppDispatch, useAppSelector } from "@/store/store";
+import { selectQrCodeState } from "@/store/qrcodeSlice";
+import { closeOrderSuccessModal, selectOrderState } from "@/store/orderSlice";
 import { clearOrderUser } from "@/store/orderuserSlice";
 
 const OrderSuccessModal = () => {

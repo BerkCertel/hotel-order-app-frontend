@@ -1,6 +1,6 @@
 "use client";
 
-import { closeRateLimitModal } from "@/store/modalSlice";
+import { closeRateLimitModal, selectModalState } from "@/store/modalSlice";
 
 import { useEffect, useState, useRef } from "react";
 import {
@@ -12,11 +12,7 @@ import {
 } from "../ui/dialog";
 import { Progress } from "../ui/progress";
 import { FaLock } from "react-icons/fa";
-import {
-  selectModalState,
-  useAppDispatch,
-  useAppSelector,
-} from "@/store/store";
+import { useAppDispatch, useAppSelector } from "@/store/store";
 
 const RateLimitModal = () => {
   const dispatch = useAppDispatch();

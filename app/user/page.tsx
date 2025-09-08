@@ -1,12 +1,7 @@
 "use client";
 
-import { getAllQrCodes } from "@/store/qrcodeSlice";
-import {
-  selectLocationState,
-  selectQrCodeState,
-  useAppDispatch,
-  useAppSelector,
-} from "@/store/store";
+import { getAllQrCodes, selectQrCodeState } from "@/store/qrcodeSlice";
+import { useAppDispatch, useAppSelector } from "@/store/store";
 import { useEffect, useRef } from "react";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Button } from "@/components/ui/button";
@@ -22,6 +17,7 @@ import { toast } from "sonner";
 import { PageContainer } from "@/components/Containers/PageContainer";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { FileBox } from "lucide-react";
+import { selectLocationState } from "@/store/locationsSlice";
 
 export default function UserQrCodesPage() {
   const dispatch = useAppDispatch();

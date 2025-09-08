@@ -15,13 +15,10 @@ import {
   deleteCategory,
   getAllCategories,
   resetCategoryState,
+  selectCategoryState,
   updateCategory,
 } from "@/store/categorySlice";
-import {
-  selectCategoryState,
-  useAppDispatch,
-  useAppSelector,
-} from "@/store/store";
+import { useAppDispatch, useAppSelector } from "@/store/store";
 import { Category } from "@/types/CategoryTypes";
 import { useFormik } from "formik";
 import Image from "next/image";
@@ -214,7 +211,7 @@ export default function Categories() {
                 </AlertDescription>
               </div>
             </Alert>
-          ) : !categories || categories.length === 0 ? (
+          ) : categories.length === 0 ? (
             <Alert className="flex items-center gap-4">
               <MdCategory className="text-primary text-2xl" />
               <div>

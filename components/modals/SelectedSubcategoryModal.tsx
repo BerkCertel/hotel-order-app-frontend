@@ -1,9 +1,7 @@
 "use client";
 
-import { addToCart, removeFromCart } from "@/store/cartSlice";
+import { addToCart, removeFromCart, selectCartState } from "@/store/cartSlice";
 import {
-  selectCartState,
-  selectCategoryState,
   selectSubcategoryState,
   useAppDispatch,
   useAppSelector,
@@ -21,6 +19,7 @@ import Image from "next/image";
 import { Button } from "../ui/button";
 import { FaMinus, FaPlus, FaTrash } from "react-icons/fa";
 import { ScrollArea } from "../ui/scroll-area";
+import { selectCategoryState } from "@/store/categorySlice";
 
 interface SelectedSubcategoryModalProps {
   open: boolean;

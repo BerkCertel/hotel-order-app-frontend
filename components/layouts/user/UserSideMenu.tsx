@@ -1,16 +1,16 @@
-import { useRouter } from "@/i18n/navigation";
 import { useLogout } from "@/hooks/useLogout";
 import { LuLogOut } from "react-icons/lu";
 import { PiQrCodeDuotone } from "react-icons/pi";
 import { FaExclamationTriangle } from "react-icons/fa";
 import { MdOutlineMenuBook } from "react-icons/md";
 import { useEffect } from "react";
-import { getAllLocations, getUserLocations } from "@/store/locationsSlice";
 import {
+  getAllLocations,
+  getUserLocations,
   selectLocationState,
-  useAppDispatch,
-  useAppSelector,
-} from "@/store/store";
+} from "@/store/locationsSlice";
+import { useAppDispatch, useAppSelector } from "@/store/store";
+import { useRouter } from "next/navigation";
 
 export default function UserSideMenu() {
   const dispatch = useAppDispatch();

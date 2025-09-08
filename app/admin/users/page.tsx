@@ -23,17 +23,13 @@ import {
 import { Skeleton } from "@/components/ui/skeleton";
 import { cn } from "@/lib/utils";
 import { UserCreateSchema } from "@/schemas/UserCreateSchema";
-import { getAllLocations } from "@/store/locationsSlice";
-import {
-  selectLocationState,
-  selectUserState,
-  useAppDispatch,
-  useAppSelector,
-} from "@/store/store";
+import { getAllLocations, selectLocationState } from "@/store/locationsSlice";
+import { useAppDispatch, useAppSelector } from "@/store/store";
 import {
   createUser,
   deleteUser,
   getAllUsers,
+  selectUserState,
   updateUserRole,
 } from "@/store/usersSlice";
 import { User } from "@/types/UserTypes";

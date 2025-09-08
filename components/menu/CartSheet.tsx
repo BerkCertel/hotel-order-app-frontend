@@ -18,20 +18,17 @@ import {
   SheetTrigger,
 } from "../ui/sheet";
 import { Button } from "../ui/button";
-import {
-  selectCartState,
-  selectOrderState,
-  selectOrderUserState,
-  selectQrCodeState,
-  useAppDispatch,
-  useAppSelector,
-} from "@/store/store";
+import { useAppDispatch, useAppSelector } from "@/store/store";
 import { useSelector } from "react-redux";
 import Image from "next/image";
-import { addToCart, removeFromCart, clearCart } from "@/store/cartSlice";
+import {
+  addToCart,
+  removeFromCart,
+  clearCart,
+  selectCartState,
+} from "@/store/cartSlice";
 
-import { createOrder } from "@/store/orderSlice";
-import { useRouter } from "@/i18n/navigation";
+import { createOrder, selectOrderState } from "@/store/orderSlice";
 import { ScrollArea } from "@radix-ui/react-scroll-area";
 import {
   Dialog,
@@ -45,6 +42,9 @@ import {
 } from "../ui/dialog";
 import { Label } from "../ui/label";
 import { Textarea } from "../ui/textarea";
+import { useRouter } from "next/navigation";
+import { selectOrderUserState } from "@/store/orderuserSlice";
+import { selectQrCodeState } from "@/store/qrcodeSlice";
 
 function CartSheet() {
   const dispatch = useAppDispatch();

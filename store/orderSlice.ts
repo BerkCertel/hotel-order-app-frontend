@@ -11,6 +11,7 @@ import { AxiosError } from "axios";
 import { API_PATHS } from "@/constants/apiPaths";
 import { OrderWithMeta } from "@/types";
 import { toast } from "sonner";
+import { RootState } from "./store";
 
 interface OrderState {
   orderSuccessModalOpen: boolean;
@@ -178,5 +179,5 @@ export const {
   addOrder,
   updateOrder,
 } = orderSlice.actions;
-
+export const selectOrderState = (state: RootState) => state.order;
 export default orderSlice.reducer;

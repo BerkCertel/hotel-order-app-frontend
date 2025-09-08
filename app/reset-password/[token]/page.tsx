@@ -1,13 +1,12 @@
 "use client";
-import { resetPassword } from "@/store/authSlice";
+import { resetPassword, selectAuthState } from "@/store/authSlice";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import { useFormik } from "formik";
 import { resetPasswordSchema } from "@/schemas/ResetPasswordSchema";
-import { selectAuthState, useAppDispatch, useAppSelector } from "@/store/store";
-import { useRouter } from "@/i18n/navigation";
-import { useParams } from "next/navigation";
+import { useAppDispatch, useAppSelector } from "@/store/store";
+import { useParams, useRouter } from "next/navigation";
 
 export default function ResetPasswordPage() {
   const router = useRouter();

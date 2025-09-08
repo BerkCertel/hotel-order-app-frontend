@@ -1,3 +1,4 @@
+import { RootState } from "./store";
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axiosInstance from "@/utils/axiosInstance";
 import { API_PATHS } from "@/constants/apiPaths";
@@ -203,4 +204,5 @@ const qrCodeSlice = createSlice({
 });
 
 export const { resetQrCodeState, setActiveQrCodeId } = qrCodeSlice.actions;
+export const selectQrCodeState = (state: RootState) => state.qrcode;
 export default qrCodeSlice.reducer;

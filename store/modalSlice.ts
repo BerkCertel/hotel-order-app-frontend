@@ -1,4 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { RootState } from "./store";
 
 interface ModalState {
   rateLimitModalOpen: boolean;
@@ -26,5 +27,5 @@ const modalSlice = createSlice({
 });
 
 export const { openRateLimitModal, closeRateLimitModal } = modalSlice.actions;
-
+export const selectModalState = (state: RootState) => state.modal;
 export default modalSlice.reducer;

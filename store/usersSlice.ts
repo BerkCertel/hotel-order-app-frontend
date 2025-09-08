@@ -3,6 +3,7 @@ import axiosInstance from "@/utils/axiosInstance";
 import { API_PATHS } from "@/constants/apiPaths";
 import { AxiosError } from "axios";
 import { User } from "@/types/UserTypes";
+import { RootState } from "./store";
 
 interface UserState {
   loading: boolean;
@@ -188,5 +189,5 @@ const usersSlice = createSlice({
 });
 
 export const { resetUserState } = usersSlice.actions;
-
+export const selectUserState = (state: RootState) => state.users;
 export default usersSlice.reducer;

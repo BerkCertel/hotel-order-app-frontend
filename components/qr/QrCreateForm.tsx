@@ -1,12 +1,12 @@
 "use client";
 
 import { QrCreateSchema } from "@/schemas/QrCreateSchema";
-import { createQrCode, resetQrCodeState } from "@/store/qrcodeSlice";
 import {
+  createQrCode,
+  resetQrCodeState,
   selectQrCodeState,
-  useAppDispatch,
-  useAppSelector,
-} from "@/store/store";
+} from "@/store/qrcodeSlice";
+import { useAppDispatch, useAppSelector } from "@/store/store";
 import { useFormik } from "formik";
 import { useEffect } from "react";
 import { toast } from "sonner";

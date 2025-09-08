@@ -2,6 +2,7 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axiosInstance from "@/utils/axiosInstance";
 import { API_PATHS } from "@/constants/apiPaths";
 import { AxiosError } from "axios";
+import { RootState } from "./store";
 
 // Backend'den dönen yanıt tipi
 interface MessageResponse {
@@ -112,5 +113,5 @@ const authSlice = createSlice({
 
 export const { resetAuthState, setLoggedInUser, clearLoggedInUser } =
   authSlice.actions;
-// PERSIST YOK! SELECTOR YOK!
+export const selectAuthState = (state: RootState) => state.auth;
 export default authSlice.reducer;

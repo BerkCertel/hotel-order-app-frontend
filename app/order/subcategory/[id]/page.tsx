@@ -2,13 +2,12 @@
 
 import React, { useEffect } from "react";
 import {
-  selectCartState,
   selectSubcategoryState,
   useAppDispatch,
   useAppSelector,
 } from "@/store/store";
 import { getSubcategoriesByCategory } from "@/store/subcategorySlice";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { PageContainer } from "@/components/Containers/PageContainer";
 import { Card, CardContent, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -17,8 +16,7 @@ import MenuHeader from "@/components/menu/MenuHeader";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { FaPlus, FaMinus, FaTrash } from "react-icons/fa";
-import { addToCart, removeFromCart } from "@/store/cartSlice";
-import { useRouter } from "@/i18n/navigation";
+import { addToCart, removeFromCart, selectCartState } from "@/store/cartSlice";
 
 export default function SubcategoryPage() {
   const params = useParams();

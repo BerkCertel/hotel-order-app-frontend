@@ -3,7 +3,7 @@
 import { useState, useContext, useEffect } from "react";
 import { useFormik } from "formik";
 import { toast } from "sonner";
-import { useRouter } from "@/i18n/navigation";
+
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -20,10 +20,12 @@ import { LoginFormSchema } from "@/schemas/LoginFormSchema";
 import axiosInstance from "@/utils/axiosInstance";
 import { AxiosError } from "axios";
 import { FaUser } from "react-icons/fa";
-import { Link } from "@/i18n/navigation";
+
 import { LoadingModal } from "@/components/modals/LoadingModal";
-import { selectAuthState, useAppDispatch, useAppSelector } from "@/store/store";
-import { setLoggedInUser } from "@/store/authSlice";
+import { useAppDispatch, useAppSelector } from "@/store/store";
+import { selectAuthState, setLoggedInUser } from "@/store/authSlice";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 export default function Home() {
   const dispatch = useAppDispatch();

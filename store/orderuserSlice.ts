@@ -1,4 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { RootState } from "./store";
 
 type OrderUserState = {
   orderUser: {
@@ -34,4 +35,5 @@ const orderuserSlice = createSlice({
 });
 
 export const { setOrderUser, clearOrderUser } = orderuserSlice.actions;
+export const selectOrderUserState = (state: RootState) => state.orderuser;
 export default orderuserSlice.reducer;

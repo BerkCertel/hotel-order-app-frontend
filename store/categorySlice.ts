@@ -1,8 +1,9 @@
-import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
-import axiosInstance from "@/utils/axiosInstance";
-import { Category } from "@/types/CategoryTypes";
-import { AxiosError } from "axios";
 import { API_PATHS } from "@/constants/apiPaths";
+import { Category } from "@/types/CategoryTypes";
+import axiosInstance from "@/utils/axiosInstance";
+import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { AxiosError } from "axios";
+import { RootState } from "./store";
 
 interface CategoryState {
   loading: boolean;
@@ -210,4 +211,5 @@ const categorySlice = createSlice({
 export const { resetCategoryState, setSelectedCategoryId } =
   categorySlice.actions;
 
+export const selectCategoryState = (state: RootState) => state.categories;
 export default categorySlice.reducer;

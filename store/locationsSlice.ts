@@ -3,6 +3,7 @@ import axiosInstance from "@/utils/axiosInstance";
 import { API_PATHS } from "@/constants/apiPaths";
 import { Location, LocationItem } from "@/types/LocationTypes";
 import { AxiosError } from "axios";
+import { RootState } from "./store";
 
 interface LocationState {
   loading: boolean;
@@ -220,5 +221,5 @@ const locationsSlice = createSlice({
 });
 
 export const { resetLocationState } = locationsSlice.actions;
-
+export const selectLocationState = (state: RootState) => state.locations;
 export default locationsSlice.reducer;

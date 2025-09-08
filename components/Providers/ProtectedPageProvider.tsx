@@ -1,10 +1,10 @@
 "use client";
 
 import { UserContext } from "@/context/userContext";
-import { useRouter } from "@/i18n/navigation";
 import { useContext, useEffect, useState } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "../ui/dialog";
 import { Loader2 } from "lucide-react";
+import { useRouter } from "next/navigation";
 
 type ProtectedPageProviderProps = {
   allowedRoles: string[];

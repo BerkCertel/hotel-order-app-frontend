@@ -2,22 +2,25 @@
 
 import { useState } from "react";
 import { PageContainer } from "@/components/Containers/PageContainer";
-import { useRouter } from "@/i18n/navigation";
-import { getAllCategories, setSelectedCategoryId } from "@/store/categorySlice";
+
 import {
+  getAllCategories,
   selectCategoryState,
-  selectQrCodeState,
-  useAppDispatch,
-  useAppSelector,
-} from "@/store/store";
+  setSelectedCategoryId,
+} from "@/store/categorySlice";
+import { useAppDispatch, useAppSelector } from "@/store/store";
 import Image from "next/image";
 import { useEffect } from "react";
 import { Card, CardContent, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import MenuHeader from "@/components/menu/MenuHeader";
-import { useParams } from "next/navigation";
-import { getQrCodeById, setActiveQrCodeId } from "@/store/qrcodeSlice";
+import { useParams, useRouter } from "next/navigation";
+import {
+  getQrCodeById,
+  selectQrCodeState,
+  setActiveQrCodeId,
+} from "@/store/qrcodeSlice";
 import SelectedSubcategoryModal from "@/components/modals/SelectedSubcategoryModal";
 
 function getIdAsString(id: string | string[] | undefined): string | undefined {

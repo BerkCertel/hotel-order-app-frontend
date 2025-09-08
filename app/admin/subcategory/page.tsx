@@ -15,9 +15,8 @@ import {
 import { Skeleton } from "@/components/ui/skeleton";
 import { Textarea } from "@/components/ui/textarea";
 import { SubcategoryCreateSchema } from "@/schemas/SubCategorySchema";
-import { getAllCategories } from "@/store/categorySlice";
+import { getAllCategories, selectCategoryState } from "@/store/categorySlice";
 import {
-  selectCategoryState,
   selectSubcategoryState,
   useAppDispatch,
   useAppSelector,

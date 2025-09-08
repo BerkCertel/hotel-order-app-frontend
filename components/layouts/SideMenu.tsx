@@ -4,11 +4,11 @@ import {
   ADMIN_SIDE_MENU_DATA,
   SUPERADMIN_SIDE_MENU_DATA,
 } from "@/constants/data";
-import { useRouter } from "@/i18n/navigation";
 import { useLogout } from "@/hooks/useLogout";
 import { LuLogOut } from "react-icons/lu";
 import { useContext } from "react";
 import { UserContext } from "@/context/userContext";
+import { useRouter } from "next/navigation";
 
 function SideMenu() {
   const navigate = useRouter();

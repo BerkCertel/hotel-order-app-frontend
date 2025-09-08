@@ -10,8 +10,10 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Download } from "lucide-react";
-import { selectLocationState, useAppSelector } from "@/store/store";
 import Image from "next/image";
+
+import { useAppSelector } from "@/store/store";
+import { selectLocationState } from "@/store/locationsSlice";
 
 // Slice ile uyumlu tipler
 interface Location {

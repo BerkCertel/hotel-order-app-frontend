@@ -1,12 +1,12 @@
 "use client";
 import { useState } from "react";
 
-import { sendResetEmail } from "@/store/authSlice";
+import { selectAuthState, sendResetEmail } from "@/store/authSlice";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
-import { selectAuthState, useAppDispatch, useAppSelector } from "@/store/store";
-import { Link } from "@/i18n/navigation";
+import { useAppDispatch, useAppSelector } from "@/store/store";
+import Link from "next/link";
 
 export default function ForgotPassword() {
   const [email, setEmail] = useState("");

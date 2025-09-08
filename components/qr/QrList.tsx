@@ -1,11 +1,11 @@
 "use client";
 
-import { deleteQrCode, getAllQrCodes } from "@/store/qrcodeSlice";
 import {
+  deleteQrCode,
+  getAllQrCodes,
   selectQrCodeState,
-  useAppDispatch,
-  useAppSelector,
-} from "@/store/store";
+} from "@/store/qrcodeSlice";
+import { useAppDispatch, useAppSelector } from "@/store/store";
 import { useEffect, useRef } from "react";
 import { toast } from "sonner";
 import { Skeleton } from "../ui/skeleton";

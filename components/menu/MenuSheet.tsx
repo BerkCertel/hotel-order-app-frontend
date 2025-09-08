@@ -21,7 +21,7 @@ import { Skeleton } from "../ui/skeleton";
 import { Alert, AlertDescription, AlertTitle } from "../ui/alert";
 import { Category } from "@/types/CategoryTypes";
 import Image from "next/image";
-import { useRouter } from "@/i18n/navigation";
+import { useRouter } from "next/navigation";
 
 function MenuSheet() {
   const navigate = useRouter();
