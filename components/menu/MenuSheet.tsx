@@ -11,12 +11,8 @@ import {
 } from "../ui/sheet";
 import { Button } from "../ui/button";
 import { FaBars, FaThList, FaTimes } from "react-icons/fa";
-import {
-  selectCategoryState,
-  useAppDispatch,
-  useAppSelector,
-} from "@/store/store";
-import { getAllCategories } from "@/store/categorySlice";
+import { useAppDispatch, useAppSelector } from "@/store/store";
+import { getAllCategories, selectCategoryState } from "@/store/categorySlice";
 import { Skeleton } from "../ui/skeleton";
 import { Alert, AlertDescription, AlertTitle } from "../ui/alert";
 import { Category } from "@/types/CategoryTypes";

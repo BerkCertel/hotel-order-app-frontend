@@ -4,6 +4,7 @@ import UserProvider from "@/context/userContext";
 import RateLimitModal from "../modals/RateLimitModal";
 import StoreProvider from "./StoreProvider";
 import { Toaster } from "../ui/sonner";
+import { ThemeProvider } from "next-themes";
 
 interface ProvidersWrapperProps {
   children: React.ReactNode;
@@ -11,12 +12,19 @@ interface ProvidersWrapperProps {
 
 export default function ProvidersWrapper({ children }: ProvidersWrapperProps) {
   return (
-    <StoreProvider>
-      <UserProvider>
-        <RateLimitModal />
-        {children}
-        <Toaster />
-      </UserProvider>
-    </StoreProvider>
+    <ThemeProvider
+      attribute="class"
+      defaultTheme="system"
+      enableSystem
+      disableTransitionOnChange
+    >
+      <StoreProvider>
+        <UserProvider>
+          <RateLimitModal />
+          {children}
+          <Toaster />
+        </UserProvider>
+      </StoreProvider>
+    </ThemeProvider>
   );
 }
