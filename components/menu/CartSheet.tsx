@@ -45,6 +45,7 @@ import { Textarea } from "../ui/textarea";
 import { useRouter } from "next/navigation";
 import { selectOrderUserState } from "@/store/orderuserSlice";
 import { selectQrCodeState } from "@/store/qrcodeSlice";
+import { toast } from "sonner";
 
 function CartSheet() {
   const dispatch = useAppDispatch();
@@ -68,7 +69,7 @@ function CartSheet() {
     }
 
     if (orderNote.length > 200) {
-      alert("Note cannot be longer than 200 characters.");
+      toast.error("Note cannot be longer than 200 characters.");
       return;
     }
     dispatch(
