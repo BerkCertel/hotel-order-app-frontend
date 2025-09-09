@@ -19,6 +19,7 @@ import {
 import { Order } from "@/types/OrderTypes";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { OrderCard } from "@/components/cards/OrderCard";
+import { setActiveLocationId } from "@/store/locationsSlice";
 
 // Order tipini meta property ile genişlet
 type OrderWithMeta = Order & { __justArrived?: boolean };
@@ -33,6 +34,10 @@ export default function OrdersByLocation() {
 
   // Limit 6
   const [limit] = useState<number>(6);
+
+  useEffect(() => {
+    dispatch(setActiveLocationId(locationId));
+  }, [locationId, dispatch]);
 
   // İlk fetch
   useEffect(() => {

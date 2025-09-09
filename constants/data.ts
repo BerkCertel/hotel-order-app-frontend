@@ -1,5 +1,5 @@
 import { LuQrCode, LuMapPin, LuUsers, LuList } from "react-icons/lu";
-import { TbCategory } from "react-icons/tb";
+import { TbCategory, TbListDetails } from "react-icons/tb";
 import { MdOutlineCategory } from "react-icons/md";
 
 export const SUPERADMIN_SIDE_MENU_DATA = [
@@ -36,7 +36,7 @@ export const SUPERADMIN_SIDE_MENU_DATA = [
   {
     id: "06",
     label: "Orders",
-    icon: LuUsers,
+    icon: TbListDetails,
     path: "/admin/orders",
   },
 ];

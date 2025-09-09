@@ -11,6 +11,7 @@ interface LocationState {
   success: boolean;
   locations: Location[];
   locationItems: LocationItem[]; // ← Bunu ekle!
+  ActiveLocationId: string | null; // Aktif lokasyon ID'si
 }
 
 const initialState: LocationState = {
@@ -19,6 +20,7 @@ const initialState: LocationState = {
   success: false,
   locations: [],
   locationItems: [],
+  ActiveLocationId: null,
 };
 
 // CREATE LOCATION
@@ -127,6 +129,9 @@ const locationsSlice = createSlice({
       state.error = null;
       state.success = false;
     },
+    setActiveLocationId(state, action) {
+      state.ActiveLocationId = action.payload;
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -220,6 +225,7 @@ const locationsSlice = createSlice({
   },
 });
 
-export const { resetLocationState } = locationsSlice.actions;
+export const { resetLocationState, setActiveLocationId } =
+  locationsSlice.actions;
 export const selectLocationState = (state: RootState) => state.locations;
 export default locationsSlice.reducer;

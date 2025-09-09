@@ -8,13 +8,16 @@ import {
   getAllLocations,
   getUserLocations,
   selectLocationState,
+  setActiveLocationId,
 } from "@/store/locationsSlice";
 import { useAppDispatch, useAppSelector } from "@/store/store";
 import { useRouter } from "next/navigation";
+import clsx from "clsx";
 
 export default function UserSideMenu() {
   const dispatch = useAppDispatch();
-  const { locations, loading, error } = useAppSelector(selectLocationState);
+  const { locations, loading, error, ActiveLocationId } =
+    useAppSelector(selectLocationState);
   const navigate = useRouter();
   const logout = useLogout();
 
@@ -28,6 +31,7 @@ export default function UserSideMenu() {
 
   const handleQrPage = () => {
     navigate.push("/user");
+    dispatch(setActiveLocationId(null));
   };
 
   if (loading)
@@ -78,15 +82,29 @@ export default function UserSideMenu() {
           <span>Orders</span>
         </h5>
         <div className="flex flex-col gap-2">
-          {locations.map((loc, index) => (
-            <button
-              key={`menu_${index}`}
-              onClick={() => handleNavigate(loc._id as string)}
-              className="cursor-pointer w-full flex items-center gap-3 text-[15px] text-black bg-white/60 py-2 px-5 rounded-xl shadow hover:bg-indigo-500 hover:text-white transition-all duration-200 group"
-            >
-              <span className="font-semibold truncate">{loc.location}</span>
-            </button>
-          ))}
+          {locations.map((loc, index) => {
+            const isActive = loc._id === ActiveLocationId;
+            return (
+              <button
+                key={`menu_${index}`}
+                onClick={() => handleNavigate(loc._id as string)}
+                className={clsx(
+                  "cursor-pointer w-full flex items-center gap-3 text-[15px] py-2 px-5 rounded-xl shadow transition-all duration-200 group font-semibold truncate",
+                  {
+                    // Aktif olan butonun hover gibi görünmesi için
+                    "bg-indigo-500 text-white": isActive,
+                    // Aktifken hover olursa ekstra opacity ekle
+                    "hover:opacity-70": isActive,
+                    // Diğerleri için standart hover
+                    "bg-white/60 text-black hover:bg-indigo-500 hover:text-white":
+                      !isActive,
+                  }
+                )}
+              >
+                <span>{loc.location}</span>
+              </button>
+            );
+          })}
         </div>
       </div>
 
