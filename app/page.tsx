@@ -20,15 +20,11 @@ import { LoginFormSchema } from "@/schemas/LoginFormSchema";
 import axiosInstance from "@/utils/axiosInstance";
 import { AxiosError } from "axios";
 import { FaUser } from "react-icons/fa";
-
 import { LoadingModal } from "@/components/modals/LoadingModal";
-import { useAppDispatch } from "@/store/store";
-import { setLoggedInUser } from "@/store/authSlice";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 
 export default function Home() {
-  const dispatch = useAppDispatch();
   const router = useRouter();
   const [Loading, setLoading] = useState(false);
 
@@ -49,7 +45,7 @@ export default function Home() {
 
         if (res.data.user) {
           updateUser(res.data.user);
-          dispatch(setLoggedInUser(res.data.user));
+
           toast.success("Login successful!");
           setLoading(false);
 

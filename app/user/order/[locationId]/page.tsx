@@ -142,21 +142,16 @@ export default function OrdersByLocation() {
 
   return (
     <div className="max-w-[1600px] mx-auto mt-3 px-2">
-      <div className="  mb-">
-        <div>
-          <h1 className="text-2xl font-bold leading-tight text-center">
-            Orders
-          </h1>
-          <p className="text-sm text-muted-foreground my-1 flex items-center gap-2">
-            <Badge
-              variant="secondary"
-              className="px-3 py-1 mb-1 text-base font-semibold"
-            >
-              <span>Total:</span>
-              {total}
-            </Badge>
-          </p>
-        </div>
+      <div className="flex items-center justify-start gap-4">
+        <p className="text-sm text-muted-foreground my-1 flex items-center gap-2">
+          <Badge
+            variant="secondary"
+            className="px-3 py-1 mb-1 text-base font-semibold"
+          >
+            <span>Total:</span>
+            {total}
+          </Badge>
+        </p>
       </div>
 
       <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 ">

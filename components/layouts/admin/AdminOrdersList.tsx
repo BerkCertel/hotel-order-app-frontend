@@ -151,7 +151,6 @@ export default function AdminOrdersList({ selectedLocationId }: Props) {
   return (
     <div className="max-w-[1600px] mx-auto mt-3 px-2">
       <div>
-        <h1 className="text-2xl font-bold leading-tight text-center">Orders</h1>
         <p className="text-sm text-muted-foreground my-1 flex items-center gap-2">
           <Badge
             variant="secondary"

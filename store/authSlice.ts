@@ -9,23 +9,16 @@ interface MessageResponse {
   message: string;
 }
 
-interface loggedInUser {
-  email: string | null;
-  role: "USER" | "ADMIN" | "SUPERADMIN" | null;
-}
-
 interface AuthState {
   loading: boolean;
   error: string | null;
   success: boolean;
-  loggedInUser: loggedInUser | null;
 }
 
 const initialState: AuthState = {
   loading: false,
   error: null,
   success: false,
-  loggedInUser: null,
 };
 
 export const sendResetEmail = createAsyncThunk<
@@ -71,12 +64,6 @@ const authSlice = createSlice({
       state.error = null;
       state.success = false;
     },
-    setLoggedInUser(state, action) {
-      state.loggedInUser = action.payload;
-    },
-    clearLoggedInUser(state) {
-      state.loggedInUser = null;
-    },
   },
   extraReducers: (builder) => {
     builder
@@ -111,7 +98,6 @@ const authSlice = createSlice({
   },
 });
 
-export const { resetAuthState, setLoggedInUser, clearLoggedInUser } =
-  authSlice.actions;
+export const { resetAuthState } = authSlice.actions;
 export const selectAuthState = (state: RootState) => state.auth;
 export default authSlice.reducer;
