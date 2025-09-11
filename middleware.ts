@@ -31,14 +31,11 @@ export function middleware(request: NextRequest) {
   try {
     decoded = jwtDecode<JwtPayload>(token);
   } catch {
-    console.log("Invalid token");
     if (pathname.startsWith("/admin") || pathname.startsWith("/user")) {
       return NextResponse.redirect(new URL("/", request.url));
     }
     return NextResponse.next();
   }
-
-  console.log(pathname, decoded.role);
 
   if (
     pathname.startsWith("/admin") &&
