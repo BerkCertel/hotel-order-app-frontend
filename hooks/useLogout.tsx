@@ -14,7 +14,6 @@ export function useLogout() {
     try {
       await axiosInstance.post(API_PATHS.AUTH.LOGOUT);
       clearUser();
-
       toast.success("Logout successful!");
       router.push("/");
     } catch (err) {

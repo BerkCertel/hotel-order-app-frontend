@@ -18,6 +18,7 @@ import { Alert, AlertDescription, AlertTitle } from "../ui/alert";
 import { Category } from "@/types/CategoryTypes";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
+import { ScrollArea } from "../ui/scroll-area";
 
 function MenuSheet() {
   const navigate = useRouter();
@@ -32,6 +33,11 @@ function MenuSheet() {
   const handleCategoryClick = (id: string) => {
     navigate.push(`/order/subcategory/${id}`);
   };
+  // // Kategoriye tıklanınca modal açılır ve seçili id redux'a yazılır
+  // const handleCategoryClick = (catId: string) => {
+  //   dispatch(setSelectedCategoryId(catId)); // Redux'a yaz
+  //   setSubcategoryModalOpen(true); // Modalı aç
+  // };
 
   return (
     <Sheet>
@@ -81,28 +87,30 @@ function MenuSheet() {
           )}
 
           {!loading && !error && categories && categories.length > 0 && (
-            <div className="space-y-3">
-              {categories.map((cate: Category) => (
-                <div
-                  onClick={() => handleCategoryClick(cate._id)}
-                  key={cate._id}
-                  className="flex items-center gap-3 p-2 rounded-lg hover:bg-accent cursor-pointer transition"
-                >
-                  <div className="relative w-12 h-12 flex-shrink-0 rounded-lg overflow-hidden bg-muted">
-                    <Image
-                      src={cate.image}
-                      alt={cate.name}
-                      fill
-                      className="object-cover"
-                      sizes="48px"
-                    />
+            <ScrollArea className="h-full w-full overflow-y-auto border rounded-md bg-white p-2">
+              <div className="space-y-3">
+                {categories.map((cate: Category) => (
+                  <div
+                    onClick={() => handleCategoryClick(cate._id)}
+                    key={cate._id}
+                    className="flex items-center gap-3 p-2 rounded-lg hover:bg-accent cursor-pointer transition"
+                  >
+                    <div className="relative w-12 h-12 flex-shrink-0 rounded-lg overflow-hidden bg-muted">
+                      <Image
+                        src={cate.image}
+                        alt={cate.name}
+                        fill
+                        className="object-cover"
+                        sizes="48px"
+                      />
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <div className="font-medium truncate">{cate.name}</div>
+                    </div>
                   </div>
-                  <div className="flex-1 min-w-0">
-                    <div className="font-medium truncate">{cate.name}</div>
-                  </div>
-                </div>
-              ))}
-            </div>
+                ))}
+              </div>
+            </ScrollArea>
           )}
         </div>
 

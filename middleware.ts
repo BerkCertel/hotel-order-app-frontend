@@ -12,48 +12,59 @@ export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
   const token = request.cookies?.get("token")?.value;
 
-  if (token) {
-    let decoded: JwtPayload;
-    try {
-      decoded = jwtDecode<JwtPayload>(token);
-    } catch {
-      // Token bozuksa login'e at
+  if (!token) {
+    // Token yoksa login'e at (sadece korumalı route'larda!)
+    if (pathname.startsWith("/admin") || pathname.startsWith("/user")) {
       return NextResponse.redirect(new URL("/", request.url));
     }
+    // Public route ise izin ver
+    return NextResponse.next();
+  }
 
-    // Token süresi dolmuşsa login'e at
-    if (decoded.exp && Date.now() / 1000 > decoded.exp) {
+  let decoded: JwtPayload;
+  try {
+    decoded = jwtDecode<JwtPayload>(token);
+  } catch {
+    // Token bozuksa login'e at (sadece korumalı route'larda!)
+    if (pathname.startsWith("/admin") || pathname.startsWith("/user")) {
       return NextResponse.redirect(new URL("/", request.url));
     }
+    return NextResponse.next();
+  }
 
-    // ROLE GÖRE OTO YÖNLENDİRME!
+  if (decoded.exp && Date.now() / 1000 > decoded.exp) {
+    // Token süresi dolmuşsa login'e at (sadece korumalı route'larda!)
+    if (pathname.startsWith("/admin") || pathname.startsWith("/user")) {
+      return NextResponse.redirect(new URL("/", request.url));
+    }
+    return NextResponse.next();
+  }
+
+  // Admin/user route'larında rol kontrolü
+  if (
+    pathname.startsWith("/admin") &&
+    !(decoded.role === "ADMIN" || decoded.role === "SUPERADMIN")
+  ) {
+    return NextResponse.redirect(new URL("/", request.url));
+  }
+  if (pathname.startsWith("/user") && decoded.role !== "USER") {
+    return NextResponse.redirect(new URL("/", request.url));
+  }
+
+  // Public route ve login sayfasındaysa otomatik role paneline yönlendir:
+  if (pathname === "/") {
     if (decoded.role === "ADMIN" || decoded.role === "SUPERADMIN") {
-      // Eğer zaten admin panelindeyse, izin ver
-      if (!pathname.startsWith("/admin")) {
-        return NextResponse.redirect(new URL("/admin", request.url));
-      }
-    } else if (decoded.role === "USER") {
-      // Eğer zaten user panelindeyse, izin ver
-      if (!pathname.startsWith("/user")) {
-        return NextResponse.redirect(new URL("/user", request.url));
-      }
-    } else {
-      // Yetkisiz rol varsa login'e at
-      return NextResponse.redirect(new URL("/", request.url));
+      return NextResponse.redirect(new URL("/admin", request.url));
+    }
+    if (decoded.role === "USER") {
+      return NextResponse.redirect(new URL("/user", request.url));
     }
   }
 
-  // Her şey yolundaysa route'a izin ver
+  // Erişim uygunsa izin ver
   return NextResponse.next();
 }
 
-// Bütün route'larda çalışsın istiyorsan matcher'ı şöyle bırak:
 export const config = {
-  matcher: [
-    // YÖNLENDİRME YAPILMASINI İSTEDİĞİN PATHLER
-    "/admin/:path*",
-    "/user/:path*",
-    // VEYA HER SAYFADA (login sayfası hariç) kontrol için:
-    "/((?!api|trpc|_next|_vercel|.*\\..*|/).*)",
-  ],
+  matcher: ["/", "/admin/:path*", "/user/:path*"],
 };
