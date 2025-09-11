@@ -15,12 +15,12 @@ function AdminPageMainLayout({ children }: AdminPageMainLayoutProps) {
 
   return (
     <AdminLayout>
-      <ProtectedPageProvider
+      {/* <ProtectedPageProvider
         allowedRoles={["ADMIN", "SUPERADMIN"]}
         redirectTo="/"
-      >
-        {children}
-      </ProtectedPageProvider>
+      > */}
+      {children}
+      {/* </ProtectedPageProvider> */}
     </AdminLayout>
   );
 }
