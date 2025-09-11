@@ -27,7 +27,6 @@ export const useUserAuth = () => {
         console.error("Failed to fetch user info:", error);
         if (isMounted) {
           clearUser();
-          router.push("/");
         }
       }
     };
