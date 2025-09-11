@@ -1,4 +1,3 @@
-"use client";
 import { useContext, useEffect } from "react";
 import { API_PATHS } from "@/constants/apiPaths";
 import { UserContext } from "@/context/userContext";
