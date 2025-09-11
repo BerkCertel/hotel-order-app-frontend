@@ -12,67 +12,61 @@ export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
   const token = request.cookies?.get("token")?.value;
 
-  if (token) {
-    let decoded: JwtPayload;
-    try {
-      decoded = jwtDecode<JwtPayload>(token);
-    } catch {
-      // Token bozuksa login'e at (sadece korumalı route'larda!)
-      if (pathname.startsWith("/admin") || pathname.startsWith("/user")) {
-        return NextResponse.redirect(new URL("/login", request.url));
-      }
-      return NextResponse.next();
-    }
+  const isProtectedRoute =
+    pathname === "/" ||
+    pathname.startsWith("/admin") ||
+    pathname.startsWith("/user");
 
-    // if (decoded.exp && Date.now() / 1000 > decoded.exp) {
-    //   // Token süresi dolmuşsa login'e at (sadece korumalı route'larda!)
-    //   if (pathname.startsWith("/admin") || pathname.startsWith("/user")) {
-    //     return NextResponse.redirect(new URL("/", request.url));
-    //   }
-    //   return NextResponse.next();
-    // }
+  if (!isProtectedRoute) {
+    return NextResponse.next();
+  }
 
-    // Admin/user route'larında rol kontrolü
-    if (
-      pathname.startsWith("/admin") &&
-      !(decoded.role === "ADMIN" || decoded.role === "SUPERADMIN")
-    ) {
-      return NextResponse.redirect(new URL("/login", request.url));
+  if (!token) {
+    if (pathname.startsWith("/admin") || pathname.startsWith("/user")) {
+      return NextResponse.redirect(new URL("/", request.url));
     }
-    if (pathname.startsWith("/user") && decoded.role !== "USER") {
-      return NextResponse.redirect(new URL("/login", request.url));
-    }
+    return NextResponse.next();
+  }
 
-    // Public route ve login sayfasındaysa otomatik role paneline yönlendir:
-    if (pathname === "/login") {
-      if (decoded.role === "ADMIN" || decoded.role === "SUPERADMIN") {
-        return NextResponse.redirect(new URL("/admin", request.url));
-      }
-      if (decoded.role === "USER") {
-        return NextResponse.redirect(new URL("/user", request.url));
-      }
+  let decoded: JwtPayload;
+  try {
+    decoded = jwtDecode<JwtPayload>(token);
+  } catch {
+    if (pathname.startsWith("/admin") || pathname.startsWith("/user")) {
+      return NextResponse.redirect(new URL("/", request.url));
+    }
+    return NextResponse.next();
+  }
+
+  if (
+    pathname.startsWith("/admin") &&
+    !(decoded.role === "ADMIN" || decoded.role === "SUPERADMIN")
+  ) {
+    if (decoded.role === "USER") {
+      return NextResponse.redirect(new URL("/user", request.url));
+    }
+    return NextResponse.redirect(new URL("/", request.url));
+  }
+
+  if (pathname.startsWith("/user") && decoded.role !== "USER") {
+    if (decoded.role === "ADMIN" || decoded.role === "SUPERADMIN") {
+      return NextResponse.redirect(new URL("/admin", request.url));
+    }
+    return NextResponse.redirect(new URL("/", request.url));
+  }
+
+  if (pathname === "/") {
+    if (decoded.role === "ADMIN" || decoded.role === "SUPERADMIN") {
+      return NextResponse.redirect(new URL("/admin", request.url));
+    }
+    if (decoded.role === "USER") {
+      return NextResponse.redirect(new URL("/user", request.url));
     }
   }
-  // Erişim uygunsa izin ver
+
   return NextResponse.next();
 }
 
 export const config = {
-  matcher: ["/login", "/admin/:path*", "/user/:path*"],
+  matcher: ["/", "/admin/:path*", "/user/:path*"],
 };
-
-// import { NextResponse } from "next/server";
-// import type { NextRequest } from "next/server";
-
-// // Basit/standart middleware: hiçbir kontrol yok, sadece gelen isteği geçirir.
-// export function middleware(request: NextRequest) {
-//   return NextResponse.next();
-// }
-
-// // Tüm route'larda çalışacak şekilde ayarladık.
-// export const config = {
-//   // Match all pathnames except for
-//   // - … if they start with `/api`, `/trpc`, `/_next` or `/_vercel`
-//   // - … the ones containing a dot (e.g. `favicon.ico`)
-//   matcher: "/((?!api|trpc|_next|_vercel|.*\\..*).*)",
-// };

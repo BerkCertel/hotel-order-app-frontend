@@ -13,9 +13,9 @@ export default function UserPageLayout({ children }: UserPageLayoutProps) {
 
   return (
     <UserLayout>
-      <ProtectedPageProvider allowedRoles={["USER"]} redirectTo="/">
-        {children}
-      </ProtectedPageProvider>
+      {/* <ProtectedPageProvider allowedRoles={["USER"]} redirectTo="/"> */}
+      {children}
+      {/* </ProtectedPageProvider> */}
     </UserLayout>
   );
 }
