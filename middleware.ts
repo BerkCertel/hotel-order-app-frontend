@@ -1,6 +1,5 @@
-import { NextResponse } from "next/server";
-import type { NextRequest } from "next/server";
 import { jwtDecode } from "jwt-decode";
+import { NextRequest, NextResponse } from "next/server";
 
 type JwtPayload = {
   exp: number;
@@ -32,15 +31,19 @@ export function middleware(request: NextRequest) {
   try {
     decoded = jwtDecode<JwtPayload>(token);
   } catch {
+    console.log("Invalid token");
     if (pathname.startsWith("/admin") || pathname.startsWith("/user")) {
       return NextResponse.redirect(new URL("/", request.url));
     }
     return NextResponse.next();
   }
 
+  console.log(pathname, decoded.role);
+
   if (
     pathname.startsWith("/admin") &&
-    !(decoded.role === "ADMIN" || decoded.role === "SUPERADMIN")
+    decoded.role !== "ADMIN" &&
+    decoded.role !== "SUPERADMIN"
   ) {
     if (decoded.role === "USER") {
       return NextResponse.redirect(new URL("/user", request.url));

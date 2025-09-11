@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useContext } from "react";
+import { useState, useContext, useEffect } from "react";
 import { useFormik } from "formik";
 import { toast } from "sonner";
 
@@ -28,7 +28,17 @@ export default function Home() {
   const router = useRouter();
   const [Loading, setLoading] = useState(false);
 
-  const { updateUser } = useContext(UserContext);
+  const { updateUser, user } = useContext(UserContext);
+
+  useEffect(() => {
+    if (user) {
+      if (user.role === "ADMIN" || user.role === "SUPERADMIN") {
+        router.push("/admin");
+      } else if (user.role === "USER") {
+        router.push("/user");
+      }
+    }
+  }, [user, router]);
 
   const formik = useFormik({
     initialValues: { email: "", password: "" },

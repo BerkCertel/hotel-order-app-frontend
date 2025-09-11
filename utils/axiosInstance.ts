@@ -21,9 +21,7 @@ axiosInstance.interceptors.response.use(
       if (status === 429) {
         console.log("Rate limit exceeded - please try again later.");
       } else if (status === 401) {
-        if (typeof window !== "undefined") {
-          console.error("Unauthorized access - redirecting to login");
-        }
+        console.error("Unauthorized - please log in again");
       } else if (status === 403) {
         console.error("Forbidden access - you do not have permission");
       } else if (error.code === "ECONNABORTED") {
