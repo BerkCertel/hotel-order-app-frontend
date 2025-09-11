@@ -12,15 +12,6 @@ export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
   const token = request.cookies?.get("token")?.value;
 
-  if (!token) {
-    // Token yoksa login'e at (sadece korumalı route'larda!)
-    if (pathname.startsWith("/admin") || pathname.startsWith("/user")) {
-      return NextResponse.redirect(new URL("/", request.url));
-    }
-    // Public route ise izin ver
-    return NextResponse.next();
-  }
-
   if (token) {
     let decoded: JwtPayload;
     try {
@@ -33,13 +24,13 @@ export function middleware(request: NextRequest) {
       return NextResponse.next();
     }
 
-    if (decoded.exp && Date.now() / 1000 > decoded.exp) {
-      // Token süresi dolmuşsa login'e at (sadece korumalı route'larda!)
-      if (pathname.startsWith("/admin") || pathname.startsWith("/user")) {
-        return NextResponse.redirect(new URL("/", request.url));
-      }
-      return NextResponse.next();
-    }
+    // if (decoded.exp && Date.now() / 1000 > decoded.exp) {
+    //   // Token süresi dolmuşsa login'e at (sadece korumalı route'larda!)
+    //   if (pathname.startsWith("/admin") || pathname.startsWith("/user")) {
+    //     return NextResponse.redirect(new URL("/", request.url));
+    //   }
+    //   return NextResponse.next();
+    // }
 
     // Admin/user route'larında rol kontrolü
     if (
