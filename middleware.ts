@@ -19,7 +19,7 @@ export function middleware(request: NextRequest) {
     } catch {
       // Token bozuksa login'e at (sadece korumalı route'larda!)
       if (pathname.startsWith("/admin") || pathname.startsWith("/user")) {
-        return NextResponse.redirect(new URL("/", request.url));
+        return NextResponse.redirect(new URL("/login", request.url));
       }
       return NextResponse.next();
     }
@@ -37,14 +37,14 @@ export function middleware(request: NextRequest) {
       pathname.startsWith("/admin") &&
       !(decoded.role === "ADMIN" || decoded.role === "SUPERADMIN")
     ) {
-      return NextResponse.redirect(new URL("/", request.url));
+      return NextResponse.redirect(new URL("/login", request.url));
     }
     if (pathname.startsWith("/user") && decoded.role !== "USER") {
-      return NextResponse.redirect(new URL("/", request.url));
+      return NextResponse.redirect(new URL("/login", request.url));
     }
 
     // Public route ve login sayfasındaysa otomatik role paneline yönlendir:
-    if (pathname === "/") {
+    if (pathname === "/login") {
       if (decoded.role === "ADMIN" || decoded.role === "SUPERADMIN") {
         return NextResponse.redirect(new URL("/admin", request.url));
       }
@@ -58,7 +58,7 @@ export function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/", "/admin/:path*", "/user/:path*"],
+  matcher: ["/login", "/admin/:path*", "/user/:path*"],
 };
 
 // import { NextResponse } from "next/server";

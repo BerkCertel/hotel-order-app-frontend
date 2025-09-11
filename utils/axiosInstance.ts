@@ -23,7 +23,6 @@ axiosInstance.interceptors.response.use(
       } else if (status === 401) {
         if (typeof window !== "undefined") {
           console.error("Unauthorized access - redirecting to login");
-          window.location.href = "/";
         }
       } else if (status === 403) {
         console.error("Forbidden access - you do not have permission");
