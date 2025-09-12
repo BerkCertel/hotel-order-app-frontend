@@ -23,12 +23,46 @@ import { FaUser } from "react-icons/fa";
 import { LoadingModal } from "@/components/modals/LoadingModal";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { useAppDispatch, useAppSelector } from "@/store/store";
+import { selectAuthState, setLoggedInUser } from "@/store/authSlice";
+import { clear } from "console";
 
 export default function Home() {
+  const dispatch = useAppDispatch();
   const router = useRouter();
   const [Loading, setLoading] = useState(false);
 
-  const { updateUser, user } = useContext(UserContext);
+  const { loggedInUser } = useAppSelector(selectAuthState);
+
+  const { updateUser, user, clearUser } = useContext(UserContext);
+
+  useEffect(() => {
+    if (loggedInUser) {
+      if (user) {
+        return;
+      }
+
+      const fetchUserInfo = async () => {
+        try {
+          const response = await axiosInstance.get(
+            API_PATHS.AUTH.GET_USER_INFO
+          );
+          if (response.data) {
+            updateUser(response.data);
+            dispatch(setLoggedInUser(true));
+          }
+        } catch (error) {
+          console.error("Failed to fetch user info:", error);
+
+          clearUser();
+          dispatch(setLoggedInUser(false));
+          router.push("/");
+        }
+      };
+
+      fetchUserInfo();
+    }
+  }, [clearUser, loggedInUser, router, updateUser, user]);
 
   useEffect(() => {
     if (user) {
@@ -55,7 +89,7 @@ export default function Home() {
 
         if (res.data.user) {
           updateUser(res.data.user);
-
+          dispatch(setLoggedInUser(true));
           toast.success("Login successful!");
           setLoading(false);
 
@@ -69,6 +103,7 @@ export default function Home() {
           }
         }
       } catch (error) {
+        dispatch(setLoggedInUser(false));
         setLoading(false);
         const err = error as AxiosError<{ message?: string }>;
         if (err.response && err.response.data.message) {

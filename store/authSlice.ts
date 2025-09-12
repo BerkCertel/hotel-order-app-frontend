@@ -13,12 +13,14 @@ interface AuthState {
   loading: boolean;
   error: string | null;
   success: boolean;
+  loggedInUser?: boolean;
 }
 
 const initialState: AuthState = {
   loading: false,
   error: null,
   success: false,
+  loggedInUser: false,
 };
 
 export const sendResetEmail = createAsyncThunk<
@@ -64,6 +66,9 @@ const authSlice = createSlice({
       state.error = null;
       state.success = false;
     },
+    setLoggedInUser(state, action) {
+      state.loggedInUser = action.payload;
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -98,6 +103,6 @@ const authSlice = createSlice({
   },
 });
 
-export const { resetAuthState } = authSlice.actions;
+export const { resetAuthState, setLoggedInUser } = authSlice.actions;
 export const selectAuthState = (state: RootState) => state.auth;
 export default authSlice.reducer;

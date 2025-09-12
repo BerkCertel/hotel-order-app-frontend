@@ -43,12 +43,18 @@ const qrCodePersistConfig = {
   whitelist: ["activeQrCodeId"], // Sadece activeQrCodeId persist edilecek
 };
 
+const authPersistConfig = {
+  key: "auth",
+  storage,
+  whitelist: ["loggedInUser"], // Sadece loggedInUser persist edilecek
+};
+
 const rootReducer = combineReducers({
   locations: locationsReducer,
   users: usersReducer,
   categories: categoryReducer,
   subcategories: subcategoryReducer,
-  auth: authReducer,
+  auth: persistReducer(authPersistConfig, authReducer),
   qrcode: persistReducer(qrCodePersistConfig, qrcodeReducer),
   orderuser: orderuserReducer,
   cart: cartReducer,
