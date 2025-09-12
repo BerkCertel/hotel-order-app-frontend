@@ -14,65 +14,20 @@ import { useEffect } from "react";
 import { Card, CardContent, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import MenuHeader from "@/components/menu/MenuHeader";
+import NoQrCodeSelectedSubcategoryModal from "@/components/modals/NoQrCodeSelectedSubcategoryModal";
+import ViewOnlyMenuHeader from "@/components/menu/ViewOnlyMenuHeader";
 
-import {
-  getQrCodeById,
-  selectQrCodeState,
-  setActiveQrCodeId,
-} from "@/store/qrcodeSlice";
-import SelectedSubcategoryModal from "@/components/modals/SelectedSubcategoryModal";
-import { useParams, useRouter } from "next/navigation";
-
-function getIdAsString(id: string | string[] | undefined): string | undefined {
-  if (typeof id === "string") return id;
-  if (Array.isArray(id) && typeof id[0] === "string") return id[0];
-  return undefined;
-}
-
-function MenuPage() {
-  const params = useParams();
+function ViewOnlyMenuPage() {
   const dispatch = useAppDispatch();
-  const router = useRouter();
   const { loading, error, categories } = useAppSelector(selectCategoryState);
-  const { activeQrCodeId, Qrerror, Qrloading, qrCodeDetail } =
-    useAppSelector(selectQrCodeState);
 
   // MODAL STATE
   const [subcategoryModalOpen, setSubcategoryModalOpen] = useState(false);
 
-  const id = getIdAsString(params.id);
-
   // Veri çekme
   useEffect(() => {
-    if (!id) return;
     dispatch(getAllCategories());
-    dispatch(setActiveQrCodeId(id));
-    dispatch(getQrCodeById(id));
-  }, [id, dispatch]);
-
-  // Yönlendirme
-  useEffect(() => {
-    if (!id || id.length !== 24) {
-      router.push("/scan-qrcode-again");
-      return;
-    }
-    if (Qrloading) return;
-
-    if (Qrerror) {
-      router.push("/scan-qrcode-again");
-      return;
-    }
-
-    if (!qrCodeDetail) return;
-    if (
-      activeQrCodeId === "" ||
-      activeQrCodeId === null ||
-      id !== activeQrCodeId
-    ) {
-      router.push("/scan-qrcode-again");
-    }
-  }, [id, activeQrCodeId, Qrerror, Qrloading, qrCodeDetail, router]);
+  }, [dispatch]);
 
   // Kategoriye tıklanınca modal açılır ve seçili id redux'a yazılır
   const handleCategoryClick = (catId: string) => {
@@ -82,7 +37,7 @@ function MenuPage() {
 
   return (
     <PageContainer className="mx-auto container">
-      <MenuHeader HeaderText="Categories" />
+      <ViewOnlyMenuHeader HeaderText="Categories" />
       {/* Loading state */}
       {loading && (
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
@@ -141,7 +96,7 @@ function MenuPage() {
       )}
 
       {/* MODAL BURADA */}
-      <SelectedSubcategoryModal
+      <NoQrCodeSelectedSubcategoryModal
         open={subcategoryModalOpen}
         onClose={() => {
           setSubcategoryModalOpen(false);
@@ -152,4 +107,4 @@ function MenuPage() {
   );
 }
 
-export default MenuPage;
+export default ViewOnlyMenuPage;

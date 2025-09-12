@@ -100,7 +100,7 @@ function CartSheet() {
     <>
       <Sheet open={sheetStatus} onOpenChange={setSheetStatus}>
         <SheetTrigger asChild>
-          <Button className="relative text-xs md:text-base">
+          <Button className="relative text-xs md:text-base text-indigo-500 bg-indigo-200">
             <FaShoppingBasket className="w-6 h-6" />
             Cart
             {cartItems.length > 0 && (

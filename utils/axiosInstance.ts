@@ -22,6 +22,7 @@ axiosInstance.interceptors.response.use(
         console.log("Rate limit exceeded - please try again later.");
       } else if (status === 401) {
         console.error("Unauthorized - please log in again");
+        window.location.href = "/";
       } else if (status === 403) {
         console.error("Forbidden access - you do not have permission");
       } else if (error.code === "ECONNABORTED") {

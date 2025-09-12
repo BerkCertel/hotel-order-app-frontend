@@ -42,7 +42,7 @@ function MenuSheet() {
   return (
     <Sheet>
       <SheetTrigger asChild>
-        <Button className="text-xs md:text-base">
+        <Button className="text-xs md:text-base text-indigo-500 bg-indigo-200">
           <FaBars className="w-6 h-6" />
           Menu
         </Button>
@@ -50,10 +50,10 @@ function MenuSheet() {
       <SheetContent side="right" className="p-0">
         {/* HEADER */}
         <div className="relative flex items-center justify-center border-b h-16">
-          <div className="absolute left-4 top-1/2 -translate-y-1/2 flex items-center space-x-2 text-accent-foreground">
+          <div className="absolute left-4 top-1/2 -translate-y-1/2 flex items-center space-x-2  text-indigo-600">
             <FaThList className="w-6 h-6" />
 
-            <SheetTitle>Menu</SheetTitle>
+            <SheetTitle className="text-indigo-600">Menu</SheetTitle>
           </div>
         </div>
 

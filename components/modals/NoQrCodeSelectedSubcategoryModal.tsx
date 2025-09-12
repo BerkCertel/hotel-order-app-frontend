@@ -1,6 +1,5 @@
 "use client";
 
-import { addToCart, removeFromCart, selectCartState } from "@/store/cartSlice";
 import { useAppDispatch, useAppSelector } from "@/store/store";
 import {
   clearSubcategories,
@@ -19,32 +18,25 @@ import { Alert, AlertDescription, AlertTitle } from "../ui/alert";
 import { Card, CardTitle } from "../ui/card";
 import Image from "next/image";
 import { Button } from "../ui/button";
-import {
-  FaInfoCircle,
-  FaMinus,
-  FaPlus,
-  FaTimes,
-  FaTrash,
-} from "react-icons/fa";
+import { FaInfoCircle, FaTimes } from "react-icons/fa";
 import { ScrollArea } from "../ui/scroll-area";
 import { selectCategoryState } from "@/store/categorySlice";
 
-interface SelectedSubcategoryModalProps {
+interface NoQrCodeSelectedSubcategoryModalProps {
   open: boolean;
   onClose: () => void;
 }
 
-const SelectedSubcategoryModal = ({
+const NoQrCodeSelectedSubcategoryModal = ({
   open,
   onClose,
-}: SelectedSubcategoryModalProps) => {
+}: NoQrCodeSelectedSubcategoryModalProps) => {
   const dispatch = useAppDispatch();
   const { selectedCategoryId, categories } =
     useAppSelector(selectCategoryState);
   const { subcategories, loading, error } = useAppSelector(
     selectSubcategoryState
   );
-  const { items: cartItems } = useAppSelector(selectCartState);
 
   // Seçili kategori ismini bul
   const selectedCategory = categories.find((c) => c._id === selectedCategoryId);
@@ -60,8 +52,6 @@ const SelectedSubcategoryModal = ({
 
   // Detay modalı için state
   const [showDetailsId, setShowDetailsId] = useState<string | null>(null);
-  // Sepet helper
-  const getCartItem = (id: string) => cartItems.find((item) => item._id === id);
 
   return (
     <Dialog open={open} onOpenChange={onClose}>
@@ -103,8 +93,6 @@ const SelectedSubcategoryModal = ({
           <ScrollArea className="w-full h-[340px] sm:h-[420px] md:h-[520px]">
             <div className="grid grid-cols-1  md:grid-cols-3 gap-4">
               {subcategories.map((subcategory) => {
-                const cartItem = getCartItem(subcategory._id);
-
                 return (
                   <Card
                     key={subcategory._id}
@@ -121,7 +109,7 @@ const SelectedSubcategoryModal = ({
                       />
                     </div>
                     <div className="flex flex-col items-center justify-between rounded-md w-full gap-1">
-                      <CardTitle className="w-full h-9 px-4 py-2  text-sm sm:text-lg md:text-xl font-semibold text-center  break-words line-clamp-1 bg-indigo-100 text-indigo-600  rounded-md">
+                      <CardTitle className="w-full h-9 md:h-8 px-4 py-2  md:p-0 text-center text-sm sm:text-lg md:text-xl font-semibold  break-words line-clamp-1 bg-indigo-100 text-indigo-600  rounded-md">
                         {subcategory.name}
                       </CardTitle>
 
@@ -140,85 +128,6 @@ const SelectedSubcategoryModal = ({
                         Details
                       </Button>
                     </div>
-
-                    {/* Cart Controls */}
-                    {!cartItem ? (
-                      <Button
-                        className="w-full text-xs sm:text-sm md:text-base font-semibold bg-indigo-500 hover:bg-indigo-400 transition text-white rounded-md"
-                        onClick={() =>
-                          dispatch(
-                            addToCart({
-                              _id: subcategory._id,
-                              name: subcategory.name,
-                              quantity: 1,
-                              image: subcategory.image,
-                              price: subcategory.price,
-                            })
-                          )
-                        }
-                      >
-                        Add to Cart
-                      </Button>
-                    ) : (
-                      <div className="flex justify-center items-center w-full gap-1">
-                        <div className="flex items-center justify-center gap-2">
-                          <Button
-                            size="icon"
-                            variant="outline"
-                            className="text-xs sm:text-sm md:text-base"
-                            onClick={() =>
-                              dispatch(
-                                addToCart({
-                                  _id: subcategory._id,
-                                  name: subcategory.name,
-                                  quantity: -1,
-                                  image: subcategory.image,
-                                  price: subcategory.price,
-                                })
-                              )
-                            }
-                            disabled={cartItem.quantity <= 1}
-                            aria-label="Decrease quantity"
-                          >
-                            <FaMinus />
-                          </Button>
-                          <span className="min-w-[32px] text-center font-semibold text-xs sm:text-sm md:text-base">
-                            {cartItem.quantity}
-                          </span>
-                          <Button
-                            size="icon"
-                            variant="outline"
-                            className="text-xs sm:text-sm md:text-base"
-                            onClick={() =>
-                              dispatch(
-                                addToCart({
-                                  _id: subcategory._id,
-                                  name: subcategory.name,
-                                  quantity: 1,
-                                  image: subcategory.image,
-                                  price: subcategory.price,
-                                })
-                              )
-                            }
-                            aria-label="Increase quantity"
-                          >
-                            <FaPlus />
-                          </Button>
-                        </div>
-                        <Button
-                          size="sm"
-                          variant="destructive"
-                          className="text-xs sm:text-sm md:text-base flex items-center gap-1 mt-1 px-2 py-1 rounded-md"
-                          onClick={() =>
-                            dispatch(removeFromCart(subcategory._id))
-                          }
-                          aria-label="Remove from cart"
-                        >
-                          <FaTrash className="w-3 h-3 md:w-4 md:h-4" />
-                          <span>Remove</span>
-                        </Button>
-                      </div>
-                    )}
 
                     {/* Detay Modalı */}
                     {showDetailsId === subcategory._id && (
@@ -264,4 +173,4 @@ const SelectedSubcategoryModal = ({
   );
 };
 
-export default SelectedSubcategoryModal;
+export default NoQrCodeSelectedSubcategoryModal;

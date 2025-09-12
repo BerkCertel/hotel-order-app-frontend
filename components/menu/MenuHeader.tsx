@@ -7,9 +7,11 @@ interface MenuSheetHeaderProps {
 
 function MenuHeader({ HeaderText }: MenuSheetHeaderProps) {
   return (
-    <div className="flex justify-between gap-x-2 border-b border-black pb-2">
+    <div className="flex justify-between gap-x-2 border-b border-indigo-500 pb-2">
       <MenuSheet />
-      <span className=" text-lg md:text-2xl font-bold">{HeaderText}</span>
+      <span className="text-indigo-600 text-lg md:text-2xl font-bold">
+        {HeaderText}
+      </span>
       <CartSheet />
     </div>
   );

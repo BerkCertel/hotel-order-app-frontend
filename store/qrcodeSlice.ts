@@ -4,6 +4,7 @@ import axiosInstance from "@/utils/axiosInstance";
 import { API_PATHS } from "@/constants/apiPaths";
 import { QrCode } from "@/types/QrCodeTypes";
 import { AxiosError } from "axios";
+import { toast } from "sonner";
 
 interface QrCodeState {
   Qrloading: boolean;
@@ -55,7 +56,7 @@ export const getAllQrCodes = createAsyncThunk<
   } catch (error: unknown) {
     const err = error as AxiosError<{ message?: string }>;
     return rejectWithValue(
-      err.response?.data?.message || "QR kodlar alınamadı"
+      err.response?.data?.message || "Qr Codes could not be retrieved."
     );
   }
 });
@@ -74,7 +75,7 @@ export const getQrCodesByLocation = createAsyncThunk<
   } catch (error: unknown) {
     const err = error as AxiosError<{ message?: string }>;
     return rejectWithValue(
-      err.response?.data?.message || "QR kodlar alınamadı"
+      err.response?.data?.message || "Qr Codes could not be retrieved."
     );
   }
 });
@@ -90,8 +91,9 @@ export const getQrCodeById = createAsyncThunk<
     return res.data as QrCode;
   } catch (error: unknown) {
     const err = error as AxiosError<{ message?: string }>;
+    toast.error("Qr code info could not be retrieved.");
     return rejectWithValue(
-      err.response?.data?.message || "QR kod bilgisi alınamadı"
+      err.response?.data?.message || "Qr code info could not be retrieved."
     );
   }
 });
@@ -166,7 +168,7 @@ const qrCodeSlice = createSlice({
       })
       .addCase(getQrCodesByLocation.rejected, (state, action) => {
         state.Qrloading = false;
-        state.Qrerror = action.payload || "QR kodlar alınamadı";
+        state.Qrerror = action.payload || "Qr Codes could not be retrieved.";
       })
       .addCase(getQrCodeById.pending, (state) => {
         state.Qrloading = true;
@@ -181,7 +183,8 @@ const qrCodeSlice = createSlice({
       })
       .addCase(getQrCodeById.rejected, (state, action) => {
         state.Qrloading = false;
-        state.Qrerror = action.payload || "QR kod bilgisi alınamadı";
+        state.Qrerror =
+          action.payload || "Qr code info could not be retrieved.";
         state.qrCodeDetail = null;
       })
       .addCase(deleteQrCode.pending, (state) => {
@@ -197,7 +200,7 @@ const qrCodeSlice = createSlice({
       })
       .addCase(deleteQrCode.rejected, (state, action) => {
         state.Qrloading = false;
-        state.Qrerror = action.payload || "QR kodu silinemedi";
+        state.Qrerror = action.payload || "Qr code could not be deleted.";
         state.Qrsuccess = false;
       });
   },
