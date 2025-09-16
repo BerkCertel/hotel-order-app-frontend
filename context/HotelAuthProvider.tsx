@@ -26,8 +26,8 @@ export const HotelAuthProvider: React.FC<{ children: React.ReactNode }> = ({
   return (
     <HotelAuthContext.Provider value={{ isAuthenticated }}>
       <HotelAuthModal
-        // open={!isAuthenticated || !orderUser || !orderUser.roomNumber}
-        open={isAuthenticated}
+        open={!isAuthenticated || !orderUser || !orderUser.roomNumber}
+        // open={isAuthenticated}
         onSuccess={(roomNumber, name) => {
           dispatch(setOrderUser({ roomNumber, name })); // isim de redux’a kaydolur
           setAuthenticated(true);
