@@ -13,6 +13,7 @@ import {
   Sheet,
   SheetClose,
   SheetContent,
+  SheetDescription,
   SheetFooter,
   SheetTitle,
   SheetTrigger,
@@ -99,6 +100,7 @@ function CartSheet() {
   return (
     <>
       <Sheet open={sheetStatus} onOpenChange={setSheetStatus}>
+        <SheetDescription />
         <SheetTrigger asChild>
           <Button className="relative text-xs md:text-base text-indigo-500 bg-indigo-200">
             <FaShoppingBasket className="w-6 h-6" />

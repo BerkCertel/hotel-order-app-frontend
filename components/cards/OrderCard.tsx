@@ -155,7 +155,6 @@ export function OrderCard({ order }: { order: Order }) {
 
             {order.orderNote && (
               <div>
-                <hr />
                 <span className="font-medium">Note:</span> {order.orderNote}
               </div>
             )}

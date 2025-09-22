@@ -5,6 +5,7 @@ import {
   Sheet,
   SheetClose,
   SheetContent,
+  SheetDescription,
   SheetFooter,
   SheetTitle,
   SheetTrigger,
@@ -41,6 +42,7 @@ function MenuSheet() {
 
   return (
     <Sheet>
+      <SheetDescription />
       <SheetTrigger asChild>
         <Button className="text-xs md:text-base text-indigo-500 bg-indigo-200">
           <FaBars className="w-6 h-6" />
