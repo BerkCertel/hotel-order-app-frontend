@@ -11,7 +11,7 @@ function Navbar() {
       {/* Overlay */}
       {openSideMenu && (
         <div
-          className="fixed inset-0 bg-black/40 z-40"
+          className="fixed lg:hidden inset-0 bg-black/40 z-40"
           onClick={() => setOpenSideMenu(false)}
         />
       )}
@@ -35,7 +35,7 @@ function Navbar() {
       {/* Mobil SideMenu - fixed ve tam height */}
       {openSideMenu && (
         <div
-          className="fixed top-0 left-0 h-screen z-40 w-[270px] max-w-[80vw]"
+          className="fixed top-0 left-0 h-screen z-40 "
           onClick={(e) => e.stopPropagation()} // Burası önemli!
         >
           <SideMenu />

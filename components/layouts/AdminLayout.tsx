@@ -11,15 +11,16 @@ function AdminLayout({ children }: AdminLayoutProps) {
   const { user } = useContext(UserContext);
 
   return (
-    <div className="">
+    <div>
       <Navbar />
       {user && (
-        <div className="flex  justify-center w-full">
-          <div className="max-[1000px]:hidden">
+        <div className="flex">
+          {/* Sadece LG ve üstünde SideMenu solda görünür */}
+          <div className="hidden lg:block fixed left-0 top-[64px] h-[calc(100vh-64px)] z-40">
             <SideMenu />
           </div>
-
-          <div className="w-full">{children}</div>
+          {/* İçerik alanı */}
+          <div className="flex-1 pt-16 lg:ml-64">{children}</div>
         </div>
       )}
     </div>
