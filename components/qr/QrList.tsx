@@ -101,7 +101,7 @@ export const QrList = ({ locations }: Props) => {
   }
 
   return (
-    <ScrollArea className="w-full h-[500px] border rounded-lg p-4 bg-white shadow-sm">
+    <ScrollArea className="w-full h-[230px] md:h-[500px] border rounded-lg p-4 bg-white shadow-sm">
       <Accordion type="multiple" className="w-full space-y-4">
         {locations.map((loc) => (
           <AccordionItem

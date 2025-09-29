@@ -192,7 +192,7 @@ export default function Categories() {
             Oluşturulan kategorileri görüntüleyin.
           </p>
         </CardHeader>
-        <CardContent className="w-full min-w-2xl">
+        <CardContent className="w-full md:min-w-2xl">
           {loading ? (
             <div className="space-y-2">
               {Array.from({ length: 4 }).map((_, i) => (

@@ -1,5 +1,5 @@
-// import { openRateLimitModal } from "@/store/modalSlice";
-// import { store } from "@/store/store";
+import { openRateLimitModal } from "@/store/modalSlice";
+import { store } from "@/store/store";
 import axios from "axios";
 
 const axiosInstance = axios.create({

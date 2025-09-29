@@ -22,7 +22,7 @@ export default function QRCodesPage() {
     <PageContainer>
       <h1 className="text-2xl font-bold mb-2 text-center">QR Kod Yönetimi</h1>
       <QrCreateForm locations={locations} />
-      <div className="my-6" />
+      <div className="my-2 md:my-6" />
 
       <QrList locations={locations} />
     </PageContainer>

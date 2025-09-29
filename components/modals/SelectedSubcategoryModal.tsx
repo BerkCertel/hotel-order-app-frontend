@@ -121,7 +121,7 @@ const SelectedSubcategoryModal = ({
                       />
                     </div>
                     <div className="flex flex-col items-center justify-between rounded-md w-full gap-1">
-                      <CardTitle className="w-full h-9 px-4 py-2  text-sm sm:text-lg md:text-xl font-semibold text-center  break-words line-clamp-1 bg-indigo-100 text-indigo-600  rounded-md">
+                      <CardTitle className="w-full h-9 md:h-full first-letter:uppercase  px-4 py-2  text-sm sm:text-lg md:text-xl font-semibold text-center  break-words line-clamp-1 bg-indigo-100 text-indigo-600  rounded-md">
                         {subcategory.name}
                       </CardTitle>
 
@@ -131,14 +131,17 @@ const SelectedSubcategoryModal = ({
                         </span>
                       )}
 
-                      <Button
-                        variant="outline"
-                        className="w-full text-xs md:text-sm rounded-md flex items-center gap-1"
-                        onClick={() => setShowDetailsId(subcategory._id)}
-                      >
-                        <FaInfoCircle className="text-indigo-500" />
-                        Details
-                      </Button>
+                      {subcategory.description &&
+                        subcategory.description.length > 0 && (
+                          <Button
+                            variant="outline"
+                            className="w-full text-xs md:text-sm rounded-md flex items-center gap-1"
+                            onClick={() => setShowDetailsId(subcategory._id)}
+                          >
+                            <FaInfoCircle className="text-indigo-500" />
+                            Details
+                          </Button>
+                        )}
                     </div>
 
                     {/* Cart Controls */}
