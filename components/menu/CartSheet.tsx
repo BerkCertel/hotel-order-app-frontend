@@ -3,7 +3,6 @@ import React, { useEffect, useState } from "react";
 import {
   FaThList,
   FaTimes,
-  FaShoppingBasket,
   FaBoxOpen,
   FaPlus,
   FaMinus,
@@ -13,7 +12,6 @@ import {
   Sheet,
   SheetClose,
   SheetContent,
-  SheetDescription,
   SheetFooter,
   SheetTitle,
   SheetTrigger,
@@ -47,6 +45,17 @@ import { useRouter } from "next/navigation";
 import { selectOrderUserState } from "@/store/orderuserSlice";
 import { selectQrCodeState } from "@/store/qrcodeSlice";
 import { toast } from "sonner";
+import { ShoppingBag } from "lucide-react";
+import {
+  AlertDialog,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 
 function CartSheet() {
   const dispatch = useAppDispatch();
@@ -57,6 +66,7 @@ function CartSheet() {
   const { activeQrCodeId } = useAppSelector(selectQrCodeState);
   const [sheetStatus, setSheetStatus] = useState(false);
   const [orderNote, setOrderNote] = useState("");
+  const [clearCartState, setClearCartState] = useState(false);
 
   const handleCreateOrder = () => {
     if (
@@ -92,6 +102,11 @@ function CartSheet() {
     }
   }, [orderStatus, dispatch]);
 
+  const handleClear = () => {
+    dispatch(clearCart());
+    setClearCartState(false);
+  };
+
   const TotalPrice = cartItems.reduce(
     (acc, item) => acc + (item.price ?? 0) * item.quantity,
     0
@@ -100,14 +115,15 @@ function CartSheet() {
   return (
     <Sheet open={sheetStatus} onOpenChange={setSheetStatus}>
       <SheetTrigger asChild>
-        <Button className="relative text-xs md:text-base text-indigo-500 bg-indigo-200">
-          <FaShoppingBasket className="w-6 h-6" />
-          Cart
+        <Button variant="outline" size="icon" className="relative">
+          <ShoppingBag className="h-5 w-5" />
           {cartItems.length > 0 && (
-            <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs w-5 h-5 flex items-center justify-center rounded-full border border-white z-10">
+            <span className="absolute -right-1 -top-1 flex h-5 w-5 bg-red-500 text-white items-center justify-center rounded-full text-xs font-medium ">
               {cartItems.length}
             </span>
           )}
+
+          <span className="sr-only">Sepet</span>
         </Button>
       </SheetTrigger>
       <SheetContent side="left" className="p-0 max-w-xs w-full">
@@ -286,14 +302,38 @@ function CartSheet() {
             </DialogContent>
           </Dialog>
 
-          <Button
-            variant="destructive"
-            type="button"
-            disabled={cartItems.length === 0 || !cartItems}
-            onClick={() => dispatch(clearCart())}
-          >
-            Clear Cart
-          </Button>
+          <AlertDialog open={clearCartState} onOpenChange={setClearCartState}>
+            <AlertDialogTrigger asChild>
+              <Button
+                variant="destructive"
+                type="button"
+                disabled={cartItems.length === 0 || !cartItems}
+              >
+                Clear Cart
+              </Button>
+            </AlertDialogTrigger>
+            <AlertDialogContent>
+              <AlertDialogHeader>
+                <AlertDialogTitle>Clear Cart</AlertDialogTitle>
+                <AlertDialogDescription>
+                  Are you sure you want to clear the cart?.
+                </AlertDialogDescription>
+              </AlertDialogHeader>
+              <AlertDialogFooter>
+                <AlertDialogCancel>Cancel</AlertDialogCancel>
+
+                <Button
+                  variant="destructive"
+                  type="button"
+                  disabled={cartItems.length === 0 || !cartItems}
+                  onClick={handleClear}
+                >
+                  Clear Cart
+                </Button>
+              </AlertDialogFooter>
+            </AlertDialogContent>
+          </AlertDialog>
+
           <SheetClose asChild>
             <Button variant="outline" type="button">
               <FaTimes className="w-5 h-5" />

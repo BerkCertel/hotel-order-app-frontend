@@ -1,7 +1,7 @@
 "use client";
 
 import { PageContainer } from "@/components/Containers/PageContainer";
-import { DeleteModal } from "@/components/modals/DeleteModal";
+import { DeleteModal } from "@/components/menu/DeleteModal";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -43,6 +43,8 @@ export default function Subcategories() {
     selectSubcategoryState
   );
   const { categories } = useAppSelector(selectCategoryState);
+
+  console.log(subcategories);
 
   // Edit states
   const [editingId, setEditingId] = useState<string | null>(null);
@@ -333,7 +335,7 @@ export default function Subcategories() {
             </span>
           </div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3   gap-4">
             {categories.map((cat) => (
               <div
                 key={cat._id}

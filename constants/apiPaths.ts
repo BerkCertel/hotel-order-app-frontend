@@ -37,6 +37,8 @@ export const API_PATHS = {
     CREATE_CATEGORY: "/api/v1/category/create-category",
     UPDATE_CATEGORY: (id: string) => `/api/v1/category/update-category/${id}`,
     DELETE_CATEGORY: (id: string) => `/api/v1/category/delete-category/${id}`,
+    GET_ALL_CATEGORIESWITH_SUBCATEGORIES:
+      "/api/v1/category/get-all-categories-with-subcategories",
   },
 
   SUBCATEGORY: {

@@ -1,7 +1,7 @@
 "use client";
 
 import { PageContainer } from "@/components/Containers/PageContainer";
-import { DeleteModal } from "@/components/modals/DeleteModal";
+import { DeleteModal } from "@/components/menu/DeleteModal";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";

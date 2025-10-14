@@ -34,7 +34,7 @@ export default function AdminOrdersList({ selectedLocationId }: Props) {
   const { orders, loading, error, total, page, totalPages } =
     useAppSelector(selectOrderState);
 
-  const limit = 6;
+  const limit = 8;
 
   // Fetch orders when selectedLocationId or page changes
   useEffect(() => {
@@ -149,74 +149,75 @@ export default function AdminOrdersList({ selectedLocationId }: Props) {
   }
 
   return (
-    <div className="max-w-[1600px] mx-auto mt-3 px-2">
-      <div>
+    <div className=" flex flex-col gap-1 w-full mt-3 px-2">
+      <div className="flex items-center justify-start gap-4 mb-2">
         <p className="text-sm text-muted-foreground my-1 flex items-center gap-2">
           <Badge
             variant="secondary"
-            className="px-3 py-1 mb-1 text-base font-semibold"
+            className="px-3 py-2 text-base font-semibold"
           >
             <span>Total:</span>
             {total}
           </Badge>
         </p>
+        {/* Pagination */}
+        {totalPages > 1 && (
+          <div className="border rounded-lg p-1">
+            <Pagination>
+              <PaginationContent>
+                <PaginationItem>
+                  <PaginationPrevious
+                    href="#"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      handlePageChange(page - 1);
+                    }}
+                    className={
+                      page <= 1 ? "pointer-events-none opacity-40" : ""
+                    }
+                  />
+                </PaginationItem>
+                {Array.from({ length: totalPages }).map((_, idx) => {
+                  const p = idx + 1;
+                  const active = p === page;
+                  return (
+                    <PaginationItem key={p}>
+                      <PaginationLink
+                        href="#"
+                        isActive={active}
+                        onClick={(e) => {
+                          e.preventDefault();
+                          handlePageChange(p);
+                        }}
+                      >
+                        {p}
+                      </PaginationLink>
+                    </PaginationItem>
+                  );
+                })}
+                <PaginationItem>
+                  <PaginationNext
+                    href="#"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      handlePageChange(page + 1);
+                    }}
+                    className={
+                      page >= totalPages ? "pointer-events-none opacity-40" : ""
+                    }
+                  />
+                </PaginationItem>
+              </PaginationContent>
+            </Pagination>
+          </div>
+        )}
       </div>
 
-      <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 ">
+      <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-4 ">
         {orders.map((order: Order) => (
           <OrderCard key={order._id} order={order} />
         ))}
       </div>
-
-      {/* Pagination */}
-      {totalPages > 1 && (
-        <div className="mt-10">
-          <Pagination>
-            <PaginationContent>
-              <PaginationItem>
-                <PaginationPrevious
-                  href="#"
-                  onClick={(e) => {
-                    e.preventDefault();
-                    handlePageChange(page - 1);
-                  }}
-                  className={page <= 1 ? "pointer-events-none opacity-40" : ""}
-                />
-              </PaginationItem>
-              {Array.from({ length: totalPages }).map((_, idx) => {
-                const p = idx + 1;
-                const active = p === page;
-                return (
-                  <PaginationItem key={p}>
-                    <PaginationLink
-                      href="#"
-                      isActive={active}
-                      onClick={(e) => {
-                        e.preventDefault();
-                        handlePageChange(p);
-                      }}
-                    >
-                      {p}
-                    </PaginationLink>
-                  </PaginationItem>
-                );
-              })}
-              <PaginationItem>
-                <PaginationNext
-                  href="#"
-                  onClick={(e) => {
-                    e.preventDefault();
-                    handlePageChange(page + 1);
-                  }}
-                  className={
-                    page >= totalPages ? "pointer-events-none opacity-40" : ""
-                  }
-                />
-              </PaginationItem>
-            </PaginationContent>
-          </Pagination>
-        </div>
-      )}
     </div>
   );
 }

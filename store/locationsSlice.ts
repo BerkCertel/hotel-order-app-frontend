@@ -60,7 +60,6 @@ export const getAllLocations = createAsyncThunk<
 });
 
 // Fetch user locations
-// Fetch user locations
 export const getUserLocations = createAsyncThunk<
   Location[],
   void,
@@ -84,13 +83,11 @@ export const updateLocation = createAsyncThunk<
   { rejectValue: string }
 >("location/updateLocation", async ({ id, location }, { rejectWithValue }) => {
   try {
-    // DOĞRU KULLANIM: API_PATHS.LOCATION.UPDATE_LOCATION bir fonksiyon!
     const res = await axiosInstance.put(
       API_PATHS.LOCATION.UPDATE_LOCATION(id),
       { location }
     );
-    // Backend response'unu kontrol et, örneğin:
-    // res.data.updatedLocation ile dönüyor
+
     return res.data.updatedLocation as Location;
   } catch (error: unknown) {
     const err = error as AxiosError<{ message?: string }>;

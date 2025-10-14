@@ -1,5 +1,5 @@
 import { API_PATHS } from "@/constants/apiPaths";
-import { Category } from "@/types/CategoryTypes";
+import { Category, CategoryWithSubcategories } from "@/types/CategoryTypes";
 import axiosInstance from "@/utils/axiosInstance";
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { AxiosError } from "axios";
@@ -10,7 +10,8 @@ interface CategoryState {
   error: string | null;
   success: boolean;
   categories: Category[];
-  selectedCategoryId: string | null; // <-- EKLENDİ
+  selectedCategoryId: string | null;
+  categoriesWithSubcategories: CategoryWithSubcategories[];
 }
 
 const initialState: CategoryState = {
@@ -19,6 +20,7 @@ const initialState: CategoryState = {
   success: false,
   categories: [],
   selectedCategoryId: null,
+  categoriesWithSubcategories: [],
 };
 
 // CREATE CATEGORY
@@ -66,6 +68,29 @@ export const getAllCategories = createAsyncThunk<
     );
   }
 });
+
+// GET ALL CATEGORIES
+// GET ALL CATEGORIES WITH SUBCATEGORIES
+export const getAllCategoriesWithSubcategories = createAsyncThunk<
+  CategoryWithSubcategories[], // <-- payload type
+  void,
+  { rejectValue: string }
+>(
+  "category/getAllCategoriesWithSubcategories",
+  async (_, { rejectWithValue }) => {
+    try {
+      const res = await axiosInstance.get(
+        API_PATHS.CATEGORY.GET_ALL_CATEGORIESWITH_SUBCATEGORIES
+      );
+      return res.data as CategoryWithSubcategories[];
+    } catch (error: unknown) {
+      const err = error as AxiosError<{ message?: string }>;
+      return rejectWithValue(
+        err.response?.data?.message || "Kategoriler alınamadı"
+      );
+    }
+  }
+);
 
 // UPDATE CATEGORY
 export const updateCategory = createAsyncThunk<
@@ -161,6 +186,20 @@ const categorySlice = createSlice({
         state.error = null;
       })
       .addCase(getAllCategories.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload || "Kategoriler alınamadı";
+      })
+      // GET ALL WITH SUBCATEGORIES
+      .addCase(getAllCategoriesWithSubcategories.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(getAllCategoriesWithSubcategories.fulfilled, (state, action) => {
+        state.loading = false;
+        state.categoriesWithSubcategories = action.payload;
+        state.error = null;
+      })
+      .addCase(getAllCategoriesWithSubcategories.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload || "Kategoriler alınamadı";
       })

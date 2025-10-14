@@ -1,51 +1,48 @@
 "use client";
 
-import React, { useEffect } from "react";
 import {
   Sheet,
   SheetClose,
   SheetContent,
-  SheetDescription,
   SheetFooter,
   SheetTitle,
   SheetTrigger,
 } from "../ui/sheet";
 import { Button } from "../ui/button";
-import { FaBars, FaThList, FaTimes } from "react-icons/fa";
-import { useAppDispatch, useAppSelector } from "@/store/store";
-import { getAllCategories, selectCategoryState } from "@/store/categorySlice";
+import { FaThList, FaTimes } from "react-icons/fa";
+import { useAppSelector } from "@/store/store";
+import { selectCategoryState } from "@/store/categorySlice";
 import { Skeleton } from "../ui/skeleton";
 import { Alert, AlertDescription, AlertTitle } from "../ui/alert";
 import { Category } from "@/types/CategoryTypes";
 import Image from "next/image";
-import { useRouter } from "next/navigation";
+// import { useRouter } from "next/navigation";
 import { ScrollArea } from "../ui/scroll-area";
+import { Menu } from "lucide-react";
 
 function MenuSheet() {
-  const navigate = useRouter();
-  const dispatch = useAppDispatch();
   const { loading, error, categories } = useAppSelector(selectCategoryState);
 
-  useEffect(() => {
-    dispatch(getAllCategories());
-    // eslint-disable-next-line
-  }, []);
-
-  const handleCategoryClick = (id: string) => {
-    navigate.push(`/order/subcategory/${id}`);
+  const handleScrollToCategory = (id: string) => {
+    const el = document.getElementById(id);
+    if (el) {
+      const header = document.querySelector(".MenuHeaderClass");
+      const headerHeight = header ? header.clientHeight : 0;
+      const y =
+        el.getBoundingClientRect().top + window.pageYOffset - headerHeight - 12; // 12px ekstra boşluk
+      window.scrollTo({ top: y, behavior: "smooth" });
+    }
   };
-  // // Kategoriye tıklanınca modal açılır ve seçili id redux'a yazılır
-  // const handleCategoryClick = (catId: string) => {
-  //   dispatch(setSelectedCategoryId(catId)); // Redux'a yaz
-  //   setSubcategoryModalOpen(true); // Modalı aç
-  // };
 
   return (
     <Sheet>
       <SheetTrigger asChild>
-        <Button className="flex text-xs md:text-base text-indigo-500 bg-indigo-200">
-          <FaBars className="w-6 h-6" />
-          Menu
+        <Button
+          variant="outline"
+          size={"icon"}
+          className="flex text-xs md:text-base "
+        >
+          <Menu className="h-5 w-5" />
         </Button>
       </SheetTrigger>
       <SheetContent side="right" className="p-0">
@@ -54,7 +51,7 @@ function MenuSheet() {
           <div className="absolute left-4 top-1/2 -translate-y-1/2 flex items-center space-x-2  text-indigo-600">
             <FaThList className="w-6 h-6" />
 
-            <SheetTitle className="text-indigo-600">Menu</SheetTitle>
+            <SheetTitle className="">Menu</SheetTitle>
           </div>
         </div>
 
@@ -76,14 +73,14 @@ function MenuSheet() {
 
           {error && (
             <Alert variant="destructive" className="mb-6">
-              <AlertTitle>Hata</AlertTitle>
+              <AlertTitle>Error</AlertTitle>
               <AlertDescription>{error}</AlertDescription>
             </Alert>
           )}
 
           {!loading && !error && categories && categories.length === 0 && (
             <p className="text-center text-muted-foreground">
-              Hiç kategori bulunamadı.
+              No categories available.
             </p>
           )}
 
@@ -92,7 +89,7 @@ function MenuSheet() {
               <div className="space-y-3">
                 {categories.map((cate: Category) => (
                   <div
-                    onClick={() => handleCategoryClick(cate._id)}
+                    onClick={() => handleScrollToCategory(cate._id)}
                     key={cate._id}
                     className="flex items-center gap-3 p-2 rounded-lg hover:bg-accent cursor-pointer transition"
                   >
