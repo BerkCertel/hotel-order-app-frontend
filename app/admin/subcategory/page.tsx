@@ -37,14 +37,18 @@ import { toast } from "sonner";
 import { cn } from "@/lib/utils";
 import { ScrollArea } from "@/components/ui/scroll-area";
 
+// Saat aralığı için state
+type PriceScheduleState = {
+  activeFrom: string;
+  activeTo: string;
+};
+
 export default function Subcategories() {
   const dispatch = useAppDispatch();
   const { loading, error, success, subcategories } = useAppSelector(
     selectSubcategoryState
   );
   const { categories } = useAppSelector(selectCategoryState);
-
-  console.log(subcategories);
 
   // Edit states
   const [editingId, setEditingId] = useState<string | null>(null);
@@ -55,6 +59,10 @@ export default function Subcategories() {
   const [editPreviewUrl, setEditPreviewUrl] = useState<string | undefined>(
     undefined
   );
+  const [editSchedule, setEditSchedule] = useState<PriceScheduleState>({
+    activeFrom: "",
+    activeTo: "",
+  });
 
   // Form image preview
   const [createPreview, setCreatePreview] = useState<string | undefined>(
@@ -75,6 +83,10 @@ export default function Subcategories() {
       image: undefined as File | undefined,
       description: "",
       price: "",
+      priceSchedule: {
+        activeFrom: "",
+        activeTo: "",
+      },
     },
     validationSchema: SubcategoryCreateSchema,
     onSubmit: async (values, { resetForm }) => {
@@ -85,6 +97,15 @@ export default function Subcategories() {
           image: values.image as File,
           description: values.description,
           price: Number(values.price),
+          priceSchedule:
+            Number(values.price) > 0 &&
+            values.priceSchedule.activeFrom &&
+            values.priceSchedule.activeTo
+              ? {
+                  activeFrom: values.priceSchedule.activeFrom,
+                  activeTo: values.priceSchedule.activeTo,
+                }
+              : undefined,
         })
       );
       if (success) resetForm();
@@ -144,6 +165,10 @@ export default function Subcategories() {
     setEditImage(undefined);
     setEditPreviewUrl(sc.image);
     setEditPrice(sc.price?.toString() ?? "");
+    setEditSchedule({
+      activeFrom: sc.priceSchedule?.activeFrom || "",
+      activeTo: sc.priceSchedule?.activeTo || "",
+    });
   };
 
   // Edit kaydet
@@ -156,6 +181,15 @@ export default function Subcategories() {
         image: editImage,
         description: editDesc,
         price: Number(editPrice),
+        priceSchedule:
+          Number(editPrice) > 0 &&
+          editSchedule.activeFrom &&
+          editSchedule.activeTo
+            ? {
+                activeFrom: editSchedule.activeFrom,
+                activeTo: editSchedule.activeTo,
+              }
+            : undefined,
       })
     );
     setEditingId(null);
@@ -220,7 +254,13 @@ export default function Subcategories() {
                   step="0.01"
                   placeholder="Fiyat (opsiyonel)"
                   value={formik.values.price}
-                  onChange={formik.handleChange}
+                  onChange={(e) => {
+                    formik.setFieldValue("price", e.target.value);
+                    if (Number(e.target.value) === 0) {
+                      formik.setFieldValue("priceSchedule.activeFrom", "");
+                      formik.setFieldValue("priceSchedule.activeTo", "");
+                    }
+                  }}
                   onBlur={formik.handleBlur}
                   disabled={loading}
                   className="bg-white"
@@ -231,6 +271,41 @@ export default function Subcategories() {
                   </span>
                 )}
               </div>
+              {/* Saat aralığı opsiyonel alanı */}
+
+              <div className="flex gap-2 items-center">
+                <label className="text-sm">
+                  Ücretli Saat Aralığı (opsiyonel):
+                </label>
+                <Input
+                  type="time"
+                  name="activeFrom"
+                  value={formik.values.priceSchedule.activeFrom}
+                  onChange={(e) =>
+                    formik.setFieldValue(
+                      "priceSchedule.activeFrom",
+                      e.target.value
+                    )
+                  }
+                  className="w-32 bg-white"
+                  disabled={loading}
+                />
+                <span>-</span>
+                <Input
+                  type="time"
+                  name="activeTo"
+                  value={formik.values.priceSchedule.activeTo}
+                  onChange={(e) =>
+                    formik.setFieldValue(
+                      "priceSchedule.activeTo",
+                      e.target.value
+                    )
+                  }
+                  className="w-32 bg-white"
+                  disabled={loading}
+                />
+              </div>
+
               {formik.touched.name && formik.errors.name && (
                 <span className="text-red-500 text-xs ml-1">
                   {formik.errors.name}
@@ -395,10 +470,50 @@ export default function Subcategories() {
                                 min={0}
                                 step="0.01"
                                 value={editPrice}
-                                onChange={(e) => setEditPrice(e.target.value)}
+                                onChange={(e) => {
+                                  setEditPrice(e.target.value);
+                                  if (Number(e.target.value) === 0) {
+                                    setEditSchedule({
+                                      activeFrom: "",
+                                      activeTo: "",
+                                    });
+                                  }
+                                }}
                                 placeholder="Fiyat (opsiyonel)"
                                 className="font-medium truncate"
                               />
+                              {/* Saat aralığı edit alanı */}
+
+                              <div className="flex gap-2 items-center mt-1">
+                                <label className="text-xs">
+                                  Ücretli Saat Aralığı (opsiyonel):
+                                </label>
+                                <Input
+                                  type="time"
+                                  value={editSchedule.activeFrom}
+                                  onChange={(e) =>
+                                    setEditSchedule((schedule) => ({
+                                      ...schedule,
+                                      activeFrom: e.target.value,
+                                    }))
+                                  }
+                                  className="w-24 bg-white"
+                                  disabled={loading}
+                                />
+                                <span>-</span>
+                                <Input
+                                  type="time"
+                                  value={editSchedule.activeTo}
+                                  onChange={(e) =>
+                                    setEditSchedule((schedule) => ({
+                                      ...schedule,
+                                      activeTo: e.target.value,
+                                    }))
+                                  }
+                                  className="w-24 bg-white"
+                                  disabled={loading}
+                                />
+                              </div>
                             </div>
                             <div className="flex flex-col gap-1 ml-2 flex-shrink-0">
                               <Button
@@ -442,6 +557,14 @@ export default function Subcategories() {
                                   {sc.description}
                                 </span>
                               )}
+                              {sc.priceSchedule?.activeFrom &&
+                                sc.priceSchedule?.activeTo &&
+                                Number(sc.price) > 0 && (
+                                  <span className="text-xs text-gray-500">
+                                    Aktif Saat: {sc.priceSchedule.activeFrom} -{" "}
+                                    {sc.priceSchedule.activeTo}
+                                  </span>
+                                )}
                             </div>
                             {typeof sc.price === "number" && (
                               <span className="text-sm text-gray-600">
@@ -476,7 +599,7 @@ export default function Subcategories() {
                       )
                     )}
                   </div>
-                </ScrollArea>{" "}
+                </ScrollArea>
               </div>
             ))}
           </div>

@@ -1,5 +1,10 @@
 import { Category } from "./CategoryTypes";
 
+export interface PriceSchedule {
+  activeFrom: string;
+  activeTo: string;
+}
+
 export interface Subcategory {
   _id: string;
   name: string;
@@ -10,4 +15,6 @@ export interface Subcategory {
   createdAt?: string;
   updatedAt?: string;
   price?: number;
+  priceSchedule?: PriceSchedule;
+  displayPrice?: number; // anlık aktif fiyat, backend'den geliyor!
 }

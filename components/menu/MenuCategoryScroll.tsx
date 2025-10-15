@@ -102,6 +102,7 @@ function MenuCategoryScroll() {
               alt={category.name}
               className="object-cover"
               fill
+              sizes="(min-width: 640px) 4rem, (min-width: 768px) 4rem, 4rem"
             />
           </div>
           <span className="text-xs font-medium text-center w-16 break-words leading-tight">

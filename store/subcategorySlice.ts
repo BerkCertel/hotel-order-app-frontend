@@ -20,6 +20,96 @@ const initialState: SubcategoryState = {
   subcategories: [],
 };
 
+// // CREATE
+// export const createSubcategory = createAsyncThunk<
+//   Subcategory,
+//   {
+//     name: string;
+//     category: string;
+//     image: File;
+//     description?: string;
+//     price?: number;
+//   },
+//   { rejectValue: string }
+// >(
+//   "subcategory/createSubcategory",
+//   async (
+//     { name, category, image, description, price },
+//     { rejectWithValue }
+//   ) => {
+//     try {
+//       const formData = new FormData();
+//       formData.append("name", name);
+//       formData.append("category", category);
+//       formData.append("image", image);
+//       if (description) formData.append("description", description);
+//       if (price !== undefined) formData.append("price", price.toString());
+
+//       const res = await axiosInstance.post(
+//         API_PATHS.SUBCATEGORY.CREATE_SUBCATEGORY,
+//         formData,
+//         {
+//           headers: { "Content-Type": "multipart/form-data" },
+//         }
+//       );
+//       return res.data as Subcategory;
+//     } catch (error: unknown) {
+//       const err = error as AxiosError<{ message?: string }>;
+//       return rejectWithValue(
+//         err.response?.data?.message || "Alt kategori oluşturulamadı"
+//       );
+//     }
+//   }
+// );
+
+// UPDATE
+export const updateSubcategory = createAsyncThunk<
+  Subcategory,
+  {
+    id: string;
+    name: string;
+    category: string;
+    image?: File;
+    description?: string;
+    price?: number;
+    priceSchedule?: { activeFrom: string; activeTo: string };
+  },
+  { rejectValue: string }
+>(
+  "subcategory/updateSubcategory",
+  async (
+    { id, name, category, image, description, price, priceSchedule },
+    { rejectWithValue }
+  ) => {
+    try {
+      const formData = new FormData();
+      formData.append("name", name);
+      formData.append("category", category);
+      if (image) formData.append("image", image);
+      if (description) formData.append("description", description);
+      if (price !== undefined) formData.append("price", price.toString());
+      // Aktif saat aralığı varsa ekle!
+      if (priceSchedule?.activeFrom)
+        formData.append("priceSchedule[activeFrom]", priceSchedule.activeFrom);
+      if (priceSchedule?.activeTo)
+        formData.append("priceSchedule[activeTo]", priceSchedule.activeTo);
+
+      const res = await axiosInstance.put(
+        API_PATHS.SUBCATEGORY.UPDATE_SUBCATEGORY(id),
+        formData,
+        {
+          headers: { "Content-Type": "multipart/form-data" },
+        }
+      );
+      return res.data.updatedSubcategory as Subcategory;
+    } catch (error: unknown) {
+      const err = error as AxiosError<{ message?: string }>;
+      return rejectWithValue(
+        err.response?.data?.message || "Alt kategori güncellenemedi"
+      );
+    }
+  }
+);
 // CREATE
 export const createSubcategory = createAsyncThunk<
   Subcategory,
@@ -29,12 +119,13 @@ export const createSubcategory = createAsyncThunk<
     image: File;
     description?: string;
     price?: number;
+    priceSchedule?: { activeFrom: string; activeTo: string };
   },
   { rejectValue: string }
 >(
   "subcategory/createSubcategory",
   async (
-    { name, category, image, description, price },
+    { name, category, image, description, price, priceSchedule },
     { rejectWithValue }
   ) => {
     try {
@@ -44,6 +135,11 @@ export const createSubcategory = createAsyncThunk<
       formData.append("image", image);
       if (description) formData.append("description", description);
       if (price !== undefined) formData.append("price", price.toString());
+      // Aktif saat aralığı varsa ekle!
+      if (priceSchedule?.activeFrom)
+        formData.append("priceSchedule[activeFrom]", priceSchedule.activeFrom);
+      if (priceSchedule?.activeTo)
+        formData.append("priceSchedule[activeTo]", priceSchedule.activeTo);
 
       const res = await axiosInstance.post(
         API_PATHS.SUBCATEGORY.CREATE_SUBCATEGORY,
@@ -123,47 +219,47 @@ export const deleteSubcategory = createAsyncThunk<
 });
 
 // UPDATE
-export const updateSubcategory = createAsyncThunk<
-  Subcategory,
-  {
-    id: string;
-    name: string;
-    category: string;
-    image?: File;
-    description?: string;
-    price?: number;
-  },
-  { rejectValue: string }
->(
-  "subcategory/updateSubcategory",
-  async (
-    { id, name, category, image, description, price },
-    { rejectWithValue }
-  ) => {
-    try {
-      const formData = new FormData();
-      formData.append("name", name);
-      formData.append("category", category);
-      if (image) formData.append("image", image);
-      if (description) formData.append("description", description);
-      if (price !== undefined) formData.append("price", price.toString());
+// export const updateSubcategory = createAsyncThunk<
+//   Subcategory,
+//   {
+//     id: string;
+//     name: string;
+//     category: string;
+//     image?: File;
+//     description?: string;
+//     price?: number;
+//   },
+//   { rejectValue: string }
+// >(
+//   "subcategory/updateSubcategory",
+//   async (
+//     { id, name, category, image, description, price },
+//     { rejectWithValue }
+//   ) => {
+//     try {
+//       const formData = new FormData();
+//       formData.append("name", name);
+//       formData.append("category", category);
+//       if (image) formData.append("image", image);
+//       if (description) formData.append("description", description);
+//       if (price !== undefined) formData.append("price", price.toString());
 
-      const res = await axiosInstance.put(
-        API_PATHS.SUBCATEGORY.UPDATE_SUBCATEGORY(id),
-        formData,
-        {
-          headers: { "Content-Type": "multipart/form-data" },
-        }
-      );
-      return res.data.updatedSubcategory as Subcategory;
-    } catch (error: unknown) {
-      const err = error as AxiosError<{ message?: string }>;
-      return rejectWithValue(
-        err.response?.data?.message || "Alt kategori güncellenemedi"
-      );
-    }
-  }
-);
+//       const res = await axiosInstance.put(
+//         API_PATHS.SUBCATEGORY.UPDATE_SUBCATEGORY(id),
+//         formData,
+//         {
+//           headers: { "Content-Type": "multipart/form-data" },
+//         }
+//       );
+//       return res.data.updatedSubcategory as Subcategory;
+//     } catch (error: unknown) {
+//       const err = error as AxiosError<{ message?: string }>;
+//       return rejectWithValue(
+//         err.response?.data?.message || "Alt kategori güncellenemedi"
+//       );
+//     }
+//   }
+// );
 
 const subcategorySlice = createSlice({
   name: "subcategories",

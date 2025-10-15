@@ -88,6 +88,7 @@ export function ProductModal({ subcategory, onClose }: ProductModalProps) {
                 alt={subcategory.name}
                 className="h-full w-full object-cover lg:object-contain"
                 fill
+                sizes="(min-width: 640px) 20rem, (min-width: 768px) 30rem, 40rem"
               />
             </div>
 

@@ -24,6 +24,8 @@ function MenuProductList() {
     dispatch(getAllCategoriesWithSubcategories());
   }, [dispatch]);
 
+  console.log(categoriesWithSubcategories);
+
   // 🔄 LOADING (Skeleton)
   if (loading) {
     return (
@@ -134,6 +136,7 @@ function MenuProductList() {
                     alt={subcategory.name}
                     className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110"
                     fill
+                    sizes="(min-width: 640px) 6rem, (min-width: 768px) 8rem, 10rem"
                   />
                 </div>
               </div>
