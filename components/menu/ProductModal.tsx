@@ -10,6 +10,10 @@ import { FaMinus, FaPlus, FaTrash } from "react-icons/fa";
 import Image from "next/image";
 import { useAppDispatch, useAppSelector } from "@/store/store";
 import { addToCart, removeFromCart, selectCartState } from "@/store/cartSlice";
+import { getActualPrice } from "@/utils/SubcategoryUtils";
+import { toast } from "sonner";
+import { getAllCategoriesWithSubcategories } from "@/store/categorySlice";
+import { GoDotFill } from "react-icons/go";
 
 interface ProductModalProps {
   subcategory: Subcategory | null;
@@ -35,16 +39,51 @@ export function ProductModal({ subcategory, onClose }: ProductModalProps) {
     }
 
     return () => {
-      document.body.style.overflow = "hidden";
+      document.body.style.overflow = "unset";
     };
   }, [subcategory]);
 
   const handleClose = () => {
     setIsOpen(false);
-    setTimeout(onClose, 300);
+    onClose();
   };
 
   if (!subcategory) return null;
+
+  const actualPrice = getActualPrice(
+    subcategory.price,
+    subcategory.priceSchedule
+  );
+
+  const displayed =
+    typeof subcategory.displayPrice === "number" ? subcategory.displayPrice : 0;
+
+  const handleAddToCart = (quantityToAdd = 1) => {
+    if (displayed !== actualPrice) {
+      toast.error(
+        `Ürün Fiyatı Güncellendi: ${displayed} $ → ${actualPrice} $`,
+        {
+          duration: 5000,
+        }
+      );
+      handleClose();
+      dispatch(getAllCategoriesWithSubcategories());
+    }
+
+    toast.success("Sepete eklendi!", { position: "top-center" });
+
+    dispatch(
+      addToCart({
+        _id: subcategory._id,
+        name: subcategory.name,
+        quantity: quantityToAdd,
+        image: subcategory.image,
+        price: actualPrice,
+        displayPrice: actualPrice,
+        priceSchedule: subcategory.priceSchedule,
+      })
+    );
+  };
 
   return (
     <>
@@ -60,7 +99,7 @@ export function ProductModal({ subcategory, onClose }: ProductModalProps) {
       {/* Modal */}
       <div
         className={cn(
-          "fixed inset-x-0 bottom-0 z-50 max-h-[90vh]  overflow-hidden rounded-t-3xl bg-card shadow-2xl transition-transform duration-500 ease-out",
+          "fixed inset-x-0 bottom-0 z-50 max-h-[90vh]   overflow-hidden rounded-t-3xl bg-card shadow-2xl transition-transform duration-500 ease-out",
           isOpen ? "translate-y-0" : "translate-y-full"
         )}
       >
@@ -96,16 +135,18 @@ export function ProductModal({ subcategory, onClose }: ProductModalProps) {
             <div className="p-6">
               <div className="mb-4 flex items-start justify-between gap-4">
                 <div>
-                  <div className="flex items-center  flex-wrap gap-4 mb-1 ">
-                    <h2 className=" text-2xl font-bold text-card-foreground">
+                  <div className="flex items-center  flex-wrap gap-2 mb-1 ">
+                    <h2 className=" first-letter:uppercase text-lg md:text-2xl font-bold text-card-foreground">
                       {subcategory.name}
                     </h2>
-                    {subcategory?.price && subcategory.price > 0 ? (
+                    /
+                    {subcategory?.displayPrice &&
+                    subcategory.displayPrice > 0 ? (
                       <span className="text-2xl font-bold text-red-600">
-                        {subcategory.price} $
+                        {subcategory.displayPrice} $
                       </span>
                     ) : (
-                      <span className="text-xl font-bold text-green-600">
+                      <span className=" text-lg md:text-xl font-bold text-green-600">
                         Ücretsiz
                       </span>
                     )}
@@ -113,6 +154,23 @@ export function ProductModal({ subcategory, onClose }: ProductModalProps) {
                   <p className="text-muted-foreground">
                     {subcategory.description}
                   </p>
+
+                  {subcategory.priceSchedule?.activeFrom &&
+                    subcategory.priceSchedule?.activeTo && (
+                      <div className="flex items-center gap-1 justify-start">
+                        <span className="font-medium text-xs">
+                          Ücretli Saatler:
+                        </span>
+                        <span
+                          className={`${
+                            displayed ? "text-green-500" : "text-red-500"
+                          } text-xs  flex items-center gap-1`}
+                        >
+                          {`${subcategory.priceSchedule.activeFrom} - ${subcategory.priceSchedule.activeTo}`}{" "}
+                          <GoDotFill />
+                        </span>
+                      </div>
+                    )}
                 </div>
               </div>
 
@@ -147,17 +205,7 @@ export function ProductModal({ subcategory, onClose }: ProductModalProps) {
               {!cartItem ? (
                 <Button
                   className="w-full text-xs sm:text-sm md:text-base font-semibold bg-indigo-500 hover:bg-indigo-400 transition text-white rounded-md"
-                  onClick={() =>
-                    dispatch(
-                      addToCart({
-                        _id: subcategory._id,
-                        name: subcategory.name,
-                        quantity: 1,
-                        image: subcategory.image,
-                        price: subcategory.price,
-                      })
-                    )
-                  }
+                  onClick={() => handleAddToCart(1)}
                 >
                   Add to Cart
                 </Button>
@@ -168,17 +216,7 @@ export function ProductModal({ subcategory, onClose }: ProductModalProps) {
                       size="icon"
                       variant="outline"
                       className="text-xs sm:text-sm md:text-base"
-                      onClick={() =>
-                        dispatch(
-                          addToCart({
-                            _id: subcategory._id,
-                            name: subcategory.name,
-                            quantity: -1,
-                            image: subcategory.image,
-                            price: subcategory.price,
-                          })
-                        )
-                      }
+                      onClick={() => handleAddToCart(-1)}
                       disabled={cartItem.quantity <= 1}
                       aria-label="Decrease quantity"
                     >
@@ -191,17 +229,7 @@ export function ProductModal({ subcategory, onClose }: ProductModalProps) {
                       size="icon"
                       variant="outline"
                       className="text-xs sm:text-sm md:text-base"
-                      onClick={() =>
-                        dispatch(
-                          addToCart({
-                            _id: subcategory._id,
-                            name: subcategory.name,
-                            quantity: 1,
-                            image: subcategory.image,
-                            price: subcategory.price,
-                          })
-                        )
-                      }
+                      onClick={() => handleAddToCart(1)}
                       aria-label="Increase quantity"
                     >
                       <FaPlus />

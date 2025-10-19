@@ -1,5 +1,6 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { RootState } from "./store";
+import { PriceSchedule } from "@/types/SubCategoryTypes";
 
 export type CartItem = {
   _id: string;
@@ -7,6 +8,8 @@ export type CartItem = {
   quantity: number;
   image: string;
   price?: number;
+  displayPrice?: number;
+  priceSchedule?: PriceSchedule;
 };
 
 type CartState = {

@@ -156,6 +156,8 @@ const SelectedSubcategoryModal = ({
                               quantity: 1,
                               image: subcategory.image,
                               price: subcategory.price,
+                              displayPrice: subcategory.displayPrice,
+                              priceSchedule: subcategory.priceSchedule,
                             })
                           )
                         }
@@ -177,6 +179,8 @@ const SelectedSubcategoryModal = ({
                                   quantity: -1,
                                   image: subcategory.image,
                                   price: subcategory.price,
+                                  displayPrice: subcategory.displayPrice,
+                                  priceSchedule: subcategory.priceSchedule,
                                 })
                               )
                             }
@@ -200,6 +204,8 @@ const SelectedSubcategoryModal = ({
                                   quantity: 1,
                                   image: subcategory.image,
                                   price: subcategory.price,
+                                  displayPrice: subcategory.displayPrice,
+                                  priceSchedule: subcategory.priceSchedule,
                                 })
                               )
                             }

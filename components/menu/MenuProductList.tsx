@@ -24,8 +24,6 @@ function MenuProductList() {
     dispatch(getAllCategoriesWithSubcategories());
   }, [dispatch]);
 
-  console.log(categoriesWithSubcategories);
-
   // 🔄 LOADING (Skeleton)
   if (loading) {
     return (
@@ -97,7 +95,7 @@ function MenuProductList() {
           <div className="flex flex-col gap-3">
             {category.subcategories.map((subcategory, index) => (
               <div
-                key={subcategory.name}
+                key={subcategory._id}
                 onClick={() => setActiveSubcategory(subcategory)}
                 className={cn(
                   "group cursor-pointer flex items-center gap-4 rounded-lg border border-border/50 bg-card p-3 text-left transition-all duration-300",
@@ -118,13 +116,13 @@ function MenuProductList() {
                   </p>
 
                   <div className="flex items-center gap-2 flex-wrap">
-                    {subcategory.price === 0 ? (
+                    {subcategory.displayPrice === 0 ? (
                       <span className="text-sm font-semibold text-green-600 ">
                         Ücretsiz
                       </span>
-                    ) : subcategory.price ? (
+                    ) : subcategory.displayPrice ? (
                       <span className="text-base font-bold text-red-600 ">
-                        {subcategory.price} $
+                        {subcategory.displayPrice} $
                       </span>
                     ) : null}
                   </div>

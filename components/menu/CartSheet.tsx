@@ -68,6 +68,11 @@ function CartSheet() {
   const [orderNote, setOrderNote] = useState("");
   const [clearCartState, setClearCartState] = useState(false);
 
+  const TotalPrice = cartItems.reduce(
+    (acc, item) => acc + (item.price ?? 0) * item.quantity,
+    0
+  );
+
   const handleCreateOrder = () => {
     if (
       activeQrCodeId === null ||
@@ -83,6 +88,7 @@ function CartSheet() {
       toast.error("Note cannot be longer than 200 characters.");
       return;
     }
+
     dispatch(
       createOrder({
         items: cartItems,
@@ -106,11 +112,6 @@ function CartSheet() {
     dispatch(clearCart());
     setClearCartState(false);
   };
-
-  const TotalPrice = cartItems.reduce(
-    (acc, item) => acc + (item.price ?? 0) * item.quantity,
-    0
-  );
 
   return (
     <Sheet open={sheetStatus} onOpenChange={setSheetStatus}>

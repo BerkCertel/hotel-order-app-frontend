@@ -90,6 +90,16 @@ export default function Subcategories() {
     },
     validationSchema: SubcategoryCreateSchema,
     onSubmit: async (values, { resetForm }) => {
+      if (
+        (values.priceSchedule.activeFrom && !values.priceSchedule.activeTo) ||
+        (!values.priceSchedule.activeFrom && values.priceSchedule.activeTo)
+      ) {
+        toast.error(
+          "Lütfen saat aralığının her iki alanını da doldurun veya ikisini de boş bırakın."
+        );
+        return;
+      }
+
       dispatch(
         createSubcategory({
           name: values.name,
@@ -173,6 +183,17 @@ export default function Subcategories() {
 
   // Edit kaydet
   const handleEditSave = async (sc: Subcategory) => {
+    const from = (editSchedule.activeFrom ?? "").toString().trim();
+    const to = (editSchedule.activeTo ?? "").toString().trim();
+
+    //Eğer sadece bir tanesi doluysa hata ver
+    if ((from && !to) || (!from && to)) {
+      toast.error(
+        "Lütfen saat aralığının her iki alanını da doldurun veya ikisini de boş bırakın."
+      );
+      return;
+    }
+
     await dispatch(
       updateSubcategory({
         id: sc._id,
@@ -182,9 +203,7 @@ export default function Subcategories() {
         description: editDesc,
         price: Number(editPrice),
         priceSchedule:
-          Number(editPrice) > 0 &&
-          editSchedule.activeFrom &&
-          editSchedule.activeTo
+          Number(editPrice) > 0
             ? {
                 activeFrom: editSchedule.activeFrom,
                 activeTo: editSchedule.activeTo,
@@ -488,31 +507,45 @@ export default function Subcategories() {
                                 <label className="text-xs">
                                   Ücretli Saat Aralığı (opsiyonel):
                                 </label>
-                                <Input
-                                  type="time"
-                                  value={editSchedule.activeFrom}
-                                  onChange={(e) =>
-                                    setEditSchedule((schedule) => ({
-                                      ...schedule,
-                                      activeFrom: e.target.value,
-                                    }))
-                                  }
-                                  className="w-24 bg-white"
-                                  disabled={loading}
-                                />
-                                <span>-</span>
-                                <Input
-                                  type="time"
-                                  value={editSchedule.activeTo}
-                                  onChange={(e) =>
-                                    setEditSchedule((schedule) => ({
-                                      ...schedule,
-                                      activeTo: e.target.value,
-                                    }))
-                                  }
-                                  className="w-24 bg-white"
-                                  disabled={loading}
-                                />
+                                {editPrice && Number(editPrice) > 0 ? (
+                                  <>
+                                    {" "}
+                                    <Input
+                                      type="time"
+                                      value={editSchedule.activeFrom}
+                                      onChange={(e) =>
+                                        setEditSchedule((schedule) => ({
+                                          ...schedule,
+                                          activeFrom: e.target.value,
+                                        }))
+                                      }
+                                      className="w-24 bg-white"
+                                      disabled={
+                                        loading || Number(editPrice) === 0
+                                      }
+                                    />
+                                    <span>-</span>
+                                    <Input
+                                      type="time"
+                                      value={editSchedule.activeTo}
+                                      onChange={(e) =>
+                                        setEditSchedule((schedule) => ({
+                                          ...schedule,
+                                          activeTo: e.target.value,
+                                        }))
+                                      }
+                                      className="w-24 bg-white"
+                                      disabled={
+                                        loading || Number(editPrice) === 0
+                                      }
+                                    />
+                                  </>
+                                ) : (
+                                  <span className="text-xs text-red-500">
+                                    (Fiyat 0 ise saat aralığı devre dışı
+                                    bırakılır.)
+                                  </span>
+                                )}
                               </div>
                             </div>
                             <div className="flex flex-col gap-1 ml-2 flex-shrink-0">
