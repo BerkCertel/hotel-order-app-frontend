@@ -81,6 +81,7 @@ export function ProductModal({ subcategory, onClose }: ProductModalProps) {
         price: actualPrice,
         displayPrice: actualPrice,
         priceSchedule: subcategory.priceSchedule,
+        basePrice: subcategory.price,
       })
     );
   };
@@ -174,33 +175,6 @@ export function ProductModal({ subcategory, onClose }: ProductModalProps) {
                 </div>
               </div>
 
-              {/* {subcategory.description && (
-                <div className="mb-4">
-                  <h3 className="mb-2 text-sm font-semibold text-card-foreground">
-                    İçindekiler
-                  </h3>
-                  <div className="flex flex-wrap gap-2">
-                    {product.ingredients.map((ingredient) => (
-                      <span
-                        key={ingredient}
-                        className="rounded-full bg-secondary px-3 py-1 text-xs font-medium text-secondary-foreground"
-                      >
-                        {ingredient}
-                      </span>
-                    ))}
-                  </div>
-                </div>
-              )} */}
-
-              {/* {product.calories && (
-                <div className="mb-6">
-                  <p className="text-sm text-muted-foreground">
-                    <span className="font-medium">Kalori:</span>{" "}
-                    {product.calories} kcal
-                  </p>
-                </div>
-              )} */}
-
               {/* Cart Controls */}
               {!cartItem ? (
                 <Button
@@ -253,4 +227,35 @@ export function ProductModal({ subcategory, onClose }: ProductModalProps) {
       </div>
     </>
   );
+}
+
+{
+  /* {subcategory.description && (
+                <div className="mb-4">
+                  <h3 className="mb-2 text-sm font-semibold text-card-foreground">
+                    İçindekiler
+                  </h3>
+                  <div className="flex flex-wrap gap-2">
+                    {product.ingredients.map((ingredient) => (
+                      <span
+                        key={ingredient}
+                        className="rounded-full bg-secondary px-3 py-1 text-xs font-medium text-secondary-foreground"
+                      >
+                        {ingredient}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              )} */
+}
+
+{
+  /* {product.calories && (
+                <div className="mb-6">
+                  <p className="text-sm text-muted-foreground">
+                    <span className="font-medium">Kalori:</span>{" "}
+                    {product.calories} kcal
+                  </p>
+                </div>
+              )} */
 }

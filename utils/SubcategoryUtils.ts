@@ -1,83 +1,102 @@
-import { isWithinInterval, addDays } from "date-fns";
-import * as dateFnsTz from "date-fns-tz";
+// utils/SubcategoryUtils.ts
+// Frontend util (TypeScript) — aligned with backend SubcategoryUtils.js logic.
+// Requires: npm i date-fns date-fns-tz
+// Make sure types/date-fns-tz.d.ts exists separately as shown above.
 
-type PriceSchedule = {
+import { isWithinInterval, addDays } from "date-fns";
+// Use named imports so we get proper types from the .d.ts
+import {
+  toDate as toDateExport,
+  fromZonedTime as fromZonedTimeExport,
+  formatInTimeZone as formatInTimeZoneExport,
+} from "date-fns-tz";
+
+export type PriceSchedule = {
   activeFrom?: string;
   activeTo?: string;
+  /* eslint-disable-next-line @typescript-eslint/no-explicit-any */
   [k: string]: any;
 };
 
-// Güvenli referanslar (varsa kullanacağız) — backend ile aynı yaklaşım
-const toDateFn =
-  dateFnsTz && typeof (dateFnsTz as any).toDate === "function"
-    ? (dateFnsTz as any).toDate
-    : null;
-const fromZonedTimeFn =
-  dateFnsTz && typeof (dateFnsTz as any).fromZonedTime === "function"
-    ? (dateFnsTz as any).fromZonedTime
-    : null;
-const formatInTimeZone =
-  dateFnsTz && typeof (dateFnsTz as any).formatInTimeZone === "function"
-    ? (dateFnsTz as any).formatInTimeZone
-    : null;
+// Local typed aliases for the functions we may use
+type ToDateFn = (dateString: string, options?: { timeZone?: string }) => Date;
+type FromZonedTimeFn = (dateString: string, timeZone: string) => Date;
+type FormatInTimeZoneFn = (
+  date: Date | number,
+  timeZone: string,
+  formatStr: string
+) => string;
 
+// Safe references (use when available) — no explicit any usage
+const toDateFn: ToDateFn | undefined =
+  typeof toDateExport === "function" ? toDateExport : undefined;
+const fromZonedTimeFn: FromZonedTimeFn | undefined =
+  typeof fromZonedTimeExport === "function" ? fromZonedTimeExport : undefined;
+const formatInTimeZone: FormatInTimeZoneFn | undefined =
+  typeof formatInTimeZoneExport === "function"
+    ? formatInTimeZoneExport
+    : undefined;
+
+/**
+ * Helper: "YYYY-MM-DD" + "HH:mm" + timeZone -> UTC Date
+ * Priority:
+ * 1) toDate (if available)
+ * 2) fromZonedTime
+ * 3) formatInTimeZone -> offset -> new Date(iso)
+ * 4) fallback: new Date(`${ymd}T${hhmm}:00Z`)
+ */
 export function makeUtcDateFromLocalTime(
   dateYmd: string,
   timeHhMm: string,
   timeZone: string
 ): Date {
-  // 1) toDate varsa deneyelim
+  // 1) toDate
   if (toDateFn) {
     try {
-      // toDate supports string + options { timeZone } (backend ortamına göre)
       return toDateFn(`${dateYmd} ${timeHhMm}`, { timeZone });
-    } catch (err) {
-      // fallback'e düşecek
-      // eslint-disable-next-line no-console
+    } catch (err: unknown) {
+      // use err so ESLint won't complain about unused vars
+
       console.warn(
         "makeUtcDateFromLocalTime: toDate failed, falling back:",
-        (err as any) || err
+        err
       );
     }
   }
 
-  // 2) fromZonedTime varsa deneyelim
+  // 2) fromZonedTime
   if (fromZonedTimeFn) {
     try {
-      // fromZonedTime(localString, timeZone)
       return fromZonedTimeFn(`${dateYmd} ${timeHhMm}`, timeZone);
-    } catch (err) {
-      // eslint-disable-next-line no-console
+    } catch (err: unknown) {
       console.warn(
         "makeUtcDateFromLocalTime: fromZonedTime failed, falling back:",
-        (err as any) || err
+        err
       );
     }
   }
 
-  // 3) formatInTimeZone ile offset alıp ISO oluştur
+  // 3) formatInTimeZone -> offset -> new Date(iso)
   if (formatInTimeZone) {
     try {
-      const offset = formatInTimeZone(new Date(), timeZone, "xxx"); // örn "+03:00"
+      const offset = formatInTimeZone(new Date(), timeZone, "xxx"); // e.g. "+03:00"
       const iso = `${dateYmd}T${timeHhMm}:00${offset}`; // "2025-10-19T09:30:00+03:00"
       return new Date(iso);
-    } catch (err) {
-      // eslint-disable-next-line no-console
+    } catch (err: unknown) {
       console.warn(
         "makeUtcDateFromLocalTime: formatInTimeZone fallback failed:",
-        (err as any) || err
+        err
       );
     }
   }
 
-  // 4) Çok kaba fallback: UTC Z ekle (doğru olmayabilir ama sonuç verir)
+  // 4) fallback
   return new Date(`${dateYmd}T${timeHhMm}:00Z`);
 }
 
 /**
  * priceSchedule: { activeFrom: "HH:mm", activeTo: "HH:mm" }
  * Türkiye timezone: Europe/Istanbul
- * Returns true if current time (UTC) is within the schedule (accounting for timezone).
  */
 export function isPriceActive(priceSchedule?: PriceSchedule | null): boolean {
   if (!priceSchedule || !priceSchedule.activeFrom || !priceSchedule.activeTo)
@@ -86,7 +105,6 @@ export function isPriceActive(priceSchedule?: PriceSchedule | null): boolean {
   const timeZone = "Europe/Istanbul";
   const nowUtc = new Date();
 
-  // Bugünün Türkiye tarihini almalıyız. formatInTimeZone varsa doğru lokal tarihi verir.
   const todayTurkey = formatInTimeZone
     ? formatInTimeZone(nowUtc, timeZone, "yyyy-MM-dd")
     : nowUtc.toISOString().slice(0, 10);
@@ -102,7 +120,6 @@ export function isPriceActive(priceSchedule?: PriceSchedule | null): boolean {
     timeZone
   );
 
-  // cross-midnight: toUtc <= fromUtc ise toUtc'u bir gün ileri al
   if (toUtc <= fromUtc) {
     toUtc = addDays(toUtc, 1);
   }
@@ -111,10 +128,7 @@ export function isPriceActive(priceSchedule?: PriceSchedule | null): boolean {
 }
 
 /**
- * Display price hesaplama:
- * - price yok/0 => 0
- * - priceSchedule yok => price (daima geçerli)
- * - priceSchedule varsa => isPriceActive ? price : 0
+ * getActualPrice: same logic as backend
  */
 export function getActualPrice(
   price?: number | null,
@@ -127,9 +141,7 @@ export function getActualPrice(
 }
 
 /**
- * Eğer priceSchedule string olarak gelebiliyorsa normalize etmek için.
- * - raw: object veya JSON-string veya ""/null/undefined
- * - return: object | undefined
+ * normalizePriceSchedule: object | JSON-string | ""/null/undefined -> object | undefined
  */
 export function normalizePriceSchedule(
   raw?: PriceSchedule | string | null
@@ -147,12 +159,10 @@ export function normalizePriceSchedule(
         return parsed as PriceSchedule;
       }
       return undefined;
-    } catch (err) {
-      // eslint-disable-next-line no-console
-      console.warn("normalizePriceSchedule: JSON parse failed for:", raw);
+    } catch (err: unknown) {
+      console.warn("normalizePriceSchedule: JSON parse failed for:", raw, err);
       return undefined;
     }
   }
-  // zaten obje ise
   return raw as PriceSchedule;
 }

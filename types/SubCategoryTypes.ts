@@ -14,7 +14,7 @@ export interface Subcategory {
   description?: string;
   createdAt?: string;
   updatedAt?: string;
-  price?: number;
-  priceSchedule?: PriceSchedule;
-  displayPrice?: number; // anlık aktif fiyat, backend'den geliyor!
+  price: number;
+  priceSchedule: PriceSchedule;
+  displayPrice: number; // anlık aktif fiyat, backend'den geliyor!
 }

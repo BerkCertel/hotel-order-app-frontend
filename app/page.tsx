@@ -25,7 +25,6 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useAppDispatch, useAppSelector } from "@/store/store";
 import { selectAuthState, setLoggedInUser } from "@/store/authSlice";
-import { clear } from "console";
 
 export default function Home() {
   const dispatch = useAppDispatch();

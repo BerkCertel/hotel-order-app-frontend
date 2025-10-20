@@ -25,6 +25,9 @@ import {
   removeFromCart,
   clearCart,
   selectCartState,
+  addToUpdateCartItems,
+  updateCartItem,
+  setReduxPreOrderStatus,
 } from "@/store/cartSlice";
 
 import { createOrder, selectOrderState } from "@/store/orderSlice";
@@ -37,7 +40,6 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
 } from "../ui/dialog";
 import { Label } from "../ui/label";
 import { Textarea } from "../ui/textarea";
@@ -45,7 +47,7 @@ import { useRouter } from "next/navigation";
 import { selectOrderUserState } from "@/store/orderuserSlice";
 import { selectQrCodeState } from "@/store/qrcodeSlice";
 import { toast } from "sonner";
-import { ShoppingBag } from "lucide-react";
+import { Loader2, ShoppingBag } from "lucide-react";
 import {
   AlertDialog,
   AlertDialogCancel,
@@ -56,55 +58,138 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
+import { getActualPrice } from "@/utils/SubcategoryUtils";
+import { getAllCategoriesWithSubcategories } from "@/store/categorySlice";
 
 function CartSheet() {
   const dispatch = useAppDispatch();
   const navigate = useRouter();
-  const { items: cartItems } = useSelector(selectCartState);
+  const {
+    items: cartItems,
+    preOrderStatus,
+    updatedItems,
+  } = useSelector(selectCartState);
   const { orderUser } = useSelector(selectOrderUserState);
   const { orderStatus } = useAppSelector(selectOrderState);
   const { activeQrCodeId } = useAppSelector(selectQrCodeState);
   const [sheetStatus, setSheetStatus] = useState(false);
   const [orderNote, setOrderNote] = useState("");
   const [clearCartState, setClearCartState] = useState(false);
+  const [preOrderStatusButton, setPreOrderStatusButton] = useState(false);
+  const [placeOrderDialogOpen, setPlaceOrderDialogOpen] = useState(false);
+  const [newCatAndSubFetched, setNewCatAndSubFetched] = useState(false);
 
   const TotalPrice = cartItems.reduce(
     (acc, item) => acc + (item.price ?? 0) * item.quantity,
     0
   );
 
-  const handleCreateOrder = () => {
+  const handlePreCreateOrder = () => {
+    // QR code check
     if (
       activeQrCodeId === null ||
       activeQrCodeId === undefined ||
       activeQrCodeId === ""
     ) {
-      // Handle missing QR code ID
       navigate.push("/scan-qrcode-again");
       return;
     }
 
+    if (!cartItems || cartItems.length === 0) {
+      toast.error("Your cart is empty.");
+      setPreOrderStatusButton(true);
+      return;
+    }
+
+    // Scan cart items and collect updates (synchronous collection)
+    let foundUpdates = false;
+    for (const item of cartItems) {
+      if (item.priceSchedule && item.price !== item.basePrice) {
+        const actualPrice = getActualPrice(item.basePrice, item.priceSchedule);
+
+        // If displayPrice differs from calculated actualPrice, register an update
+        if (
+          typeof item.displayPrice === "number" &&
+          item.displayPrice !== actualPrice
+        ) {
+          // Update cart item price in store
+          dispatch(
+            updateCartItem({
+              _id: item._id,
+              price: actualPrice,
+            })
+          );
+
+          // Add to updatedItems list (reducer should dedupe)
+          dispatch(
+            addToUpdateCartItems({
+              _id: item._id,
+              name: item.name,
+              quantity: item.quantity,
+              image: item.image,
+              oldPrice: item.displayPrice,
+              newPrice: actualPrice,
+              priceSchedule: item.priceSchedule,
+            })
+          );
+
+          foundUpdates = true;
+        }
+      }
+    }
+
+    if (foundUpdates) {
+      dispatch(setReduxPreOrderStatus(true));
+      setPreOrderStatusButton(true);
+
+      if (newCatAndSubFetched === false) {
+        dispatch(getAllCategoriesWithSubcategories());
+      }
+      setNewCatAndSubFetched(true);
+      return; // güncelleme varsa dialog açılmasın
+    } else {
+      // No updates found -> clear pre-order status and open the place-order dialog
+      dispatch(setReduxPreOrderStatus(false));
+      setPreOrderStatusButton(false);
+      setPlaceOrderDialogOpen(true); // burası dialogu açar
+    }
+  };
+
+  const handleCreateOrder = () => {
     if (orderNote.length > 200) {
       toast.error("Note cannot be longer than 200 characters.");
       return;
     }
 
-    dispatch(
-      createOrder({
-        items: cartItems,
-        qrCodeId: activeQrCodeId,
-        roomNumber: orderUser.roomNumber,
-        orderUserName: orderUser.name,
-        TotalPrice,
-        orderNote,
-      })
-    );
+    if (
+      preOrderStatusButton === false &&
+      updatedItems.length === 0 &&
+      preOrderStatus === false
+    ) {
+      dispatch(
+        createOrder({
+          items: cartItems,
+          qrCodeId: activeQrCodeId,
+          roomNumber: orderUser.roomNumber,
+          orderUserName: orderUser.name,
+          TotalPrice,
+          orderNote,
+        })
+      );
+      // orderStatus succeeded olduğunda useEffect ile dialog kapatılıyor ve orderNote temizleniyor
+    } else {
+      toast.error(
+        "Please fix the price issues in your cart before placing the order."
+      );
+    }
   };
 
   useEffect(() => {
     if (orderStatus === "succeeded") {
       dispatch(clearCart());
       setSheetStatus(false);
+      setPlaceOrderDialogOpen(false);
+      setOrderNote("");
     }
   }, [orderStatus, dispatch]);
 
@@ -165,7 +250,6 @@ function CartSheet() {
                   >
                     {/* Image */}
                     <div className="w-14 h-14 flex-shrink-0 flex items-center justify-center bg-white rounded-md border overflow-hidden">
-                      {/* Placeholder image since item.image yok */}
                       <Image
                         src={item.image ?? "/placeholder.png"}
                         alt={item.name}
@@ -197,6 +281,10 @@ function CartSheet() {
                                 name: item.name,
                                 quantity: -1,
                                 image: item.image,
+                                displayPrice: item.displayPrice,
+                                price: item.price,
+                                priceSchedule: item.priceSchedule,
+                                basePrice: item.price,
                               })
                             )
                           }
@@ -218,6 +306,10 @@ function CartSheet() {
                                 name: item.name,
                                 quantity: 1,
                                 image: item.image,
+                                displayPrice: item.displayPrice,
+                                price: item.price,
+                                priceSchedule: item.priceSchedule,
+                                basePrice: item.price,
                               })
                             )
                           }
@@ -249,20 +341,26 @@ function CartSheet() {
             Total: ${TotalPrice}
           </div>
 
-          <Dialog>
-            <DialogTrigger asChild>
-              <Button
-                className="w-full "
-                type="submit"
-                disabled={
-                  orderStatus === "loading" ||
-                  cartItems.length === 0 ||
-                  !cartItems
-                }
-              >
-                {orderStatus === "loading" ? "Sending..." : "Place Order"}
-              </Button>
-            </DialogTrigger>
+          <Button
+            className="w-full "
+            type="button"
+            onClick={handlePreCreateOrder}
+            disabled={
+              orderStatus === "loading" || cartItems.length === 0 || !cartItems
+            }
+          >
+            {orderStatus === "loading" ? "Sending..." : "Place Order"}
+          </Button>
+
+          <Dialog
+            open={placeOrderDialogOpen}
+            onOpenChange={(open) => {
+              setPlaceOrderDialogOpen(open);
+              if (!open) {
+                setOrderNote("");
+              }
+            }}
+          >
             <DialogContent className="sm:max-w-[425px]">
               <DialogHeader>
                 <DialogTitle>Place Order</DialogTitle>
@@ -290,14 +388,34 @@ function CartSheet() {
               </div>
               <DialogFooter>
                 <DialogClose asChild>
-                  <Button variant="destructive">Cancel</Button>
+                  <Button
+                    variant="destructive"
+                    onClick={() => {
+                      setPlaceOrderDialogOpen(false);
+                      setOrderNote("");
+                    }}
+                  >
+                    Cancel
+                  </Button>
                 </DialogClose>
                 <Button
-                  type="submit"
-                  disabled={orderStatus === "loading" || orderNote.length > 200}
+                  type="button"
+                  disabled={
+                    orderStatus === "loading" ||
+                    orderNote.length > 200 ||
+                    preOrderStatusButton === true ||
+                    preOrderStatus === true
+                  }
                   onClick={handleCreateOrder}
                 >
-                  {orderStatus === "loading" ? "Sending..." : "Place Order"}
+                  {orderStatus === "loading" ? (
+                    <div className="flex items-center">
+                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                      Sending...
+                    </div>
+                  ) : (
+                    "Place Order"
+                  )}
                 </Button>
               </DialogFooter>
             </DialogContent>

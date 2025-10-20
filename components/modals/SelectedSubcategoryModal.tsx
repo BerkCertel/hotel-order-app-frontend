@@ -158,6 +158,7 @@ const SelectedSubcategoryModal = ({
                               price: subcategory.price,
                               displayPrice: subcategory.displayPrice,
                               priceSchedule: subcategory.priceSchedule,
+                              basePrice: subcategory.price,
                             })
                           )
                         }
@@ -181,6 +182,7 @@ const SelectedSubcategoryModal = ({
                                   price: subcategory.price,
                                   displayPrice: subcategory.displayPrice,
                                   priceSchedule: subcategory.priceSchedule,
+                                  basePrice: subcategory.price,
                                 })
                               )
                             }
@@ -206,6 +208,7 @@ const SelectedSubcategoryModal = ({
                                   price: subcategory.price,
                                   displayPrice: subcategory.displayPrice,
                                   priceSchedule: subcategory.priceSchedule,
+                                  basePrice: subcategory.price,
                                 })
                               )
                             }
