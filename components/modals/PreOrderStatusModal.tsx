@@ -13,6 +13,7 @@ import {
   clearUpdatedCartItems,
   selectCartState,
   setReduxPreOrderStatus,
+  updateCartItem,
 } from "@/store/cartSlice";
 import { ScrollArea } from "@radix-ui/react-scroll-area";
 import Image from "next/image";
@@ -25,15 +26,27 @@ export default function PreOrderStatusModal() {
   const { updatedItems, preOrderStatus } = useSelector(selectCartState);
 
   const handleUpdatedItemsStatus = () => {
-    dispatch(setReduxPreOrderStatus(false));
+    // Kullanıcı "Kabul Et" dediğinde sepetteki öğelerin fiyatını güncelle
+    if (updatedItems && updatedItems.length > 0) {
+      for (const u of updatedItems) {
+        dispatch(
+          updateCartItem({
+            _id: u._id,
+            price: u.newPrice,
+          })
+        );
+      }
+    }
+
+    // temizle ve modal kapat
     dispatch(clearUpdatedCartItems());
+    dispatch(setReduxPreOrderStatus(false));
   };
 
   return (
     <Dialog
       open={preOrderStatus}
       onOpenChange={(open) => {
-        // if user closes modal by UI, clear the status
         if (!open) {
           dispatch(setReduxPreOrderStatus(false));
         }
@@ -82,8 +95,8 @@ export default function PreOrderStatusModal() {
                               <Image
                                 src={u.image}
                                 alt={u.name}
-                                width={24}
-                                height={24}
+                                width={64}
+                                height={64}
                                 className="object-cover"
                               />
                             ) : (

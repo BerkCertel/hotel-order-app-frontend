@@ -26,7 +26,6 @@ import {
   clearCart,
   selectCartState,
   addToUpdateCartItems,
-  updateCartItem,
   setReduxPreOrderStatus,
 } from "@/store/cartSlice";
 
@@ -112,14 +111,6 @@ function CartSheet() {
           typeof item.displayPrice === "number" &&
           item.displayPrice !== actualPrice
         ) {
-          // Update cart item price in store
-          dispatch(
-            updateCartItem({
-              _id: item._id,
-              price: actualPrice,
-            })
-          );
-
           // Add to updatedItems list (reducer should dedupe)
           dispatch(
             addToUpdateCartItems({
@@ -146,12 +137,13 @@ function CartSheet() {
         dispatch(getAllCategoriesWithSubcategories());
       }
       setNewCatAndSubFetched(true);
+      setPlaceOrderDialogOpen(false);
       return; // güncelleme varsa dialog açılmasın
     } else {
       // No updates found -> clear pre-order status and open the place-order dialog
       dispatch(setReduxPreOrderStatus(false));
       setPreOrderStatusButton(false);
-      setPlaceOrderDialogOpen(true); // burası dialogu açar
+      setPlaceOrderDialogOpen(true);
     }
   };
 
@@ -176,7 +168,6 @@ function CartSheet() {
           orderNote,
         })
       );
-      // orderStatus succeeded olduğunda useEffect ile dialog kapatılıyor ve orderNote temizleniyor
     } else {
       toast.error(
         "Please fix the price issues in your cart before placing the order."
@@ -192,6 +183,12 @@ function CartSheet() {
       setOrderNote("");
     }
   }, [orderStatus, dispatch]);
+
+  useEffect(() => {
+    if (!updatedItems || updatedItems.length === 0) {
+      setPreOrderStatusButton(false);
+    }
+  }, [updatedItems]);
 
   const handleClear = () => {
     dispatch(clearCart());

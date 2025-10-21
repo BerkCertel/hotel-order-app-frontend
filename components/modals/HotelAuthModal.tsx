@@ -81,7 +81,7 @@ const HotelAuthModal: React.FC<HotelAuthModalProps> = ({ open, onSuccess }) => {
               className="bg-indigo-50 border-indigo-200 focus:border-indigo-500 focus:ring-indigo-500"
             />
             {formik.touched.roomNumber && formik.errors.roomNumber && (
-              <p className="text-red-500 text-xs mt-1 text-center">
+              <p className="text-red-500 text-xs mt-1 text-start">
                 {formik.errors.roomNumber}
               </p>
             )}
@@ -104,7 +104,7 @@ const HotelAuthModal: React.FC<HotelAuthModalProps> = ({ open, onSuccess }) => {
               className="bg-indigo-50 border-indigo-200 focus:border-indigo-500 focus:ring-indigo-500"
             />
             {formik.touched.birthDate && formik.errors.birthDate && (
-              <p className="text-red-500 text-xs mt-1 text-center">
+              <p className="text-red-500 text-xs mt-1 text-start">
                 {formik.errors.birthDate}
               </p>
             )}
@@ -128,7 +128,7 @@ const HotelAuthModal: React.FC<HotelAuthModalProps> = ({ open, onSuccess }) => {
               className="bg-indigo-50 border-indigo-200 focus:border-indigo-500 focus:ring-indigo-500"
             />
             {formik.touched.name && formik.errors.name && (
-              <p className="text-red-500 text-xs mt-1 text-center">
+              <p className="text-red-500 text-xs mt-1 text-start">
                 {formik.errors.name}
               </p>
             )}
