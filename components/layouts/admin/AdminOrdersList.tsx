@@ -22,6 +22,9 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { getSocket } from "@/utils/socket";
 import { Order } from "@/types/OrderTypes";
+import useOrderSound from "@/hooks/useOrderSound";
+import OrderSoundToggle from "@/components/utils/OrderSoundToggle";
+import { toast } from "sonner";
 
 type OrderWithMeta = Order & { __justArrived?: boolean };
 
@@ -33,6 +36,8 @@ export default function AdminOrdersList({ selectedLocationId }: Props) {
   const dispatch = useAppDispatch();
   const { orders, loading, error, total, page, totalPages } =
     useAppSelector(selectOrderState);
+
+  const { play } = useOrderSound("/sounds/orderSound.mp3");
 
   const limit = 8;
 
@@ -62,8 +67,24 @@ export default function AdminOrdersList({ selectedLocationId }: Props) {
       if (String(order.location) !== String(selectedLocationId)) return;
 
       if (type === "new") {
+        // Eğer bu sipariş zaten listede varsa (ör. initial fetch veya duplicate event), ignore et
+        const exists = orders.some((o) => String(o._id) === String(order._id));
+        if (exists) {
+          // Zaten mevcutsa sadece update isteği varsa güncelle ama ses çalma
+          return;
+        }
+
         const newOrder: OrderWithMeta = { ...order, __justArrived: true };
         dispatch(addOrder(newOrder));
+
+        // Yeni sipariş geldi -> ses çal
+        try {
+          play();
+          toast.success("Yeni sipariş alındı!");
+        } catch {
+          // ignore
+        }
+
         setTimeout(() => {
           dispatch(updateOrder({ ...order, __justArrived: false }));
         }, 3000);
@@ -76,7 +97,7 @@ export default function AdminOrdersList({ selectedLocationId }: Props) {
     return () => {
       socket.off("orderUpdate", handleUpdate);
     };
-  }, [dispatch, selectedLocationId]);
+  }, [dispatch, selectedLocationId, orders, play]);
 
   const handlePageChange = (newPage: number) => {
     if (newPage < 1 || newPage > totalPages) return;
@@ -160,6 +181,11 @@ export default function AdminOrdersList({ selectedLocationId }: Props) {
             {total}
           </Badge>
         </p>
+        {/* Ses aç/kapat butonu (Redux tabanlı) */}
+        <div className="ml-2">
+          <OrderSoundToggle />
+        </div>
+
         {/* Pagination */}
         {totalPages > 1 && (
           <div className="border rounded-lg p-1">

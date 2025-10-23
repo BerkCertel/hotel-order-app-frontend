@@ -13,6 +13,7 @@ import cartReducer from "./cartSlice";
 import orderReducer from "./orderSlice";
 import modalReducer from "./modalSlice";
 import styleReducer from "./styleSlice";
+import utilsReducer from "./utilsSlice";
 
 import { persistReducer, persistStore } from "redux-persist";
 import createWebStorage from "redux-persist/es/storage/createWebStorage";
@@ -61,6 +62,7 @@ const rootReducer = combineReducers({
   order: orderReducer,
   modal: modalReducer,
   style: styleReducer,
+  utils: utilsReducer,
 });
 
 export const store = configureStore({
