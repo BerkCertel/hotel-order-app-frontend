@@ -6,7 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import { useAppDispatch, useAppSelector } from "@/store/store";
-import Link from "next/link";
+import { Link } from "@/i18n/navigation";
 
 export default function ForgotPassword() {
   const [email, setEmail] = useState("");

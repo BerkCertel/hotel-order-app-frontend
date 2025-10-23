@@ -1,6 +1,6 @@
 "use client";
+import { useRouter } from "@/i18n/navigation";
 import { useEffect } from "react";
-import { useRouter } from "next/navigation";
 
 export default function ErrorPage() {
   const router = useRouter();

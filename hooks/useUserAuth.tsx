@@ -4,8 +4,8 @@ import { API_PATHS } from "@/constants/apiPaths";
 import { UserContext } from "@/context/userContext";
 import axiosInstance from "@/utils/axiosInstance";
 import { useAppDispatch } from "@/store/store";
-import { useRouter } from "next/navigation";
 import { setLoggedInUser } from "@/store/authSlice";
+import { useRouter } from "@/i18n/navigation";
 
 export const useUserAuth = () => {
   const { user, updateUser, clearUser } = useContext(UserContext);

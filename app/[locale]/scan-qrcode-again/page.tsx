@@ -2,9 +2,9 @@
 
 import React from "react";
 import { FaQrcode, FaTimesCircle, FaEye } from "react-icons/fa";
-import { useRouter } from "next/navigation";
 import clx from "clsx";
 import { Button } from "@/components/ui/button";
+import { useRouter } from "@/i18n/navigation";
 
 function ScanQrcodeAgainPage() {
   const router = useRouter();

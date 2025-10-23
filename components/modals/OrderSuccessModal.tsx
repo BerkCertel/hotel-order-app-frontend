@@ -9,11 +9,11 @@ import {
 } from "../ui/dialog";
 import { Button } from "../ui/button";
 import { FaCheckCircle } from "react-icons/fa";
-import { useRouter } from "next/navigation";
 import { useAppDispatch, useAppSelector } from "@/store/store";
 import { selectQrCodeState } from "@/store/qrcodeSlice";
 import { closeOrderSuccessModal, selectOrderState } from "@/store/orderSlice";
 import { clearOrderUser } from "@/store/orderuserSlice";
+import { useRouter } from "@/i18n/navigation";
 
 const OrderSuccessModal = () => {
   const { activeQrCodeId } = useAppSelector(selectQrCodeState);

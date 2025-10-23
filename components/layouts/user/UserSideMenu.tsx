@@ -11,8 +11,8 @@ import {
   setActiveLocationId,
 } from "@/store/locationsSlice";
 import { useAppDispatch, useAppSelector } from "@/store/store";
-import { useRouter } from "next/navigation";
 import clsx from "clsx";
+import { useRouter } from "@/i18n/navigation";
 
 export default function UserSideMenu() {
   const dispatch = useAppDispatch();

@@ -8,8 +8,9 @@ import {
   selectQrCodeState,
   setActiveQrCodeId,
 } from "@/store/qrcodeSlice";
-import { useParams, useRouter } from "next/navigation";
+import { useParams } from "next/navigation";
 import MenuProductList from "@/components/menu/MenuProductList";
+import { useRouter } from "@/i18n/navigation";
 
 function getIdAsString(id: string | string[] | undefined): string | undefined {
   if (typeof id === "string") return id;

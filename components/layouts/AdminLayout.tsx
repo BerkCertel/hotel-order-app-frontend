@@ -13,6 +13,7 @@ function AdminLayout({ children }: AdminLayoutProps) {
   return (
     <div>
       <Navbar />
+
       {user && (
         <div className="flex">
           {/* Sadece LG ve üstünde SideMenu solda görünür */}

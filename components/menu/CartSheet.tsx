@@ -42,7 +42,6 @@ import {
 } from "../ui/dialog";
 import { Label } from "../ui/label";
 import { Textarea } from "../ui/textarea";
-import { useRouter } from "next/navigation";
 import { selectOrderUserState } from "@/store/orderuserSlice";
 import { selectQrCodeState } from "@/store/qrcodeSlice";
 import { toast } from "sonner";
@@ -59,6 +58,7 @@ import {
 } from "@/components/ui/alert-dialog";
 import { getActualPrice } from "@/utils/SubcategoryUtils";
 import { getAllCategoriesWithSubcategories } from "@/store/categorySlice";
+import { useRouter } from "@/i18n/navigation";
 
 function CartSheet() {
   const dispatch = useAppDispatch();

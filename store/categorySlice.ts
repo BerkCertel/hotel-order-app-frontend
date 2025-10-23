@@ -95,15 +95,27 @@ export const getAllCategoriesWithSubcategories = createAsyncThunk<
 // UPDATE CATEGORY
 export const updateCategory = createAsyncThunk<
   Category,
-  { id: string; name: string; image?: File },
+  {
+    id: string;
+    name: string;
+    image?: File;
+    translations: {
+      tr: string;
+      en: string;
+      ru: string;
+      de: string;
+      fr: string;
+    };
+  },
   { rejectValue: string }
 >(
   "category/updateCategory",
-  async ({ id, name, image }, { rejectWithValue }) => {
+  async ({ id, name, image, translations }, { rejectWithValue }) => {
     try {
       const formData = new FormData();
       formData.append("name", name);
       if (image) formData.append("image", image);
+      formData.append("translations", JSON.stringify(translations));
 
       const res = await axiosInstance.put(
         API_PATHS.CATEGORY.UPDATE_CATEGORY(id),

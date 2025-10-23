@@ -6,7 +6,8 @@ import { toast } from "sonner";
 import { useFormik } from "formik";
 import { resetPasswordSchema } from "@/schemas/ResetPasswordSchema";
 import { useAppDispatch, useAppSelector } from "@/store/store";
-import { useParams, useRouter } from "next/navigation";
+import { useParams } from "next/navigation";
+import { useRouter } from "@/i18n/navigation";
 
 export default function ResetPasswordPage() {
   const router = useRouter();

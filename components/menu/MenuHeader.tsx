@@ -3,6 +3,7 @@ import React from "react";
 import MenuSheet from "./MenuSheet";
 import CartSheet from "./CartSheet";
 import MenuCategoryScroll from "./MenuCategoryScroll";
+import LangChangeButton from "./LangChangeButton";
 
 function MenuHeader() {
   return (
@@ -19,6 +20,7 @@ function MenuHeader() {
           <div className="flex items-center gap-2">
             <MenuSheet />
             <CartSheet />
+            <LangChangeButton />
           </div>
         </div>
       </div>

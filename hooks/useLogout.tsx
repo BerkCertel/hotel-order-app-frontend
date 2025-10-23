@@ -1,10 +1,10 @@
 import { API_PATHS } from "@/constants/apiPaths";
 import { UserContext } from "@/context/userContext";
+import { useRouter } from "@/i18n/navigation";
 import { setLoggedInUser } from "@/store/authSlice";
 import { useAppDispatch } from "@/store/store";
 
 import axiosInstance from "@/utils/axiosInstance";
-import { useRouter } from "next/navigation";
 import { useContext } from "react";
 import { toast } from "sonner";
 

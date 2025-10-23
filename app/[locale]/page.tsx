@@ -21,10 +21,10 @@ import axiosInstance from "@/utils/axiosInstance";
 import { AxiosError } from "axios";
 import { FaUser } from "react-icons/fa";
 import { LoadingModal } from "@/components/modals/LoadingModal";
-import Link from "next/link";
-import { useRouter } from "next/navigation";
+
 import { useAppDispatch, useAppSelector } from "@/store/store";
 import { selectAuthState, setLoggedInUser } from "@/store/authSlice";
+import { Link, useRouter } from "@/i18n/navigation";
 
 export default function Home() {
   const dispatch = useAppDispatch();

@@ -8,11 +8,11 @@ import { useLogout } from "@/hooks/useLogout";
 import { LuLogOut } from "react-icons/lu";
 import { useContext } from "react";
 import { UserContext } from "@/context/userContext";
-import { useRouter } from "next/navigation";
 
 import { useAppDispatch, useAppSelector } from "@/store/store";
 import clsx from "clsx";
 import { selectStyleState, setActiveAdminMenuId } from "@/store/styleSlice";
+import { useRouter } from "@/i18n/navigation";
 
 function SideMenu() {
   const dispatch = useAppDispatch();

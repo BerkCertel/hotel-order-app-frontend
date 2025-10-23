@@ -1,6 +1,7 @@
 "use client";
 import { Button } from "@/components/ui/button";
-import { useRouter } from "next/navigation";
+import { useRouter } from "@/i18n/navigation";
+
 import { TbError404 } from "react-icons/tb";
 
 const NotFoundPage = () => {

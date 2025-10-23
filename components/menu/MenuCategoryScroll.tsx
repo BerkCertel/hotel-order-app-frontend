@@ -10,6 +10,7 @@ import {
   FaLongArrowAltRight,
 } from "react-icons/fa";
 import { Alert, AlertDescription, AlertTitle } from "../ui/alert";
+import { useLocale } from "next-intl";
 
 function MenuCategoryScroll() {
   const { loading, error, categories } = useAppSelector(selectCategoryState);
@@ -17,6 +18,7 @@ function MenuCategoryScroll() {
   const dispatch = useAppDispatch();
   const scrollRef = useRef<HTMLDivElement>(null);
   const [scrolled, setScrolled] = useState(0);
+  const locale = useLocale();
 
   useEffect(() => {
     dispatch(getAllCategories());
@@ -89,27 +91,34 @@ function MenuCategoryScroll() {
       onScroll={handleScroll}
       className="hide-scrollbar relative flex items-center h-full gap-3 overflow-x-auto px-2 md:px-4 py-4"
     >
-      {categories.map((category) => (
-        <button
-          type="button"
-          onClick={() => handleScrollToCategory(category._id)}
-          key={category._id}
-          className="flex flex-col items-center gap-2 min-w-[80px] focus:outline-none hover:scale-105 transition-transform cursor-pointer"
-        >
-          <div className="relative h-14 w-14 md:h-16 md:w-16 overflow-hidden rounded-full border-2 shadow-sm bg-white flex items-center justify-center">
-            <Image
-              src={category.image || "/placeholder.svg"}
-              alt={category.name}
-              className="object-cover"
-              fill
-              sizes="(min-width: 640px) 4rem, (min-width: 768px) 4rem, 4rem"
-            />
-          </div>
-          <span className="text-xs font-medium text-center w-16 break-words leading-tight">
-            {category.name}
-          </span>
-        </button>
-      ))}
+      {categories.map((category) => {
+        const lang = (locale || "tr").split("-")[0];
+        const title =
+          (category.translations && (category.translations as any)[lang]) ||
+          category.name;
+
+        return (
+          <button
+            type="button"
+            onClick={() => handleScrollToCategory(category._id)}
+            key={category._id}
+            className="flex flex-col items-center gap-2 min-w-[80px] focus:outline-none hover:scale-105 transition-transform cursor-pointer"
+          >
+            <div className="relative h-14 w-14 md:h-16 md:w-16 overflow-hidden rounded-full border-2 shadow-sm bg-white flex items-center justify-center">
+              <Image
+                src={category.image || "/placeholder.svg"}
+                alt={category.name}
+                className="object-cover"
+                fill
+                sizes="(min-width: 640px) 4rem, (min-width: 768px) 4rem, 4rem"
+              />
+            </div>
+            <span className="text-xs font-medium text-center w-20 break-words leading-tight">
+              {title}
+            </span>
+          </button>
+        );
+      })}
 
       {/* Scroll For More: scroll gerçekleşince görünmez olsun */}
       <div

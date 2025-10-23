@@ -4,7 +4,7 @@ import { UserContext } from "@/context/userContext";
 import { useContext, useEffect, useState } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "../ui/dialog";
 import { Loader2 } from "lucide-react";
-import { useRouter } from "next/navigation";
+import { useRouter } from "@/i18n/navigation";
 
 type ProtectedPageProviderProps = {
   allowedRoles: string[];

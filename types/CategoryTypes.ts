@@ -1,5 +1,13 @@
 import { Subcategory } from "./SubCategoryTypes";
 
+export type Translations = {
+  tr: string;
+  en: string;
+  ru: string;
+  de: string;
+  fr: string;
+};
+
 export interface Category {
   _id: string;
   name: string;
@@ -7,6 +15,7 @@ export interface Category {
   publicId: string;
   createdAt?: string;
   updatedAt?: string;
+  translations?: Translations;
 }
 
 // Her kategori ve ona bağlı alt kategoriler
