@@ -61,7 +61,7 @@ export default function Home() {
 
       fetchUserInfo();
     }
-  }, [clearUser, loggedInUser, router, updateUser, user]);
+  }, [clearUser, loggedInUser, router, updateUser, user, dispatch]);
 
   useEffect(() => {
     if (user) {

@@ -11,6 +11,7 @@ import {
 } from "react-icons/fa";
 import { Alert, AlertDescription, AlertTitle } from "../ui/alert";
 import { useLocale } from "next-intl";
+import { CategoryTranslations } from "@/types/CategoryTypes";
 
 function MenuCategoryScroll() {
   const { loading, error, categories } = useAppSelector(selectCategoryState);
@@ -94,7 +95,8 @@ function MenuCategoryScroll() {
       {categories.map((category) => {
         const lang = (locale || "tr").split("-")[0];
         const title =
-          (category.translations && (category.translations as any)[lang]) ||
+          (category.translations &&
+            (category.translations as CategoryTranslations)[lang]) ||
           category.name;
 
         return (

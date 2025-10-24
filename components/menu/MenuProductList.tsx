@@ -13,6 +13,7 @@ import { Alert, AlertDescription, AlertTitle } from "../ui/alert";
 import { FaBoxOpen, FaExclamationTriangle } from "react-icons/fa";
 import { Skeleton } from "../ui/skeleton";
 import { useLocale, useTranslations } from "next-intl";
+import { CategoryTranslations } from "@/types/CategoryTypes";
 
 function MenuProductList() {
   const [activeSubcategory, setActiveSubcategory] =
@@ -100,7 +101,7 @@ function MenuProductList() {
         const title =
           (category.translations &&
             // typesafe index: cast to any because translations keys are dynamic
-            (category.translations as any)[lang]) ||
+            (category.translations as CategoryTranslations)[lang]) ||
           category.name;
 
         return (

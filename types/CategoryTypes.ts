@@ -22,3 +22,7 @@ export interface Category {
 export interface CategoryWithSubcategories extends Category {
   subcategories: Subcategory[];
 }
+
+export interface CategoryTranslations {
+  [key: string]: string;
+}
