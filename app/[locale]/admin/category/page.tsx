@@ -429,7 +429,12 @@ export default function Categories() {
 
           <div className="space-y-4 py-4">
             <div className="space-y-2">
-              <Label htmlFor="edit-name">Kategori Adı</Label>
+              <div className="flex items-center justify-between">
+                <Label htmlFor="edit-name">Kategori Adı</Label>/
+                <Label className="text-xs text-muted-foreground">
+                  Türkçe (TR)
+                </Label>
+              </div>
               <Input
                 id="edit-name"
                 value={editValue}
@@ -475,7 +480,7 @@ export default function Categories() {
             <div className="space-y-3 pt-2">
               <Label className="text-base font-semibold">Çeviriler</Label>
               <div className="grid gap-3 sm:grid-cols-2">
-                <div className="space-y-1.5">
+                {/* <div className="space-y-1.5">
                   <Label
                     htmlFor="edit-tr"
                     className="text-xs text-muted-foreground"
@@ -494,7 +499,7 @@ export default function Categories() {
                     }
                     disabled={loading}
                   />
-                </div>
+                </div> */}
                 <div className="space-y-1.5">
                   <Label
                     htmlFor="edit-en"

@@ -72,13 +72,37 @@ export const updateSubcategory = createAsyncThunk<
     image?: File;
     description?: string;
     price?: number;
+    translationsDesc?: {
+      tr?: string;
+      en?: string;
+      de?: string;
+      ru?: string;
+      fr?: string;
+    };
+    translationsName?: {
+      tr?: string;
+      en?: string;
+      de?: string;
+      ru?: string;
+      fr?: string;
+    };
     priceSchedule?: { activeFrom: string; activeTo: string };
   },
   { rejectValue: string }
 >(
   "subcategory/updateSubcategory",
   async (
-    { id, name, category, image, description, price, priceSchedule },
+    {
+      id,
+      name,
+      category,
+      image,
+      description,
+      price,
+      priceSchedule,
+      translationsDesc,
+      translationsName,
+    },
     { rejectWithValue }
   ) => {
     try {
@@ -88,6 +112,13 @@ export const updateSubcategory = createAsyncThunk<
       if (image) formData.append("image", image);
       if (description) formData.append("description", description);
       if (price !== undefined) formData.append("price", price.toString());
+      // Send translations as JSON string so backend can JSON.parse it reliably.
+      if (translationsDesc) {
+        formData.append("translationsDesc", JSON.stringify(translationsDesc));
+      }
+      if (translationsName) {
+        formData.append("translationsName", JSON.stringify(translationsName));
+      }
       // Aktif saat aralığı varsa ekle!
       if (priceSchedule?.activeFrom)
         formData.append("priceSchedule[activeFrom]", priceSchedule.activeFrom);
@@ -110,6 +141,7 @@ export const updateSubcategory = createAsyncThunk<
     }
   }
 );
+
 // CREATE
 export const createSubcategory = createAsyncThunk<
   Subcategory,
