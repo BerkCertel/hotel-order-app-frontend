@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { Subcategory } from "@/types/SubCategoryTypes";
 import Image from "next/image";
+import { useTranslations } from "next-intl";
 
 interface NoQrCodeProductModalProps {
   subcategory: Subcategory | null;
@@ -17,6 +18,7 @@ export function NoQrCodeProductModal({
   onClose,
 }: NoQrCodeProductModalProps) {
   const [isOpen, setIsOpen] = useState(false);
+  const t = useTranslations();
 
   useEffect(() => {
     if (subcategory) {
@@ -98,7 +100,9 @@ export function NoQrCodeProductModal({
                       </span>
                     ) : (
                       <span className="text-xl font-bold text-green-600">
-                        Ücretsiz
+                        {t
+                          ? t("free", { defaultValue: "Ücretsiz" })
+                          : "Ücretsiz"}
                       </span>
                     )}
                   </div>

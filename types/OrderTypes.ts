@@ -4,6 +4,7 @@ export interface OrderItem {
   quantity: number;
   image: string;
   price?: number;
+  orderName?: string;
 }
 
 export interface OrderPayload {

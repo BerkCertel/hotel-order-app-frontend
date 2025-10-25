@@ -116,6 +116,7 @@ function CartSheet() {
             addToUpdateCartItems({
               _id: item._id,
               name: item.name,
+              orderName: item.orderName,
               quantity: item.quantity,
               image: item.image,
               oldPrice: item.displayPrice,

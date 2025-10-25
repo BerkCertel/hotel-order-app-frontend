@@ -8,6 +8,7 @@ export type CartItem = {
   quantity: number;
   image: string;
   price: number;
+  orderName?: string;
   displayPrice: number;
   priceSchedule: PriceSchedule;
   basePrice: number;
@@ -17,6 +18,7 @@ export type UpdatedItem = {
   _id: string;
   name: string;
   quantity: number;
+  orderName?: string;
   image: string;
   oldPrice: number;
   newPrice: number;

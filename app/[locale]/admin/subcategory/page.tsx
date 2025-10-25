@@ -1281,7 +1281,7 @@ export default function Subcategories() {
           </Card>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {categories.map((cat) => (
+            {categories.map((cat: Category) => (
               <Card
                 key={cat._id}
                 className="border-none shadow-lg overflow-hidden"
@@ -1333,7 +1333,7 @@ export default function Subcategories() {
                                   {sc.name}
                                 </h4>
                                 {sc.description && (
-                                  <p className="text-xs text-muted-foreground line-clamp-2 mb-2">
+                                  <p className="text-xs text-muted-foreground line-clamp-2 max-w-64 mb-2">
                                     {sc.description}
                                   </p>
                                 )}
@@ -1423,7 +1423,7 @@ export default function Subcategories() {
                 placeholder="Açıklama (opsiyonel)"
                 rows={3}
                 maxLength={200}
-                className="resize-none"
+                className="resize-none max-w-md"
               />
               <div className="text-xs text-muted-foreground text-right">
                 {editDesc.length}/200

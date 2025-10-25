@@ -8,7 +8,11 @@ import { useAppDispatch, useAppSelector } from "@/store/store";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import { ProductModal } from "./ProductModal";
-import { Subcategory } from "@/types/SubCategoryTypes";
+import {
+  Subcategory,
+  SubcategoryNameTranslations,
+  SubcategoryDescTranslations,
+} from "@/types/SubCategoryTypes";
 import { Alert, AlertDescription, AlertTitle } from "../ui/alert";
 import { FaBoxOpen, FaExclamationTriangle } from "react-icons/fa";
 import { Skeleton } from "../ui/skeleton";
@@ -107,58 +111,78 @@ function MenuProductList() {
         return (
           <div id={category._id} key={category._id}>
             {/* Kategori adı (başlık olarak) */}
-            <h2 className="text-2xl font-bold mb-4">{title}</h2>
+            <h2 className="text-2xl font-bold mb-4 first-letter:uppercase">
+              {title}
+            </h2>
 
             {/* Alt kategoriler (ürünler) */}
             <div className="flex flex-col gap-3">
-              {category.subcategories.map((subcategory, index) => (
-                <div
-                  key={subcategory._id}
-                  onClick={() => setActiveSubcategory(subcategory)}
-                  className={cn(
-                    "group cursor-pointer flex items-center gap-4 rounded-lg border border-border/50 bg-card p-3 text-left transition-all duration-300",
-                    "hover:shadow-md hover:border-primary/30 active:scale-[0.98]",
-                    "animate-in fade-in slide-in-from-bottom-2"
-                  )}
-                  style={{
-                    animationDelay: `${index * 30}ms`,
-                    animationFillMode: "backwards",
-                  }}
-                >
-                  <div className="flex-1 min-w-0">
-                    <h3 className="text-base first-letter:uppercase font-semibold leading-tight text-card-foreground mb-1">
-                      {subcategory.name}
-                    </h3>
-                    <p className="text-sm text-muted-foreground line-clamp-2 mb-2 break-words">
-                      {subcategory.description}
-                    </p>
+              {category.subcategories.map((subcategory, index) => {
+                const translationsName =
+                  (subcategory.translationsName &&
+                    // typesafe index: cast to any because translations keys are dynamic
+                    (
+                      subcategory.translationsName as SubcategoryNameTranslations
+                    )[lang]) ||
+                  subcategory.name;
 
-                    <div className="flex items-center gap-2 flex-wrap">
-                      {subcategory.displayPrice === 0 ? (
-                        <span className="text-sm font-semibold text-green-600 ">
-                          {t
-                            ? t("free", { defaultValue: "Ücretsiz" })
-                            : "Ücretsiz"}
-                        </span>
-                      ) : subcategory.displayPrice ? (
-                        <span className="text-base font-bold text-red-600 ">
-                          {subcategory.displayPrice} $
-                        </span>
-                      ) : null}
+                const translationsDesc =
+                  (subcategory.translationsDesc &&
+                    // typesafe index: cast to any because translations keys are dynamic
+                    (
+                      subcategory.translationsDesc as SubcategoryDescTranslations
+                    )[lang]) ||
+                  subcategory.description;
+
+                return (
+                  <div
+                    key={subcategory._id}
+                    onClick={() => setActiveSubcategory(subcategory)}
+                    className={cn(
+                      "group cursor-pointer flex items-center gap-4 rounded-lg border border-border/50 bg-card p-3 text-left transition-all duration-300",
+                      "hover:shadow-md hover:border-primary/30 active:scale-[0.98]",
+                      "animate-in fade-in slide-in-from-bottom-2"
+                    )}
+                    style={{
+                      animationDelay: `${index * 30}ms`,
+                      animationFillMode: "backwards",
+                    }}
+                  >
+                    <div className="flex-1 min-w-0">
+                      <h3 className="text-base first-letter:uppercase font-semibold leading-tight text-card-foreground mb-1">
+                        {translationsName}
+                      </h3>
+                      <p className="text-sm text-muted-foreground line-clamp-2 mb-2 break-words">
+                        {translationsDesc}
+                      </p>
+
+                      <div className="flex items-center gap-2 flex-wrap">
+                        {subcategory.displayPrice === 0 ? (
+                          <span className="text-sm font-semibold text-green-600 ">
+                            {t
+                              ? t("free", { defaultValue: "Ücretsiz" })
+                              : "Ücretsiz"}
+                          </span>
+                        ) : subcategory.displayPrice ? (
+                          <span className="text-base font-bold text-red-600 ">
+                            {subcategory.displayPrice} $
+                          </span>
+                        ) : null}
+                      </div>
+                    </div>
+
+                    <div className="relative h-20 w-20 flex-shrink-0 overflow-hidden border rounded-md bg-muted sm:h-24 sm:w-24 md:h-28 md:w-28">
+                      <Image
+                        src={subcategory.image || "/placeholder.svg"}
+                        alt={subcategory.name}
+                        className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110"
+                        fill
+                        sizes="(min-width: 640px) 6rem, (min-width: 768px) 8rem, 10rem"
+                      />
                     </div>
                   </div>
-
-                  <div className="relative h-20 w-20 flex-shrink-0 overflow-hidden border rounded-md bg-muted sm:h-24 sm:w-24 md:h-28 md:w-28">
-                    <Image
-                      src={subcategory.image || "/placeholder.svg"}
-                      alt={subcategory.name}
-                      className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110"
-                      fill
-                      sizes="(min-width: 640px) 6rem, (min-width: 768px) 8rem, 10rem"
-                    />
-                  </div>
-                </div>
-              ))}
+                );
+              })}
             </div>
           </div>
         );

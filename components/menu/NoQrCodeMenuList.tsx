@@ -12,8 +12,10 @@ import { Alert, AlertDescription, AlertTitle } from "../ui/alert";
 import { FaBoxOpen, FaExclamationTriangle } from "react-icons/fa";
 import { Skeleton } from "../ui/skeleton";
 import { NoQrCodeProductModal } from "./NoQrCodeProductModal";
+import { useTranslations } from "next-intl";
 
 export default function NoQrCodeMenuProductList() {
+  const t = useTranslations();
   const [activeSubcategory, setActiveSubcategory] =
     useState<Subcategory | null>(null);
   const dispatch = useAppDispatch();
@@ -118,7 +120,9 @@ export default function NoQrCodeMenuProductList() {
                   <div className="flex items-center gap-2 flex-wrap">
                     {subcategory.price === 0 ? (
                       <span className="text-sm font-semibold text-green-600 ">
-                        Ücretsiz
+                        {t
+                          ? t("free", { defaultValue: "Ücretsiz" })
+                          : "Ücretsiz"}
                       </span>
                     ) : subcategory.price ? (
                       <span className="text-base font-bold text-red-600 ">

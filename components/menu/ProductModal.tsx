@@ -14,6 +14,7 @@ import { getActualPrice } from "@/utils/SubcategoryUtils";
 import { toast } from "sonner";
 import { getAllCategoriesWithSubcategories } from "@/store/categorySlice";
 import { GoDotFill } from "react-icons/go";
+import { useLocale } from "next-intl";
 
 interface ProductModalProps {
   subcategory: Subcategory | null;
@@ -25,6 +26,8 @@ export function ProductModal({ subcategory, onClose }: ProductModalProps) {
   const dispatch = useAppDispatch();
 
   const { items: cartItems } = useAppSelector(selectCartState);
+  const locale = useLocale();
+  const lang = (locale || "tr").split("-")[0];
 
   const getCartItem = (id: string) => cartItems.find((item) => item._id === id);
   const cartItem = subcategory ? getCartItem(subcategory._id) : undefined;
@@ -50,6 +53,18 @@ export function ProductModal({ subcategory, onClose }: ProductModalProps) {
 
   if (!subcategory) return null;
 
+  // locale'e göre güvenli şekilde çeviriyi al (fallback ile)
+  const translationsName =
+    (subcategory.translationsName as Record<string, string>)?.[lang] ??
+    subcategory.name;
+  const translationsDesc =
+    (subcategory.translationsDesc as Record<string, string>)?.[lang] ??
+    subcategory.description;
+  // türkçe orderName (her zaman tr kullan)
+  const orderNameTr =
+    (subcategory.translationsName as Record<string, string>)?.["tr"] ??
+    subcategory.name;
+
   const actualPrice = getActualPrice(
     subcategory.price,
     subcategory.priceSchedule
@@ -64,6 +79,7 @@ export function ProductModal({ subcategory, onClose }: ProductModalProps) {
         `Ürün Fiyatı Güncellendi: ${displayed} $ → ${actualPrice} $`,
         {
           duration: 5000,
+          position: "top-center",
         }
       );
       handleClose();
@@ -75,7 +91,10 @@ export function ProductModal({ subcategory, onClose }: ProductModalProps) {
     dispatch(
       addToCart({
         _id: subcategory._id,
-        name: subcategory.name,
+        name:
+          (subcategory.translationsName as Record<string, string>)?.[lang] ??
+          subcategory.name,
+        orderName: orderNameTr,
         quantity: quantityToAdd,
         image: subcategory.image,
         price: actualPrice,
@@ -138,7 +157,7 @@ export function ProductModal({ subcategory, onClose }: ProductModalProps) {
                 <div>
                   <div className="flex items-center  flex-wrap gap-2 mb-1 ">
                     <h2 className=" first-letter:uppercase text-lg md:text-2xl font-bold text-card-foreground">
-                      {subcategory.name}
+                      {translationsName}
                     </h2>
                     /
                     {subcategory?.displayPrice &&
@@ -152,9 +171,7 @@ export function ProductModal({ subcategory, onClose }: ProductModalProps) {
                       </span>
                     )}
                   </div>
-                  <p className="text-muted-foreground">
-                    {subcategory.description}
-                  </p>
+                  <p className="text-muted-foreground">{translationsDesc}</p>
 
                   {subcategory.priceSchedule?.activeFrom &&
                     subcategory.priceSchedule?.activeTo && (
@@ -227,35 +244,4 @@ export function ProductModal({ subcategory, onClose }: ProductModalProps) {
       </div>
     </>
   );
-}
-
-{
-  /* {subcategory.description && (
-                <div className="mb-4">
-                  <h3 className="mb-2 text-sm font-semibold text-card-foreground">
-                    İçindekiler
-                  </h3>
-                  <div className="flex flex-wrap gap-2">
-                    {product.ingredients.map((ingredient) => (
-                      <span
-                        key={ingredient}
-                        className="rounded-full bg-secondary px-3 py-1 text-xs font-medium text-secondary-foreground"
-                      >
-                        {ingredient}
-                      </span>
-                    ))}
-                  </div>
-                </div>
-              )} */
-}
-
-{
-  /* {product.calories && (
-                <div className="mb-6">
-                  <p className="text-sm text-muted-foreground">
-                    <span className="font-medium">Kalori:</span>{" "}
-                    {product.calories} kcal
-                  </p>
-                </div>
-              )} */
 }

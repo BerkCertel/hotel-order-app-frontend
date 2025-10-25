@@ -4,6 +4,7 @@ import axiosInstance from "@/utils/axiosInstance";
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { AxiosError } from "axios";
 import { RootState } from "./store";
+import { toast } from "sonner";
 
 // STATE
 interface SubcategoryState {
@@ -135,6 +136,7 @@ export const updateSubcategory = createAsyncThunk<
       return res.data.updatedSubcategory as Subcategory;
     } catch (error: unknown) {
       const err = error as AxiosError<{ message?: string }>;
+      toast.error(err.response?.data?.message || "Alt kategori güncellenemedi");
       return rejectWithValue(
         err.response?.data?.message || "Alt kategori güncellenemedi"
       );

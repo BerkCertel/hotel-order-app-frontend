@@ -15,6 +15,7 @@ export type OrderItem = {
   name: string;
   quantity: number;
   price?: number;
+  orderName?: string;
 };
 
 interface OrderItemsTableProps {
@@ -43,7 +44,7 @@ export function OrderItemsTable({ items }: OrderItemsTableProps) {
               <TableRow key={i} className="border-t">
                 {/* Item Name */}
                 <TableCell className="font-bold first-letter:uppercase truncate max-w-[90px]">
-                  {item.name}
+                  {item.orderName}
                 </TableCell>
                 {/* Quantity */}
                 <TableCell className="font-medium text-center">
